@@ -1,7 +1,5 @@
 # Built application files
 *.apk
-*.ap_
-
 # Files for the ART/Dalvik VM
 *.dex
 
@@ -63,3 +61,18 @@ fastlane/Preview.html
 fastlane/screenshots
 fastlane/test_output
 fastlane/readme.md
+.idea/codeStyles/
+.idea/misc.xml
+.idea/modules.xml
+.idea/runConfigurations.xml
+.idea/vcs.xml
+app/.gitignore
+app/libs/
+app/proguard-rules.pro
+app/src/
+build.gradle
+gradle.properties
+gradle/
+gradlew
+gradlew.bat
+settings.gradle
