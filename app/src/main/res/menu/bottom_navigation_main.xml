@@ -4,10 +4,28 @@
     android:layout_height="wrap_content"
     android:layout_width="wrap_content">
     <item
-        android:id="@+id/action_favorites"
+        android:id="@+id/action_home"
         android:enabled="true"
-        android:icon="@drawable/ic_favorite_white_24dp"
-        android:title="@string/text_favorites"
+        android:icon="@drawable/ic_home_24dp_vector"
+        android:title="@string/text_home"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_add"
+        android:enabled="true"
+        android:icon="@drawable/ic_add_circle_outline_24dp_vector"
+        android:title="@string/text_add"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_chat"
+        android:enabled="true"
+        android:icon="@drawable/ic_message_24dp_vector"
+        android:title="@string/text_chat"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_profile"
+        android:enabled="true"
+        android:icon="@drawable/ic_person_24dp_vector"
+        android:title="@string/text_profile"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_menu"

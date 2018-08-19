@@ -1,5 +1,10 @@
 <resources>
     <string name="app_name">Geekstagram</string>
-    <string name="text_favorites">Favorites</string>
+    <string name="text_chat">Messages</string>
     <string name="text_menu">Menu</string>
+    <string name="settings_theme_title_default">Standard</string>
+    <string name="settings_theme_title_dark">Dark</string>
+    <string name="text_home">Home</string>
+    <string name="text_add">Add</string>
+    <string name="text_profile">Profile</string>
 </resources>
