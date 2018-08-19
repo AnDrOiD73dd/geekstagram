@@ -12,12 +12,14 @@
         <item name="colorPrimary">@color/defaultPrimary</item>
         <item name="colorPrimaryDark">@color/defaultPrimaryDark</item>
         <item name="colorAccent">@color/defaultAccent</item>
+        <item name="themeName">@string/theme_name_standard</item>
     </style>
 
-    <style name="SecondaryTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="DarkTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/secondaryPrimary</item>
         <item name="colorPrimaryDark">@color/secondaryPrimaryDark</item>
         <item name="colorAccent">@color/secondaryAccent</item>
+        <item name="themeName">@string/theme_name_dark</item>
     </style>
 
 </resources>
