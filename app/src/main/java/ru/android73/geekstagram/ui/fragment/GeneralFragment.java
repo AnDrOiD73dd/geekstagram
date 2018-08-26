@@ -73,6 +73,12 @@ public class GeneralFragment extends MvpAppCompatFragment implements GeneralView
     }
 
     @Override
+    public void onDetach() {
+        super.onDetach();
+        adapter.setOnItemClickListener(null);
+    }
+
+    @Override
     public void onViewCreated(final View view, final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
     }
