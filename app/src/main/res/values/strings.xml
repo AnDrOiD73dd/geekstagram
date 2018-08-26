@@ -6,6 +6,6 @@
     <string name="text_add">Add</string>
     <string name="text_profile">Profile</string>
 
-    <string name="settings_theme_title_default">Standard</string>
-    <string name="settings_theme_title_dark">Dark</string>
+    <string name="settings_theme_title_default">Blue</string>
+    <string name="settings_theme_title_dark">Gray</string>
 </resources>

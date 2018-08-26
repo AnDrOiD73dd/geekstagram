@@ -5,6 +5,6 @@
     <string name="text_add">Добавить</string>
     <string name="text_profile">Профиль</string>
 
-    <string name="settings_theme_title_default">Стандартная</string>
-    <string name="settings_theme_title_dark">Темная</string>
+    <string name="settings_theme_title_default">Голубая</string>
+    <string name="settings_theme_title_dark">Серая</string>
 </resources>
