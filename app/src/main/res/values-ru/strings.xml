@@ -1,10 +1,10 @@
 <resources>
-    <string name="app_name">Geekstagram</string>
-    <string name="settings_theme_title_default">Стандартная</string>
-    <string name="settings_theme_title_dark">Темная</string>
     <string name="text_chat">Сообщения</string>
     <string name="text_menu">Меню</string>
     <string name="text_home">Домой</string>
     <string name="text_add">Добавить</string>
     <string name="text_profile">Профиль</string>
+
+    <string name="settings_theme_title_default">Стандартная</string>
+    <string name="settings_theme_title_dark">Темная</string>
 </resources>
