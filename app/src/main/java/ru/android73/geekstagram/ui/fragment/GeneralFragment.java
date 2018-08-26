@@ -23,7 +23,8 @@ import ru.android73.geekstagram.model.ImageListItem;
 import ru.android73.geekstagram.ui.presentation.presenter.GeneralPresenter;
 import ru.android73.geekstagram.ui.presentation.view.GeneralView;
 
-public class GeneralFragment extends MvpAppCompatFragment implements GeneralView, ImageAdapter.OnItemClickListener {
+public class GeneralFragment extends MvpAppCompatFragment implements GeneralView,
+        ImageAdapter.OnItemClickListener {
 
     public static final int COLUMN_COUNT = 2;
 
@@ -31,10 +32,10 @@ public class GeneralFragment extends MvpAppCompatFragment implements GeneralView
     GeneralPresenter generalPresenter;
 
     protected FloatingActionButton floatingActionButton;
-    private CoordinatorLayout coordinatorLayout;
-    private RecyclerView recyclerView;
-    private ImageAdapter adapter;
-    private List<ImageListItem> dataSource;
+    protected CoordinatorLayout coordinatorLayout;
+    protected RecyclerView recyclerView;
+    protected ImageAdapter adapter;
+    protected List<ImageListItem> dataSource;
 
     public static GeneralFragment newInstance() {
         GeneralFragment fragment = new GeneralFragment();
@@ -53,8 +54,7 @@ public class GeneralFragment extends MvpAppCompatFragment implements GeneralView
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Snackbar.make(coordinatorLayout, R.string.notification_image_added_text,
-                        Snackbar.LENGTH_LONG).show();
+                generalPresenter.onFabClick();
             }
         });
 
@@ -79,11 +79,16 @@ public class GeneralFragment extends MvpAppCompatFragment implements GeneralView
 
     @Override
     public void onItemClick(View view, int position) {
-
+        generalPresenter.onListItemClick(view, position);
     }
 
     @Override
     public void onLongClick(View view, int position) {
+        generalPresenter.onLongItemClick(view, position);
+    }
 
+    @Override
+    public void showInfo(int resourceId) {
+        Snackbar.make(coordinatorLayout, resourceId, Snackbar.LENGTH_LONG).show();
     }
 }
