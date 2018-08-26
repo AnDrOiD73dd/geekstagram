@@ -8,4 +8,7 @@
     <string name="settings_theme_title_default">Голубая</string>
     <string name="settings_theme_title_dark">Серая</string>
     <string name="settings_theme_title">Выбор темы</string>
+    <string name="settings_title">Настройки</string>
+    <string name="author_name">Улейкин Евгений</string>
+    <string name="nav_about_developer_title">О разработчике</string>
 </resources>

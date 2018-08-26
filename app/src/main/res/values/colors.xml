@@ -14,4 +14,6 @@
     <color name="secondaryPrimaryDark">#607D8B</color>
     <color name="secondaryPrimaryLight">#ECEFF1</color>
     <color name="secondaryAccent">#FFC400</color>
+
+    <color name="status_blue">#009EFF</color>
 </resources>

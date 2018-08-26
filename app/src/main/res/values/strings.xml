@@ -9,4 +9,10 @@
     <string name="settings_theme_title_default">Blue</string>
     <string name="settings_theme_title_dark">Gray</string>
     <string name="settings_theme_title">Select theme</string>
+    <string name="settings_title">Settings</string>
+    <string name="author_name">Uleikin Evgenii</string>
+    <string name="author_email">android73.dd@gmail.com</string>
+    <string name="nav_about_developer_title">About developer</string>
+    <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
+    <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
 </resources>
