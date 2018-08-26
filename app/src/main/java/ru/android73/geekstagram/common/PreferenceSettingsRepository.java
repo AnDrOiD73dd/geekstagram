@@ -7,18 +7,20 @@ import ru.android73.geekstagram.R;
 
 public class PreferenceSettingsRepository implements SettingsRepository {
 
-    public final String KEY_APP_THEME = "kat";
+    protected static final String KEY_APP_THEME = "kat";
 
     @Override
-    public void saveTheme(Context context, int themeId) {
+    public void saveTheme(Context context, String themeName) {
+        // Check theme name is exists in AppName enum
+        AppTheme.valueOf(themeName);
         PrefUtils.getEditor(context)
-                .putInt(KEY_APP_THEME, themeId)
+                .putString(KEY_APP_THEME, themeName)
                 .apply();
     }
 
     @Override
-    public int getCurrentTheme(Context context) {
+    public String getTheme(Context context) {
         SharedPreferences prefs = PrefUtils.getPrefs(context);
-        return prefs.getInt(KEY_APP_THEME, R.style.DefaultTheme);
+        return prefs.getString(KEY_APP_THEME, AppTheme.BLUE.name());
     }
 }
