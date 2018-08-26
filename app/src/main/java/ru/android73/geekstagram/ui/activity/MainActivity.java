@@ -12,9 +12,11 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import ru.android73.geekstagram.R;
+import ru.android73.geekstagram.ui.fragment.GeneralFragment;
 import ru.android73.geekstagram.ui.presentation.presenter.MainPresenter;
 import ru.android73.geekstagram.ui.presentation.view.MainView;
 
@@ -41,8 +43,8 @@ public class MainActivity extends BaseActivity implements MainView,
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-//        BaseFragment fragment = CitiesFragment.newInstance();
-//        getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, fragment).commit();
+        MvpAppCompatFragment fragment = GeneralFragment.newInstance();
+        getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, fragment).commit();
     }
 
     @Override

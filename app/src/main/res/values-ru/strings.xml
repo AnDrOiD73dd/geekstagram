@@ -11,4 +11,6 @@
     <string name="settings_title">Настройки</string>
     <string name="author_name">Улейкин Евгений</string>
     <string name="nav_about_developer_title">О разработчике</string>
+
+    <string name="notification_image_added_text">Изображение успешно добавлено</string>
 </resources>

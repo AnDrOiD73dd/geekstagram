@@ -15,4 +15,6 @@
     <string name="nav_about_developer_title">About developer</string>
     <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
     <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
+
+    <string name="notification_image_added_text">Image successfully added</string>
 </resources>
