@@ -16,4 +16,5 @@
     <color name="secondaryAccent">#FFC400</color>
 
     <color name="status_blue">#009EFF</color>
+    <color name="favorite_color">#FFF44336</color>
 </resources>

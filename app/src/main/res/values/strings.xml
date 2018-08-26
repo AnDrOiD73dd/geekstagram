@@ -17,4 +17,6 @@
     <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
 
     <string name="notification_image_added_text">Image successfully added</string>
+    <string name="image_content_description">Your image</string>
+    <string name="image_favorite_content_description">Select as favorite</string>
 </resources>

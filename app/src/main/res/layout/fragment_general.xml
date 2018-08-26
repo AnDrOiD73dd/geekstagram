@@ -8,6 +8,12 @@
     android:layout_height="match_parent"
     tools:context=".ui.fragment.GeneralFragment">
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_images_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical"/>
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/floating_action_button"
         android:layout_width="wrap_content"
@@ -16,6 +22,8 @@
         android:layout_gravity="bottom|end"
         app:srcCompat="@drawable/ic_add_24dp_vector"
         app:fabSize="auto"
+        app:layout_anchor="@id/rv_images_list"
+        app:layout_anchorGravity="bottom|end"
         style="@style/Widget.Design.FloatingActionButton"/>
 
 </android.support.design.widget.CoordinatorLayout>
