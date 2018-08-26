@@ -8,4 +8,5 @@
 
     <string name="settings_theme_title_default">Blue</string>
     <string name="settings_theme_title_dark">Gray</string>
+    <string name="settings_theme_title">Select theme</string>
 </resources>

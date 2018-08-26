@@ -7,4 +7,5 @@
 
     <string name="settings_theme_title_default">Голубая</string>
     <string name="settings_theme_title_dark">Серая</string>
+    <string name="settings_theme_title">Выбор темы</string>
 </resources>
