@@ -7,4 +7,8 @@ import com.arellomobile.mvp.MvpView;
 public interface GeneralView extends MvpView {
 
     void showInfo(@StringRes int resId);
+
+    void openCamera();
+
+    void requestWriteExternalPermission();
 }
