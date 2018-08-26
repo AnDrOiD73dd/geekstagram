@@ -3,39 +3,26 @@ package ru.android73.geekstagram.ui.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.widget.AppCompatRadioButton;
 import android.widget.CompoundButton;
 
-import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import ru.android73.geekstagram.R;
-import ru.android73.geekstagram.common.PreferenceSettingsRepository;
 import ru.android73.geekstagram.ui.presentation.presenter.SettingsPresenter;
 import ru.android73.geekstagram.ui.presentation.view.SettingsView;
 
-public class SettingsActivity extends MvpAppCompatActivity implements SettingsView,
+public class SettingsActivity extends BaseActivity implements SettingsView,
         CompoundButton.OnCheckedChangeListener {
 
     @InjectPresenter
     SettingsPresenter settingsPresenter;
     private AppCompatRadioButton rbThemeDark;
     private AppCompatRadioButton rbThemeStandard;
-    private int currentThemeId;
 
     public static Intent getIntent(final Context context) {
         return new Intent(context, SettingsActivity.class);
-    }
-
-    @Override
-    public void setTheme(int resid) {
-        currentThemeId = getUserTheme();
-        super.setTheme(currentThemeId);
-    }
-
-    private int getUserTheme() {
-        PreferenceSettingsRepository preferences = new PreferenceSettingsRepository();
-        return preferences.getCurrentTheme(this);
     }
 
     @Override
@@ -59,12 +46,12 @@ public class SettingsActivity extends MvpAppCompatActivity implements SettingsVi
         switch (buttonView.getId()) {
             case R.id.rb_theme_standard:
                 if (isChecked) {
-                    settingsPresenter.onThemeSelected(this, R.style.DefaultTheme);
+                    settingsPresenter.onThemeSelected(this, R.style.DefaultTheme, currentThemeId);
                 }
                 break;
             case R.id.rb_theme_dark:
                 if (isChecked) {
-                    settingsPresenter.onThemeSelected(this, R.style.DarkTheme);
+                    settingsPresenter.onThemeSelected(this, R.style.DarkTheme, currentThemeId);
                 }
                 break;
             default:
@@ -73,12 +60,20 @@ public class SettingsActivity extends MvpAppCompatActivity implements SettingsVi
     }
 
     @Override
-    public void setStandardThemeChecked() {
+    public void setCheckedStandardTheme() {
         rbThemeStandard.setChecked(true);
     }
 
     @Override
-    public void setDarkThemeChecked() {
+    public void setCheckedDarkTheme() {
         rbThemeDark.setChecked(true);
+    }
+
+    @Override
+    public void applyTheme(int themeId) {
+        TaskStackBuilder.create(this)
+                .addNextIntent(new Intent(this, MainActivity.class))
+                .addNextIntent(this.getIntent())
+                .startActivities();
     }
 }
