@@ -8,6 +8,4 @@
 
     <string name="settings_theme_title_default">Standard</string>
     <string name="settings_theme_title_dark">Dark</string>
-    <string name="theme_name_standard" translatable="false">standard theme</string>
-    <string name="theme_name_dark" translatable="false">dark theme</string>
 </resources>
