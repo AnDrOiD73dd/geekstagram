@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="theme_name_standard">standard theme</string>
+    <string name="theme_name_dark">dark theme</string>
+</resources>

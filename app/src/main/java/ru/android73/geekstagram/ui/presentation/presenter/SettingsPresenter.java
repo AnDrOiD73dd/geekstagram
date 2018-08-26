@@ -8,19 +8,28 @@ import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 
 import ru.android73.geekstagram.R;
+import ru.android73.geekstagram.common.AppTheme;
 import ru.android73.geekstagram.common.PreferenceSettingsRepository;
 import ru.android73.geekstagram.ui.presentation.view.SettingsView;
 
 @InjectViewState
 public class SettingsPresenter extends MvpPresenter<SettingsView> {
 
-    public void onThemeSelected(Context context, int themeId, int currentThemeId) {
-        if (currentThemeId == themeId) {
+    public void onThemeSelected(Context context, int newThemeId, int currentThemeId) {
+        if (currentThemeId == newThemeId) {
             return;
         }
         PreferenceSettingsRepository preferences = new PreferenceSettingsRepository();
-        preferences.saveTheme(context, themeId);
-        getViewState().applyTheme(themeId);
+        if (newThemeId == R.style.DefaultTheme) {
+            preferences.saveTheme(context, AppTheme.BLUE.name());
+        }
+        else if (newThemeId == R.style.DarkTheme) {
+            preferences.saveTheme(context, AppTheme.GRAY.name());
+        }
+        else {
+            // TODO write warning to logcat
+        }
+        getViewState().applyTheme(newThemeId);
     }
 
     public void onResume(Context context) {
