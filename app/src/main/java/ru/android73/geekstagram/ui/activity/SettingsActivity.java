@@ -13,13 +13,13 @@ import ru.android73.geekstagram.R;
 import ru.android73.geekstagram.ui.presentation.presenter.SettingsPresenter;
 import ru.android73.geekstagram.ui.presentation.view.SettingsView;
 
-public class SettingsActivity extends BaseActivity implements SettingsView,
-        CompoundButton.OnCheckedChangeListener {
+public class SettingsActivity extends BaseActivity implements SettingsView {
 
     @InjectPresenter
     SettingsPresenter settingsPresenter;
     private AppCompatRadioButton rbThemeDark;
     private AppCompatRadioButton rbThemeStandard;
+    private CompoundButton.OnCheckedChangeListener themeChooserListener;
 
     public static Intent getIntent(final Context context) {
         return new Intent(context, SettingsActivity.class);
@@ -30,33 +30,36 @@ public class SettingsActivity extends BaseActivity implements SettingsView,
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         rbThemeStandard = findViewById(R.id.rb_theme_standard);
-        rbThemeStandard.setOnCheckedChangeListener(this);
         rbThemeDark = findViewById(R.id.rb_theme_dark);
-        rbThemeDark.setOnCheckedChangeListener(this);
+        themeChooserListener = new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                switch (buttonView.getId()) {
+                    case R.id.rb_theme_standard:
+                        if (isChecked) {
+                            settingsPresenter.onThemeSelected(SettingsActivity.this,
+                                    R.style.DefaultTheme, currentThemeId);
+                        }
+                        break;
+                    case R.id.rb_theme_dark:
+                        if (isChecked) {
+                            settingsPresenter.onThemeSelected(SettingsActivity.this,
+                                    R.style.DarkTheme, currentThemeId);
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+        };
+        rbThemeStandard.setOnCheckedChangeListener(themeChooserListener);
+        rbThemeDark.setOnCheckedChangeListener(themeChooserListener);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         settingsPresenter.onResume(this);
-    }
-
-    @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        switch (buttonView.getId()) {
-            case R.id.rb_theme_standard:
-                if (isChecked) {
-                    settingsPresenter.onThemeSelected(this, R.style.DefaultTheme, currentThemeId);
-                }
-                break;
-            case R.id.rb_theme_dark:
-                if (isChecked) {
-                    settingsPresenter.onThemeSelected(this, R.style.DarkTheme, currentThemeId);
-                }
-                break;
-            default:
-                break;
-        }
     }
 
     @Override
