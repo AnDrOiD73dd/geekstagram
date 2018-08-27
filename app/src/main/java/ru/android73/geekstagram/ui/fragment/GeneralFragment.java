@@ -1,10 +1,7 @@
 package ru.android73.geekstagram.ui.fragment;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -21,12 +18,8 @@ import android.view.ViewGroup;
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
-import java.io.ByteArrayOutputStream;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import ru.android73.geekstagram.R;
 import ru.android73.geekstagram.log.Logger;
@@ -35,15 +28,12 @@ import ru.android73.geekstagram.model.ImageListItem;
 import ru.android73.geekstagram.ui.presentation.presenter.GeneralPresenter;
 import ru.android73.geekstagram.ui.presentation.view.GeneralView;
 
-import static android.app.Activity.RESULT_OK;
-
 public class GeneralFragment extends MvpAppCompatFragment implements GeneralView,
         ImageAdapter.OnItemClickListener {
 
-    public static final String IMAGE_SUFFIX = ".jpg";
     private static final int COLUMN_COUNT = 2;
-    private static final int REQUEST_IMAGE_CAPTURE = 1000;
-    private static final int REQUEST_WRITE_EXTERNAL_STORAGE = 1001;
+    public static final int REQUEST_IMAGE_CAPTURE = 1000;
+    public static final int REQUEST_WRITE_EXTERNAL_STORAGE = 1001;
 
     @InjectPresenter
     GeneralPresenter generalPresenter;
@@ -131,16 +121,19 @@ public class GeneralFragment extends MvpAppCompatFragment implements GeneralView
     }
 
     @Override
+    public void addItemToList(ImageListItem item) {
+        dataSource.add(item);
+    }
+
+    @Override
+    public void notifyDataChanged() {
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            Bundle extras = data.getExtras();
-            // TODO check NPE
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
-            // TODO check NPE
-            dataSource.add(new ImageListItem(getImageUri(getActivity(), imageBitmap), false));
-            adapter.notifyDataSetChanged();
-        }
+        generalPresenter.handleActivityResult(getActivity(), requestCode, resultCode, data);
     }
 
     @Override
@@ -155,19 +148,5 @@ public class GeneralFragment extends MvpAppCompatFragment implements GeneralView
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
                 break;
         }
-    }
-
-    private Uri getImageUri(Context context, Bitmap bitmap) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-        String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), bitmap,
-                getNewFileName(), null);
-        return Uri.parse(path);
-    }
-
-    private String getNewFileName() {
-        String timeStamp = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss",
-                Locale.getDefault()).format(new Date());
-        return timeStamp + IMAGE_SUFFIX;
     }
 }
