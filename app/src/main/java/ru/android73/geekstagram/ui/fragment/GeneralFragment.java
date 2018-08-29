@@ -1,10 +1,9 @@
 package ru.android73.geekstagram.ui.fragment;
 
-import android.Manifest;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -22,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ru.android73.geekstagram.R;
-import ru.android73.geekstagram.log.Logger;
 import ru.android73.geekstagram.model.ImageAdapter;
 import ru.android73.geekstagram.model.ImageListItem;
 import ru.android73.geekstagram.ui.presentation.presenter.GeneralPresenter;
@@ -33,7 +31,6 @@ public class GeneralFragment extends MvpAppCompatFragment implements GeneralView
 
     private static final int COLUMN_COUNT = 2;
     public static final int REQUEST_IMAGE_CAPTURE = 1000;
-    public static final int REQUEST_WRITE_EXTERNAL_STORAGE = 1001;
 
     @InjectPresenter
     GeneralPresenter generalPresenter;
@@ -61,7 +58,7 @@ public class GeneralFragment extends MvpAppCompatFragment implements GeneralView
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                generalPresenter.onFabClick();
+                generalPresenter.onFabClick(getActivity());
             }
         });
 
@@ -106,18 +103,13 @@ public class GeneralFragment extends MvpAppCompatFragment implements GeneralView
     }
 
     @Override
-    public void openCamera() {
+    public void openCamera(Uri imageUri) {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // TODO check NPE
         if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
         }
-    }
-
-    @Override
-    public void requestWriteExternalPermission() {
-        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                REQUEST_WRITE_EXTERNAL_STORAGE);
     }
 
     @Override
@@ -134,19 +126,5 @@ public class GeneralFragment extends MvpAppCompatFragment implements GeneralView
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         generalPresenter.handleActivityResult(getActivity(), requestCode, resultCode, data);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case REQUEST_WRITE_EXTERNAL_STORAGE:
-                generalPresenter.onRequestPermissionResult(permissions, grantResults);
-                break;
-            default:
-                Logger.e("Unknown requestCode:%d", requestCode);
-                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-                break;
-        }
     }
 }

@@ -1,5 +1,6 @@
 package ru.android73.geekstagram.ui.presentation.view;
 
+import android.net.Uri;
 import android.support.annotation.StringRes;
 
 import com.arellomobile.mvp.MvpView;
@@ -15,10 +16,7 @@ public interface GeneralView extends MvpView {
     void showInfo(@StringRes int resId);
 
     @StateStrategyType(SkipStrategy.class)
-    void openCamera();
-
-    @StateStrategyType(SkipStrategy.class)
-    void requestWriteExternalPermission();
+    void openCamera(Uri imageUri);
 
     @StateStrategyType(AddToEndSingleStrategy.class)
     void addItemToList(ImageListItem item);
