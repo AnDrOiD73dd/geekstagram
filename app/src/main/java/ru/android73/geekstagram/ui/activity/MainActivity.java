@@ -45,6 +45,15 @@ public class MainActivity extends BaseActivity implements MainView,
     }
 
     @Override
+    public void onBackPressed() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
     public void showSettingsActivity() {
         startActivity(SettingsActivity.getIntent(this));
     }
