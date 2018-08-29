@@ -13,6 +13,7 @@
         <item name="colorPrimaryDark">@color/defaultPrimaryDark</item>
         <item name="colorAccent">@color/defaultAccent</item>
         <item name="themeName">@string/theme_name_standard</item>
+        <item name="cardViewStyle">@style/CardView</item>
     </style>
 
     <style name="DarkTheme" parent="Theme.AppCompat.Light.NoActionBar">
@@ -20,6 +21,7 @@
         <item name="colorPrimaryDark">@color/secondaryPrimaryDark</item>
         <item name="colorAccent">@color/secondaryAccent</item>
         <item name="themeName">@string/theme_name_dark</item>
+        <item name="cardViewStyle">@style/CardView</item>
     </style>
 
 </resources>
