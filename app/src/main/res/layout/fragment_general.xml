@@ -24,6 +24,7 @@
         app:fabSize="auto"
         app:layout_anchor="@id/rv_images_list"
         app:layout_anchorGravity="bottom|end"
+        app:layout_behavior="@string/scroll_aware_fab_behavior"
         style="@style/Widget.Design.FloatingActionButton"/>
 
 </android.support.design.widget.CoordinatorLayout>

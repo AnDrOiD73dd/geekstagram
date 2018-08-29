@@ -21,4 +21,5 @@
     <string name="notification_can_not_create_file">Can not create file</string>
     <string name="image_content_description">Your image</string>
     <string name="image_favorite_content_description">Select as favorite</string>
+    <string name="scroll_aware_fab_behavior">ru.android73.geekstagram.common.ScrollAwareFabBehavior</string>
 </resources>
