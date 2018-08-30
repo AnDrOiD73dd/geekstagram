@@ -47,13 +47,6 @@ public class GeneralPresenter extends MvpPresenter<GeneralView> {
                 context.getPackageName() + ".photoprovider", image);
     }
 
-    public void onListItemClick(View view, int position) {
-
-    }
-
-    public void onLongItemClick(View view, int position) {
-    }
-
     public void handleActivityResult(Context context, int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             getViewState().addItemToList(new ImageListItem(Uri.parse(lastPhotoPath), false));
@@ -73,5 +66,14 @@ public class GeneralPresenter extends MvpPresenter<GeneralView> {
             Logger.e(e);
         }
         return image;
+    }
+
+    public void onImageClick(View v, int adapterPosition) {
+    }
+
+    public void onLikeClick(View v, int adapterPosition) {
+    }
+
+    public void onImageLongClick(View v, int adapterPosition) {
     }
 }

@@ -88,13 +88,18 @@ public class GeneralFragment extends MvpAppCompatFragment implements GeneralView
     }
 
     @Override
-    public void onItemClick(View view, int position) {
-        generalPresenter.onListItemClick(view, position);
+    public void onImageClick(View v, int adapterPosition) {
+        generalPresenter.onImageClick(v, adapterPosition);
     }
 
     @Override
-    public void onLongClick(View view, int position) {
-        generalPresenter.onLongItemClick(view, position);
+    public void onImageLongClick(View v, int adapterPosition) {
+        generalPresenter.onImageLongClick(v, adapterPosition);
+    }
+
+    @Override
+    public void onLikeClick(View v, int adapterPosition) {
+        generalPresenter.onLikeClick(v, adapterPosition);
     }
 
     @Override

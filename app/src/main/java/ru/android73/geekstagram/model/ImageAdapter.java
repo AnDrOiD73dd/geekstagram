@@ -39,8 +39,9 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
     }
 
     public interface OnItemClickListener {
-        void onItemClick(View view , int position);
-        void onLongClick(View view , int position);
+        void onImageClick(View v, int adapterPosition);
+        void onImageLongClick(View v, int adapterPosition);
+        void onLikeClick(View v, int adapterPosition);
     }
 
     public void setOnItemClickListener(OnItemClickListener itemClickListener){
@@ -54,29 +55,38 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
 
         public ViewHolder(View itemView) {
             super(itemView);
-            itemView.setOnClickListener(new View.OnClickListener() {
+            ivImageContainer = itemView.findViewById(R.id.iv_image_container);
+            ivImageContainer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (itemClickListener != null) {
-                        itemClickListener.onItemClick(v, getAdapterPosition());
+                        itemClickListener.onImageClick(v, getAdapterPosition());
                     }
                 }
             });
-            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            ivImageContainer.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
                     if (itemClickListener != null) {
-                        itemClickListener.onLongClick(v, getAdapterPosition());
+                        itemClickListener.onImageLongClick(v, getAdapterPosition());
                         return true;
                     }
                     return false;
                 }
             });
-            ivImageContainer = itemView.findViewById(R.id.iv_image_container);
+
             ivFavorite = itemView.findViewById(R.id.iv_favorite);
+            ivFavorite.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (itemClickListener != null) {
+                        itemClickListener.onLikeClick(v, getAdapterPosition());
+                    }
+                }
+            });
         }
 
-        public void bind(int position) {
+        void bind(int position) {
             if (getLayoutPosition() != RecyclerView.NO_POSITION) {
                 ImageListItem item = dataSource.get(position);
                 setupViewData(item);
