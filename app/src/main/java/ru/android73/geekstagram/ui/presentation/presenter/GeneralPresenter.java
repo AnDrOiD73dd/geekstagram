@@ -72,6 +72,8 @@ public class GeneralPresenter extends MvpPresenter<GeneralView> {
     }
 
     public void onLikeClick(View v, int adapterPosition) {
+        getViewState().revertItemLike(adapterPosition);
+        getViewState().notifyDataChanged();
     }
 
     public void onImageLongClick(int adapterPosition) {

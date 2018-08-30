@@ -153,6 +153,12 @@ public class GeneralFragment extends MvpAppCompatFragment implements GeneralView
     }
 
     @Override
+    public void revertItemLike(int adapterPosition) {
+        ImageListItem item = dataSource.get(adapterPosition);
+        item.setFavorite(!item.isFavorite());
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         generalPresenter.handleActivityResult(getActivity(), requestCode, resultCode, data);

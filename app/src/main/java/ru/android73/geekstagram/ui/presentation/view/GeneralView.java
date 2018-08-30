@@ -25,4 +25,6 @@ public interface GeneralView extends MvpView {
     void showDeleteConfirmationDialog(int adapterPosition);
 
     void removeItem(int adapterPosition);
+
+    void revertItemLike(int adapterPosition);
 }
