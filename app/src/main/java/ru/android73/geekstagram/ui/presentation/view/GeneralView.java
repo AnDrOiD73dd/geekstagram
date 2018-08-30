@@ -21,4 +21,8 @@ public interface GeneralView extends MvpView {
     void addItemToList(ImageListItem item);
 
     void notifyDataChanged();
+
+    void showDeleteConfirmationDialog(int adapterPosition);
+
+    void removeItem(int adapterPosition);
 }

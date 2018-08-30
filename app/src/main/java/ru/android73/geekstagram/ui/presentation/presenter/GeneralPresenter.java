@@ -74,6 +74,16 @@ public class GeneralPresenter extends MvpPresenter<GeneralView> {
     public void onLikeClick(View v, int adapterPosition) {
     }
 
-    public void onImageLongClick(View v, int adapterPosition) {
+    public void onImageLongClick(int adapterPosition) {
+        getViewState().showDeleteConfirmationDialog(adapterPosition);
+    }
+
+    public void onDeleteConfirmed(int adapterPosition) {
+        getViewState().removeItem(adapterPosition);
+        getViewState().notifyDataChanged();
+    }
+
+    public void onDeleteCanceled() {
+
     }
 }

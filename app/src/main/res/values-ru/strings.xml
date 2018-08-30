@@ -15,4 +15,7 @@
     <string name="notification_image_added_text">Изображение успешно добавлено</string>
     <string name="notification_can_not_open_camera">Не могу открыть камеру</string>
     <string name="notification_can_not_create_file">Не могу создать файл</string>
+    <string name="dialog_delete_item_message">Вы действительно хотите удалить фотографию?</string>
+    <string name="yes">Да</string>
+    <string name="cancel">Отмена</string>
 </resources>

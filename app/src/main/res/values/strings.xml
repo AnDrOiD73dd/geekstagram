@@ -22,4 +22,7 @@
     <string name="image_content_description">Your image</string>
     <string name="image_favorite_content_description">Select as favorite</string>
     <string name="scroll_aware_fab_behavior">ru.android73.geekstagram.common.ScrollAwareFabBehavior</string>
+    <string name="dialog_delete_item_message">Do you really want to delete photo?</string>
+    <string name="yes">Yes</string>
+    <string name="cancel">Cancel</string>
 </resources>

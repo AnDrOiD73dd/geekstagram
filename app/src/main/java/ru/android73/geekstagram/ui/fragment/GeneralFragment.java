@@ -1,5 +1,6 @@
 package ru.android73.geekstagram.ui.fragment;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -7,6 +8,7 @@ import android.provider.MediaStore;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -94,7 +96,7 @@ public class GeneralFragment extends MvpAppCompatFragment implements GeneralView
 
     @Override
     public void onImageLongClick(View v, int adapterPosition) {
-        generalPresenter.onImageLongClick(v, adapterPosition);
+        generalPresenter.onImageLongClick(adapterPosition);
     }
 
     @Override
@@ -125,6 +127,29 @@ public class GeneralFragment extends MvpAppCompatFragment implements GeneralView
     @Override
     public void notifyDataChanged() {
         adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void showDeleteConfirmationDialog(final int adapterPosition) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage(R.string.dialog_delete_item_message)
+                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                generalPresenter.onDeleteConfirmed(adapterPosition);
+            }
+        })
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                generalPresenter.onDeleteCanceled();
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    @Override
+    public void removeItem(int adapterPosition) {
+        dataSource.remove(adapterPosition);
     }
 
     @Override
