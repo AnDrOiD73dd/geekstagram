@@ -18,9 +18,7 @@ public interface GeneralView extends MvpView {
     @StateStrategyType(SkipStrategy.class)
     void openCamera(Uri imageUri);
 
-    @StateStrategyType(AddToEndSingleStrategy.class)
     void addItemToList(ImageListItem item);
 
-    @StateStrategyType(AddToEndSingleStrategy.class)
     void notifyDataChanged();
 }
