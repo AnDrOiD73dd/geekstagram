@@ -8,6 +8,7 @@ import com.arellomobile.mvp.MvpPresenter;
 
 import ru.android73.geekstagram.R;
 import ru.android73.geekstagram.common.AppTheme;
+import ru.android73.geekstagram.common.AppThemeMapper;
 import ru.android73.geekstagram.common.PreferenceSettingsRepository;
 import ru.android73.geekstagram.log.Logger;
 import ru.android73.geekstagram.ui.presentation.view.SettingsView;
@@ -19,7 +20,7 @@ public class SettingsPresenter extends MvpPresenter<SettingsView> {
         if (currentThemeId == newThemeId) {
             return;
         }
-        PreferenceSettingsRepository preferences = new PreferenceSettingsRepository();
+        PreferenceSettingsRepository preferences = new PreferenceSettingsRepository(new AppThemeMapper());
         if (newThemeId == R.style.DefaultTheme) {
             preferences.saveTheme(context, AppTheme.BLUE);
         }

@@ -4,7 +4,7 @@ import ru.android73.geekstagram.R;
 
 public class AppThemeMapper {
 
-    public static int toResourceId(AppTheme appTheme) {
+    public int toResourceId(AppTheme appTheme) {
         if (appTheme.equals(AppTheme.BLUE)) {
             return R.style.DefaultTheme;
         }
@@ -17,7 +17,7 @@ public class AppThemeMapper {
 
     }
 
-    public static AppTheme toEnumValue(String appThemeName) {
+    public AppTheme toEnumValue(String appThemeName) {
         try {
             return AppTheme.valueOf(appThemeName);
         } catch (Exception ex) {
