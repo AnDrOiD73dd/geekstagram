@@ -20,6 +20,8 @@
             android:layout_gravity="center_horizontal"
             android:contentDescription="@string/image_content_description"
             android:padding="@dimen/image_padding"
+            android:scaleType="centerCrop"
+            android:adjustViewBounds="true"
             />
 
         <ImageView
