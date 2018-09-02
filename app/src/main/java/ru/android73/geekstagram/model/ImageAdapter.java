@@ -101,7 +101,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
             }
             else {
                 ivFavorite.setImageDrawable(ivFavorite.getContext().getResources()
-                        .getDrawable(R.drawable.ic_favorite_border_24dp_vector));
+                        .getDrawable(R.drawable.ic_favorite_filled_with_border_vector));
             }
         }
     }
