@@ -1,6 +1,5 @@
 package ru.android73.geekstagram.model;
 
-import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,13 +7,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
+
+import java.io.File;
 import java.util.List;
 
 import ru.android73.geekstagram.R;
+import ru.android73.geekstagram.log.Logger;
 import ru.android73.geekstagram.model.db.ImageListItem;
 
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> {
 
+    private static final int PREVIEW_SIZE = 300;
     private final List<ImageListItem> dataSource;
     private OnItemClickListener itemClickListener;
 
@@ -107,7 +112,23 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
         }
 
         private void setupViewData(ImageListItem item) {
-            ivImageContainer.setImageURI(Uri.parse(item.getImageUri()));
+            File file = new File(item.getImageUri());
+            Picasso.get()
+                    .load(file)
+                    .resize(PREVIEW_SIZE,PREVIEW_SIZE)
+                    .centerCrop()
+                    .placeholder(R.drawable.ic_image_24dp_vector)
+                    .error(R.drawable.ic_report_problem_24dp_vector)
+                    .into(ivImageContainer, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                        }
+
+                        @Override
+                        public void onError(Exception e) {
+                            Logger.e(e.getLocalizedMessage());
+                        }
+                    });
             if (item.isFavorite()) {
                 ivFavorite.setImageDrawable(ivFavorite.getContext().getResources()
                         .getDrawable(R.drawable.ic_favorite_24dp_vector));
