@@ -122,7 +122,8 @@ public class ImagesListFragment extends MvpAppCompatFragment implements ImagesLi
     }
 
     private Uri getImageUri(File image) {
-        return FileProvider.getUriForFile(getContext(), getString(R.string.file_provider), image);
+        return FileProvider.getUriForFile(getContext(), getString(R.string.file_provider_authority),
+                image);
     }
 
     @Override
