@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.widget.AppCompatRadioButton;
+import android.util.TypedValue;
 import android.widget.CompoundButton;
 
 import com.arellomobile.mvp.presenter.InjectPresenter;
@@ -59,7 +60,7 @@ public class SettingsActivity extends BaseActivity implements SettingsView {
     @Override
     protected void onResume() {
         super.onResume();
-        settingsPresenter.onResume(this);
+        setCheckedCurrentTheme();
     }
 
     @Override
@@ -78,5 +79,16 @@ public class SettingsActivity extends BaseActivity implements SettingsView {
                 .addNextIntent(new Intent(this, MainActivity.class))
                 .addNextIntent(this.getIntent())
                 .startActivities();
+    }
+
+    private void setCheckedCurrentTheme() {
+        TypedValue themeAttributeValue = new TypedValue();
+        getTheme().resolveAttribute(R.attr.themeName, themeAttributeValue, true);
+        if (themeAttributeValue.string.equals(getString(R.string.theme_name_standard))) {
+            setCheckedStandardTheme();
+        }
+        else if (themeAttributeValue.string.equals(getString(R.string.theme_name_dark))) {
+            setCheckedDarkTheme();
+        }
     }
 }
