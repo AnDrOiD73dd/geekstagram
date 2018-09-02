@@ -31,7 +31,7 @@ import ru.android73.geekstagram.ui.presentation.view.GeneralView;
 public class GeneralFragment extends MvpAppCompatFragment implements GeneralView,
         ImageAdapter.OnItemClickListener {
 
-    private static final int COLUMN_COUNT = 2;
+    private static final int COLUMN_COUNT = 3;
     public static final int REQUEST_IMAGE_CAPTURE = 1000;
 
     @InjectPresenter
