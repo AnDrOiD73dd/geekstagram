@@ -12,6 +12,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +32,7 @@ import ru.android73.geekstagram.ui.presentation.view.GeneralView;
 public class GeneralFragment extends MvpAppCompatFragment implements GeneralView,
         ImageAdapter.OnItemClickListener {
 
-    private static final int COLUMN_COUNT = 3;
+    private static final int IMAGE_WIDTH = 180;
     public static final int REQUEST_IMAGE_CAPTURE = 1000;
 
     @InjectPresenter
@@ -71,11 +72,17 @@ public class GeneralFragment extends MvpAppCompatFragment implements GeneralView
         recyclerView = layout.findViewById(R.id.rv_images_list);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setHasFixedSize(true);
-        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), COLUMN_COUNT);
+        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), calculateColumnsCount());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 
         return layout;
+    }
+
+    private int calculateColumnsCount() {
+        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
+        return (int) (dpWidth / IMAGE_WIDTH);
     }
 
     @Override
