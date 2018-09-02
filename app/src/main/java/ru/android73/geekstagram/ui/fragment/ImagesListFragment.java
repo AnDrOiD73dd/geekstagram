@@ -27,15 +27,15 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import ru.android73.geekstagram.AppApi;
 import ru.android73.geekstagram.R;
 import ru.android73.geekstagram.log.Logger;
 import ru.android73.geekstagram.model.ImageAdapter;
-import ru.android73.geekstagram.model.ImageListItem;
+import ru.android73.geekstagram.model.db.ImageListItem;
 import ru.android73.geekstagram.ui.presentation.presenter.ImagesListPresenter;
 import ru.android73.geekstagram.ui.presentation.view.ImagesListView;
 
@@ -88,7 +88,7 @@ public class ImagesListFragment extends MvpAppCompatFragment implements ImagesLi
             }
         });
 
-        dataSource = new ArrayList<>();
+        dataSource = AppApi.getInstance().getDatabase().geekstagramDao().getAll();
         adapter = new ImageAdapter(dataSource);
         adapter.setOnItemClickListener(this);
 
@@ -184,6 +184,7 @@ public class ImagesListFragment extends MvpAppCompatFragment implements ImagesLi
     @Override
     public void addItemToList(ImageListItem item) {
         if (dataSource.add(item)) {
+            AppApi.getInstance().getDatabase().geekstagramDao().insert(item);
             int position = dataSource.indexOf(item);
             adapter.notifyItemInserted(position);
         }
@@ -213,6 +214,8 @@ public class ImagesListFragment extends MvpAppCompatFragment implements ImagesLi
 
     @Override
     public void removeItem(int adapterPosition) {
+        ImageListItem item = dataSource.get(adapterPosition);
+        AppApi.getInstance().getDatabase().geekstagramDao().delete(item);
         dataSource.remove(adapterPosition);
         adapter.notifyItemRemoved(adapterPosition);
     }
@@ -221,6 +224,7 @@ public class ImagesListFragment extends MvpAppCompatFragment implements ImagesLi
     public void revertItemLike(int adapterPosition) {
         ImageListItem item = dataSource.get(adapterPosition);
         item.setFavorite(!item.isFavorite());
+        AppApi.getInstance().getDatabase().geekstagramDao().update(item);
         adapter.notifyItemChanged(adapterPosition);
     }
 

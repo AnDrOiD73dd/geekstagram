@@ -1,5 +1,6 @@
 package ru.android73.geekstagram.model;
 
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 import java.util.List;
 
 import ru.android73.geekstagram.R;
+import ru.android73.geekstagram.model.db.ImageListItem;
 
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> {
 
@@ -105,7 +107,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
         }
 
         private void setupViewData(ImageListItem item) {
-            ivImageContainer.setImageURI(item.getImageUri());
+            ivImageContainer.setImageURI(Uri.parse(item.getImageUri()));
             if (item.isFavorite()) {
                 ivFavorite.setImageDrawable(ivFavorite.getContext().getResources()
                         .getDrawable(R.drawable.ic_favorite_24dp_vector));

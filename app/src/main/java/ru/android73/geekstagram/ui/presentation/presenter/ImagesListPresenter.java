@@ -6,14 +6,14 @@ import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 
 import ru.android73.geekstagram.R;
-import ru.android73.geekstagram.model.ImageListItem;
+import ru.android73.geekstagram.model.db.ImageListItem;
 import ru.android73.geekstagram.ui.presentation.view.ImagesListView;
 
 @InjectViewState
 public class ImagesListPresenter extends MvpPresenter<ImagesListView> {
 
     public void onTakePhotoSuccess(String lastPhotoPath) {
-        getViewState().addItemToList(new ImageListItem(Uri.parse(lastPhotoPath), false));
+        getViewState().addItemToList(new ImageListItem(lastPhotoPath, false));
         getViewState().showInfo(R.string.notification_image_added_text);
     }
 
@@ -30,6 +30,7 @@ public class ImagesListPresenter extends MvpPresenter<ImagesListView> {
 
     public void onDeleteConfirmed(int adapterPosition) {
         getViewState().removeItem(adapterPosition);
+        getViewState().showInfo(R.string.notification_image_deleted_text);
     }
 
     public void onDeleteCanceled() {
