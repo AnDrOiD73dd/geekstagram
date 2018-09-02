@@ -50,7 +50,6 @@ public class GeneralPresenter extends MvpPresenter<GeneralView> {
     public void handleActivityResult(Context context, int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             getViewState().addItemToList(new ImageListItem(Uri.parse(lastPhotoPath), false));
-            getViewState().notifyDataChanged();
             getViewState().showInfo(R.string.notification_image_added_text);
         }
     }
@@ -73,7 +72,6 @@ public class GeneralPresenter extends MvpPresenter<GeneralView> {
 
     public void onLikeClick(View v, int adapterPosition) {
         getViewState().revertItemLike(adapterPosition);
-        getViewState().notifyDataChanged();
     }
 
     public void onImageLongClick(int adapterPosition) {
@@ -82,10 +80,13 @@ public class GeneralPresenter extends MvpPresenter<GeneralView> {
 
     public void onDeleteConfirmed(int adapterPosition) {
         getViewState().removeItem(adapterPosition);
-        getViewState().notifyDataChanged();
     }
 
     public void onDeleteCanceled() {
 
+    }
+
+    public void onDeleteClick(int adapterPosition) {
+        getViewState().showDeleteConfirmationDialog(adapterPosition);
     }
 }

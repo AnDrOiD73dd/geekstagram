@@ -42,6 +42,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
         void onImageClick(View v, int adapterPosition);
         void onImageLongClick(View v, int adapterPosition);
         void onLikeClick(View v, int adapterPosition);
+        void onDeleteClick(int adapterPosition);
     }
 
     public void setOnItemClickListener(OnItemClickListener itemClickListener){
@@ -52,6 +53,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
 
         private ImageView ivImageContainer;
         private ImageView ivFavorite;
+        private ImageView ivDelete;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -84,6 +86,15 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
                     }
                 }
             });
+            ivDelete = itemView.findViewById(R.id.iv_delete);
+            ivDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (itemClickListener != null) {
+                        itemClickListener.onDeleteClick(getAdapterPosition());
+                    }
+                }
+            });
         }
 
         void bind(int position) {
@@ -103,6 +114,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
                 ivFavorite.setImageDrawable(ivFavorite.getContext().getResources()
                         .getDrawable(R.drawable.ic_favorite_filled_with_border_vector));
             }
+            ivDelete.setImageResource(R.drawable.ic_delete_filled_with_border_24dp_vector);
         }
     }
 }

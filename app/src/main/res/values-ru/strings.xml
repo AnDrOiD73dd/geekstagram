@@ -18,4 +18,5 @@
     <string name="dialog_delete_item_message">Вы действительно хотите удалить фотографию?</string>
     <string name="yes">Да</string>
     <string name="cancel">Отмена</string>
+    <string name="image_delete_content_description">Кнопка удаления</string>
 </resources>

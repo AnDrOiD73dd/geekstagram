@@ -112,6 +112,11 @@ public class GeneralFragment extends MvpAppCompatFragment implements GeneralView
     }
 
     @Override
+    public void onDeleteClick(int adapterPosition) {
+        generalPresenter.onDeleteClick(adapterPosition);
+    }
+
+    @Override
     public void showInfo(int resourceId) {
         Snackbar.make(coordinatorLayout, resourceId, Snackbar.LENGTH_LONG).show();
     }
@@ -128,7 +133,10 @@ public class GeneralFragment extends MvpAppCompatFragment implements GeneralView
 
     @Override
     public void addItemToList(ImageListItem item) {
-        dataSource.add(item);
+        if (dataSource.add(item)) {
+            int position = dataSource.indexOf(item);
+            adapter.notifyItemInserted(position);
+        }
     }
 
     @Override
@@ -157,12 +165,14 @@ public class GeneralFragment extends MvpAppCompatFragment implements GeneralView
     @Override
     public void removeItem(int adapterPosition) {
         dataSource.remove(adapterPosition);
+        adapter.notifyItemRemoved(adapterPosition);
     }
 
     @Override
     public void revertItemLike(int adapterPosition) {
         ImageListItem item = dataSource.get(adapterPosition);
         item.setFavorite(!item.isFavorite());
+        adapter.notifyItemChanged(adapterPosition);
     }
 
     @Override
