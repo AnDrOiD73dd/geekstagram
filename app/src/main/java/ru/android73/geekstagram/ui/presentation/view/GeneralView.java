@@ -22,6 +22,7 @@ public interface GeneralView extends MvpView {
 
     void notifyDataChanged();
 
+    @StateStrategyType(SkipStrategy.class)
     void showDeleteConfirmationDialog(int adapterPosition);
 
     void removeItem(int adapterPosition);
