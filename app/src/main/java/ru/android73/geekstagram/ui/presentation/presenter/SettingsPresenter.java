@@ -21,10 +21,10 @@ public class SettingsPresenter extends MvpPresenter<SettingsView> {
         }
         PreferenceSettingsRepository preferences = new PreferenceSettingsRepository();
         if (newThemeId == R.style.DefaultTheme) {
-            preferences.saveTheme(context, AppTheme.BLUE.name());
+            preferences.saveTheme(context, AppTheme.BLUE);
         }
         else if (newThemeId == R.style.DarkTheme) {
-            preferences.saveTheme(context, AppTheme.GRAY.name());
+            preferences.saveTheme(context, AppTheme.GRAY);
         }
         else {
             // TODO write warning to logcat

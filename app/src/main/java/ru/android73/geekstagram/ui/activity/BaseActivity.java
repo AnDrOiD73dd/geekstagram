@@ -19,11 +19,11 @@ public class BaseActivity extends MvpAppCompatActivity {
 
     private int getUserTheme() {
         SettingsRepository preferences = new PreferenceSettingsRepository();
-        String themeName = preferences.getTheme(this);
-        if (themeName.equals(AppTheme.BLUE.name())) {
+        AppTheme themeName = preferences.getTheme(this);
+        if (themeName.equals(AppTheme.BLUE)) {
             return R.style.DefaultTheme;
         }
-        else if (themeName.equals(AppTheme.GRAY.name())) {
+        else if (themeName.equals(AppTheme.GRAY)) {
             return R.style.DarkTheme;
         }
         else {
