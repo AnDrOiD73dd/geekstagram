@@ -184,6 +184,7 @@ public class ImagesListFragment extends MvpAppCompatFragment implements ImagesLi
     @Override
     public void addItemToList(ImageListItem item) {
         if (dataSource.add(item)) {
+            // TODO move work with DB
             AppApi.getInstance().getDatabase().geekstagramDao().insert(item);
             int position = dataSource.indexOf(item);
             adapter.notifyItemInserted(position);
@@ -215,7 +216,11 @@ public class ImagesListFragment extends MvpAppCompatFragment implements ImagesLi
     @Override
     public void removeItem(int adapterPosition) {
         ImageListItem item = dataSource.get(adapterPosition);
+        //TODO move work with DB and files
         AppApi.getInstance().getDatabase().geekstagramDao().delete(item);
+        File file = new File(item.getImageUri());
+        // TODO handle result
+        file.delete();
         dataSource.remove(adapterPosition);
         adapter.notifyItemRemoved(adapterPosition);
     }
@@ -224,6 +229,7 @@ public class ImagesListFragment extends MvpAppCompatFragment implements ImagesLi
     public void revertItemLike(int adapterPosition) {
         ImageListItem item = dataSource.get(adapterPosition);
         item.setFavorite(!item.isFavorite());
+        // TODO move work with DB
         AppApi.getInstance().getDatabase().geekstagramDao().update(item);
         adapter.notifyItemChanged(adapterPosition);
     }
