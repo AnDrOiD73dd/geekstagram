@@ -37,11 +37,22 @@ public class MainActivity extends BaseActivity implements MainView,
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        if (savedInstanceState == null) {
+            NavigationView navigationView = findViewById(R.id.nav_view);
+            navigationView.setNavigationItemSelectedListener(this);
 
-        MvpAppCompatFragment fragment = GeneralFragment.newInstance();
-        getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, fragment).commit();
+            MvpAppCompatFragment fragment = GeneralFragment.newInstance();
+            getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, fragment).commit();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @Override

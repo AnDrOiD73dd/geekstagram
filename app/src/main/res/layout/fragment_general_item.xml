@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/card_view"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_gravity="center"
     android:layout_margin="5dp"
     android:elevation="@dimen/elevation_4dp"
     card_view:cardCornerRadius="@dimen/list_item_card_corner_radius">
@@ -18,18 +15,19 @@
 
         <ImageView
             android:id="@+id/iv_image_container"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="240dp"
+            android:layout_height="240dp"
+            android:layout_gravity="center_horizontal"
             android:contentDescription="@string/image_content_description"
             />
 
         <ImageView
             android:id="@+id/iv_favorite"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_8dp"
+            android:layout_gravity="center_horizontal"
             android:contentDescription="@string/image_favorite_content_description"
-            app:srcCompat="@drawable/ic_favorite_border_24dp_vector"
             />
 
     </LinearLayout>
