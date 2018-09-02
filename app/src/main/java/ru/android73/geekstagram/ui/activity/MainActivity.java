@@ -13,6 +13,7 @@ import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import ru.android73.geekstagram.R;
+import ru.android73.geekstagram.log.Logger;
 import ru.android73.geekstagram.ui.fragment.GeneralFragment;
 import ru.android73.geekstagram.ui.presentation.presenter.MainPresenter;
 import ru.android73.geekstagram.ui.presentation.view.MainView;
@@ -37,10 +38,10 @@ public class MainActivity extends BaseActivity implements MainView,
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
-        if (savedInstanceState == null) {
-            NavigationView navigationView = findViewById(R.id.nav_view);
-            navigationView.setNavigationItemSelectedListener(this);
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
 
+        if (savedInstanceState == null) {
             MvpAppCompatFragment fragment = GeneralFragment.newInstance();
             getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, fragment).commit();
         }
