@@ -96,7 +96,7 @@ public class ImagesListFragment extends MvpAppCompatFragment implements ImagesLi
 
     @Override
     public void onImageClick(View v, int adapterPosition) {
-        imagesListPresenter.onImageClick(v, adapterPosition);
+        imagesListPresenter.onImageClick(adapterPosition);
     }
 
     @Override
@@ -106,7 +106,7 @@ public class ImagesListFragment extends MvpAppCompatFragment implements ImagesLi
 
     @Override
     public void onLikeClick(View v, int adapterPosition) {
-        imagesListPresenter.onLikeClick(v, adapterPosition);
+        imagesListPresenter.onLikeClick(adapterPosition);
     }
 
     @Override

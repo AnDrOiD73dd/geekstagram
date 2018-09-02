@@ -61,10 +61,10 @@ public class ImagesListPresenter extends MvpPresenter<ImagesListView> {
         return image;
     }
 
-    public void onImageClick(View v, int adapterPosition) {
+    public void onImageClick(int adapterPosition) {
     }
 
-    public void onLikeClick(View v, int adapterPosition) {
+    public void onLikeClick(int adapterPosition) {
         getViewState().revertItemLike(adapterPosition);
     }
 
