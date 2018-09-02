@@ -3,8 +3,6 @@ package ru.android73.geekstagram.common;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import ru.android73.geekstagram.R;
-
 public class PreferenceSettingsRepository implements SettingsRepository {
 
     protected static final String KEY_APP_THEME = "db2414d0-7131-4bb2-bcb0-032ec8d7ae40";
@@ -20,6 +18,6 @@ public class PreferenceSettingsRepository implements SettingsRepository {
     public AppTheme getTheme(Context context) {
         SharedPreferences prefs = PrefUtils.getPrefs(context);
         String themeName = prefs.getString(KEY_APP_THEME, AppTheme.BLUE.name());
-        return AppTheme.toEnum(themeName);
+        return AppThemeMapper.toEnumValue(themeName);
     }
 }
