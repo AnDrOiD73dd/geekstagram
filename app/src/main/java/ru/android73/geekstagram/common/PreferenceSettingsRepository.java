@@ -7,7 +7,7 @@ import ru.android73.geekstagram.R;
 
 public class PreferenceSettingsRepository implements SettingsRepository {
 
-    protected static final String KEY_APP_THEME = "kat";
+    protected static final String KEY_APP_THEME = "db2414d0-7131-4bb2-bcb0-032ec8d7ae40";
 
     @Override
     public void saveTheme(Context context, String themeName) {
