@@ -2,4 +2,5 @@
 <resources>
     <string name="theme_name_standard">standard theme</string>
     <string name="theme_name_dark">dark theme</string>
+    <string name="file_provider">ru.android73.geekstagram.photoprovider</string>
 </resources>

@@ -22,7 +22,7 @@
 
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="ru.android73.geekstagram.photoprovider"
+            android:authorities="@string/file_provider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
