@@ -5,10 +5,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
@@ -21,10 +24,16 @@ import android.view.ViewGroup;
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import ru.android73.geekstagram.R;
+import ru.android73.geekstagram.log.Logger;
 import ru.android73.geekstagram.model.ImageAdapter;
 import ru.android73.geekstagram.model.ImageListItem;
 import ru.android73.geekstagram.ui.presentation.presenter.ImagesListPresenter;
@@ -35,8 +44,11 @@ import static android.app.Activity.RESULT_OK;
 public class ImagesListFragment extends MvpAppCompatFragment implements ImagesListView,
         ImageAdapter.OnItemClickListener {
 
+    private static final int REQUEST_IMAGE_CAPTURE = 1000;
     private static final int IMAGE_WIDTH = 180;
-    public static final int REQUEST_IMAGE_CAPTURE = 1000;
+    private static final String IMAGE_SUFFIX = ".jpg";
+    private static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd-HH-mm-ss";
+    private static final String KEY_PHOTO_PATH = "97c75611-71b0-49a7-9be3-aa0ad1adc655";
 
     @InjectPresenter
     ImagesListPresenter imagesListPresenter;
@@ -46,6 +58,7 @@ public class ImagesListFragment extends MvpAppCompatFragment implements ImagesLi
     protected RecyclerView recyclerView;
     protected ImageAdapter adapter;
     protected List<ImageListItem> dataSource;
+    protected String lastPhotoPath;
 
     public static ImagesListFragment newInstance() {
         ImagesListFragment fragment = new ImagesListFragment();
@@ -64,7 +77,14 @@ public class ImagesListFragment extends MvpAppCompatFragment implements ImagesLi
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                imagesListPresenter.onFabClick(getActivity());
+                File imageFile = createImageFile();
+                if (imageFile == null) {
+                    imagesListPresenter.onCreateFileError();
+                    return;
+                }
+                Uri imageUri = getImageUri(imageFile);
+                lastPhotoPath = imageFile.getAbsolutePath();
+                imagesListPresenter.onCreateFileSuccess(imageUri);
             }
         });
 
@@ -86,6 +106,38 @@ public class ImagesListFragment extends MvpAppCompatFragment implements ImagesLi
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
         float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
         return (int) (dpWidth / IMAGE_WIDTH);
+    }
+
+    private File createImageFile() {
+        String timeStamp = new SimpleDateFormat(DEFAULT_DATE_FORMAT,
+                Locale.getDefault()).format(new Date());
+        File storageDir = getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = null;
+        try {
+            image = File.createTempFile(timeStamp, IMAGE_SUFFIX, storageDir);
+        } catch (IOException e) {
+            Logger.e(e);
+        }
+        return image;
+    }
+
+    private Uri getImageUri(File image) {
+        return FileProvider.getUriForFile(getContext(),
+                getActivity().getPackageName() + ".photoprovider", image);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(KEY_PHOTO_PATH, lastPhotoPath);
+    }
+
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        if (savedInstanceState != null && savedInstanceState.containsKey(KEY_PHOTO_PATH)) {
+            lastPhotoPath = savedInstanceState.getString(KEY_PHOTO_PATH);
+        }
     }
 
     @Override
@@ -176,7 +228,7 @@ public class ImagesListFragment extends MvpAppCompatFragment implements ImagesLi
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            imagesListPresenter.onTakePhotoSuccess();
+            imagesListPresenter.onTakePhotoSuccess(lastPhotoPath);
         }
     }
 }
