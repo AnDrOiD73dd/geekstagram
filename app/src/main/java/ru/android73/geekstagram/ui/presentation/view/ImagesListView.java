@@ -10,7 +10,7 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 
 import ru.android73.geekstagram.model.ImageListItem;
 
-public interface GeneralView extends MvpView {
+public interface ImagesListView extends MvpView {
 
     @StateStrategyType(AddToEndSingleStrategy.class)
     void showInfo(@StringRes int resId);

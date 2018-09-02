@@ -13,8 +13,7 @@ import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import ru.android73.geekstagram.R;
-import ru.android73.geekstagram.log.Logger;
-import ru.android73.geekstagram.ui.fragment.GeneralFragment;
+import ru.android73.geekstagram.ui.fragment.ImagesListFragment;
 import ru.android73.geekstagram.ui.presentation.presenter.MainPresenter;
 import ru.android73.geekstagram.ui.presentation.view.MainView;
 
@@ -42,7 +41,7 @@ public class MainActivity extends BaseActivity implements MainView,
         navigationView.setNavigationItemSelectedListener(this);
 
         if (savedInstanceState == null) {
-            MvpAppCompatFragment fragment = GeneralFragment.newInstance();
+            MvpAppCompatFragment fragment = ImagesListFragment.newInstance();
             getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, fragment).commit();
         }
     }

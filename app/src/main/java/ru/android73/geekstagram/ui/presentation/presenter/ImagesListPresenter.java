@@ -19,13 +19,13 @@ import java.util.Locale;
 import ru.android73.geekstagram.R;
 import ru.android73.geekstagram.log.Logger;
 import ru.android73.geekstagram.model.ImageListItem;
-import ru.android73.geekstagram.ui.presentation.view.GeneralView;
+import ru.android73.geekstagram.ui.presentation.view.ImagesListView;
 
 import static android.app.Activity.RESULT_OK;
-import static ru.android73.geekstagram.ui.fragment.GeneralFragment.REQUEST_IMAGE_CAPTURE;
+import static ru.android73.geekstagram.ui.fragment.ImagesListFragment.REQUEST_IMAGE_CAPTURE;
 
 @InjectViewState
-public class GeneralPresenter extends MvpPresenter<GeneralView> {
+public class ImagesListPresenter extends MvpPresenter<ImagesListView> {
 
     private static final String IMAGE_SUFFIX = ".jpg";
     protected String lastPhotoPath;

@@ -26,17 +26,17 @@ import java.util.List;
 import ru.android73.geekstagram.R;
 import ru.android73.geekstagram.model.ImageAdapter;
 import ru.android73.geekstagram.model.ImageListItem;
-import ru.android73.geekstagram.ui.presentation.presenter.GeneralPresenter;
-import ru.android73.geekstagram.ui.presentation.view.GeneralView;
+import ru.android73.geekstagram.ui.presentation.presenter.ImagesListPresenter;
+import ru.android73.geekstagram.ui.presentation.view.ImagesListView;
 
-public class GeneralFragment extends MvpAppCompatFragment implements GeneralView,
+public class ImagesListFragment extends MvpAppCompatFragment implements ImagesListView,
         ImageAdapter.OnItemClickListener {
 
     private static final int IMAGE_WIDTH = 180;
     public static final int REQUEST_IMAGE_CAPTURE = 1000;
 
     @InjectPresenter
-    GeneralPresenter generalPresenter;
+    ImagesListPresenter imagesListPresenter;
 
     protected FloatingActionButton floatingActionButton;
     protected CoordinatorLayout coordinatorLayout;
@@ -44,8 +44,8 @@ public class GeneralFragment extends MvpAppCompatFragment implements GeneralView
     protected ImageAdapter adapter;
     protected List<ImageListItem> dataSource;
 
-    public static GeneralFragment newInstance() {
-        GeneralFragment fragment = new GeneralFragment();
+    public static ImagesListFragment newInstance() {
+        ImagesListFragment fragment = new ImagesListFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -61,7 +61,7 @@ public class GeneralFragment extends MvpAppCompatFragment implements GeneralView
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                generalPresenter.onFabClick(getActivity());
+                imagesListPresenter.onFabClick(getActivity());
             }
         });
 
@@ -98,22 +98,22 @@ public class GeneralFragment extends MvpAppCompatFragment implements GeneralView
 
     @Override
     public void onImageClick(View v, int adapterPosition) {
-        generalPresenter.onImageClick(v, adapterPosition);
+        imagesListPresenter.onImageClick(v, adapterPosition);
     }
 
     @Override
     public void onImageLongClick(View v, int adapterPosition) {
-        generalPresenter.onImageLongClick(adapterPosition);
+        imagesListPresenter.onImageLongClick(adapterPosition);
     }
 
     @Override
     public void onLikeClick(View v, int adapterPosition) {
-        generalPresenter.onLikeClick(v, adapterPosition);
+        imagesListPresenter.onLikeClick(v, adapterPosition);
     }
 
     @Override
     public void onDeleteClick(int adapterPosition) {
-        generalPresenter.onDeleteClick(adapterPosition);
+        imagesListPresenter.onDeleteClick(adapterPosition);
     }
 
     @Override
@@ -150,12 +150,12 @@ public class GeneralFragment extends MvpAppCompatFragment implements GeneralView
         builder.setMessage(R.string.dialog_delete_item_message)
                 .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                generalPresenter.onDeleteConfirmed(adapterPosition);
+                imagesListPresenter.onDeleteConfirmed(adapterPosition);
             }
         })
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                generalPresenter.onDeleteCanceled();
+                imagesListPresenter.onDeleteCanceled();
             }
         });
         AlertDialog dialog = builder.create();
@@ -178,6 +178,6 @@ public class GeneralFragment extends MvpAppCompatFragment implements GeneralView
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        generalPresenter.handleActivityResult(getActivity(), requestCode, resultCode, data);
+        imagesListPresenter.handleActivityResult(getActivity(), requestCode, resultCode, data);
     }
 }
