@@ -1,5 +1,6 @@
 package ru.android73.geekstagram.ui.fragment;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -28,6 +29,8 @@ import ru.android73.geekstagram.model.ImageAdapter;
 import ru.android73.geekstagram.model.ImageListItem;
 import ru.android73.geekstagram.ui.presentation.presenter.ImagesListPresenter;
 import ru.android73.geekstagram.ui.presentation.view.ImagesListView;
+
+import static android.app.Activity.RESULT_OK;
 
 public class ImagesListFragment extends MvpAppCompatFragment implements ImagesListView,
         ImageAdapter.OnItemClickListener {
@@ -92,11 +95,6 @@ public class ImagesListFragment extends MvpAppCompatFragment implements ImagesLi
     }
 
     @Override
-    public void onViewCreated(final View view, final Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-    }
-
-    @Override
     public void onImageClick(View v, int adapterPosition) {
         imagesListPresenter.onImageClick(v, adapterPosition);
     }
@@ -140,13 +138,12 @@ public class ImagesListFragment extends MvpAppCompatFragment implements ImagesLi
     }
 
     @Override
-    public void notifyDataChanged() {
-        adapter.notifyDataSetChanged();
-    }
-
-    @Override
     public void showDeleteConfirmationDialog(final int adapterPosition) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        Activity activity = getActivity();
+        if (activity == null) {
+            return;
+        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setMessage(R.string.dialog_delete_item_message)
                 .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
@@ -178,6 +175,8 @@ public class ImagesListFragment extends MvpAppCompatFragment implements ImagesLi
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        imagesListPresenter.handleActivityResult(getActivity(), requestCode, resultCode, data);
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            imagesListPresenter.onTakePhotoSuccess();
+        }
     }
 }

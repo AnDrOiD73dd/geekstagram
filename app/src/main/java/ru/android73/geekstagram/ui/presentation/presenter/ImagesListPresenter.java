@@ -1,7 +1,6 @@
 package ru.android73.geekstagram.ui.presentation.presenter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.v4.content.FileProvider;
@@ -20,9 +19,6 @@ import ru.android73.geekstagram.R;
 import ru.android73.geekstagram.log.Logger;
 import ru.android73.geekstagram.model.ImageListItem;
 import ru.android73.geekstagram.ui.presentation.view.ImagesListView;
-
-import static android.app.Activity.RESULT_OK;
-import static ru.android73.geekstagram.ui.fragment.ImagesListFragment.REQUEST_IMAGE_CAPTURE;
 
 @InjectViewState
 public class ImagesListPresenter extends MvpPresenter<ImagesListView> {
@@ -47,11 +43,9 @@ public class ImagesListPresenter extends MvpPresenter<ImagesListView> {
                 context.getPackageName() + ".photoprovider", image);
     }
 
-    public void handleActivityResult(Context context, int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            getViewState().addItemToList(new ImageListItem(Uri.parse(lastPhotoPath), false));
-            getViewState().showInfo(R.string.notification_image_added_text);
-        }
+    public void onTakePhotoSuccess() {
+        getViewState().addItemToList(new ImageListItem(Uri.parse(lastPhotoPath), false));
+        getViewState().showInfo(R.string.notification_image_added_text);
     }
 
     private File createImageFile(Context context) {

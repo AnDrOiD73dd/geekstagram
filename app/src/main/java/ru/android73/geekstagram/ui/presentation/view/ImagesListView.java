@@ -20,8 +20,6 @@ public interface ImagesListView extends MvpView {
 
     void addItemToList(ImageListItem item);
 
-    void notifyDataChanged();
-
     @StateStrategyType(SkipStrategy.class)
     void showDeleteConfirmationDialog(int adapterPosition);
 
