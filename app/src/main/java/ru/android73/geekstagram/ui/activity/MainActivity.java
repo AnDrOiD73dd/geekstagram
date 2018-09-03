@@ -45,6 +45,7 @@ public class MainActivity extends BaseActivity implements MainView,
             MvpAppCompatFragment fragment = ImagesListFragment.newInstance();
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.fragment_container, fragment, ImagesListFragment.TAG)
+                    .addToBackStack(ImagesListFragment.TAG)
                     .commit();
         }
     }
@@ -87,6 +88,7 @@ public class MainActivity extends BaseActivity implements MainView,
         MvpAppCompatFragment fragment = ViewerFragment.newInstance(imageUri);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, fragment, ViewerFragment.TAG)
+                .addToBackStack(ViewerFragment.TAG)
                 .commit();
     }
 }
