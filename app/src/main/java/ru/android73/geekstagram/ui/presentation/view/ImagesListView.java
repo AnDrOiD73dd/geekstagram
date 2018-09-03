@@ -30,5 +30,6 @@ public interface ImagesListView extends MvpView {
     @StateStrategyType(OneExecutionStateStrategy.class)
     void revertItemLike(int adapterPosition);
 
+    @StateStrategyType(SkipStrategy.class)
     void showImageViewer(int adapterPosition);
 }
