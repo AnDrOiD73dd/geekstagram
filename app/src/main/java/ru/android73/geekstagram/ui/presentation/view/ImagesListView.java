@@ -4,7 +4,6 @@ import android.net.Uri;
 import android.support.annotation.StringRes;
 
 import com.arellomobile.mvp.MvpView;
-import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy;
 import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy;
 import com.arellomobile.mvp.viewstate.strategy.SkipStrategy;
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
@@ -30,4 +29,6 @@ public interface ImagesListView extends MvpView {
 
     @StateStrategyType(OneExecutionStateStrategy.class)
     void revertItemLike(int adapterPosition);
+
+    void showImageViewer(int adapterPosition);
 }

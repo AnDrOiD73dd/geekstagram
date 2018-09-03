@@ -18,6 +18,7 @@ public class ImagesListPresenter extends MvpPresenter<ImagesListView> {
     }
 
     public void onImageClick(int adapterPosition) {
+        getViewState().showImageViewer(adapterPosition);
     }
 
     public void onLikeClick(int adapterPosition) {
