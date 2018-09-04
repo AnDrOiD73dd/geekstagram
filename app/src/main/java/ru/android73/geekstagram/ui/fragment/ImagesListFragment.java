@@ -46,9 +46,9 @@ public class ImagesListFragment extends MvpAppCompatFragment implements ImagesLi
 
     private static final int REQUEST_IMAGE_CAPTURE = 1000;
     private static final int IMAGE_WIDTH = 180;
-    private static final String IMAGE_SUFFIX = ".jpg";
-    private static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd-HH-mm-ss";
     private static final String KEY_PHOTO_PATH = "97c75611-71b0-49a7-9be3-aa0ad1adc655";
+    private static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd-HH-mm-ss";
+    private static final String IMAGE_SUFFIX = ".jpg";
 
     @InjectPresenter
     ImagesListPresenter imagesListPresenter;
@@ -77,14 +77,7 @@ public class ImagesListFragment extends MvpAppCompatFragment implements ImagesLi
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                File imageFile = createImageFile();
-                if (imageFile == null) {
-                    imagesListPresenter.onCreateFileError();
-                    return;
-                }
-                Uri imageUri = getImageUri(imageFile);
-                lastPhotoPath = imageFile.getAbsolutePath();
-                imagesListPresenter.onCreateFileSuccess(imageUri);
+                imagesListPresenter.onAddPhotoClick();
             }
         });
 
@@ -108,17 +101,20 @@ public class ImagesListFragment extends MvpAppCompatFragment implements ImagesLi
         return (int) (dpWidth / IMAGE_WIDTH);
     }
 
-    private File createImageFile() {
+    @Override
+    public void createImageFile() {
         String timeStamp = new SimpleDateFormat(DEFAULT_DATE_FORMAT,
                 Locale.getDefault()).format(new Date());
         File storageDir = getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = null;
+        File image;
         try {
             image = File.createTempFile(timeStamp, IMAGE_SUFFIX, storageDir);
         } catch (IOException e) {
             Logger.e(e);
+            imagesListPresenter.onFileCreatedFail();
+            return;
         }
-        return image;
+        imagesListPresenter.onFileCreatedSuccess(image);
     }
 
     private Uri getImageUri(File image) {
@@ -169,6 +165,13 @@ public class ImagesListFragment extends MvpAppCompatFragment implements ImagesLi
     @Override
     public void showInfo(int resourceId) {
         Snackbar.make(coordinatorLayout, resourceId, Snackbar.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void openCamera(File imageFile) {
+        Uri imageUri = getImageUri(imageFile);
+        lastPhotoPath = imageFile.getAbsolutePath();
+        openCamera(imageUri);
     }
 
     @Override

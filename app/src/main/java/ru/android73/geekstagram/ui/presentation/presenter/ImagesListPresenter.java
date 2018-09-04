@@ -5,6 +5,8 @@ import android.net.Uri;
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 
+import java.io.File;
+
 import ru.android73.geekstagram.R;
 import ru.android73.geekstagram.model.db.ImageListItem;
 import ru.android73.geekstagram.ui.presentation.view.ImagesListView;
@@ -41,11 +43,15 @@ public class ImagesListPresenter extends MvpPresenter<ImagesListView> {
         getViewState().showDeleteConfirmationDialog(adapterPosition);
     }
 
-    public void onCreateFileError() {
+    public void onAddPhotoClick() {
+        getViewState().createImageFile();
+    }
+
+    public void onFileCreatedFail() {
         getViewState().showInfo(R.string.notification_can_not_create_file);
     }
 
-    public void onCreateFileSuccess(Uri imageUri) {
-        getViewState().openCamera(imageUri);
+    public void onFileCreatedSuccess(File imageFile) {
+        getViewState().openCamera(imageFile);
     }
 }
