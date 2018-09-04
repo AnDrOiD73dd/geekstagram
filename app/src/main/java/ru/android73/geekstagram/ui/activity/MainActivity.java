@@ -14,11 +14,12 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import ru.android73.geekstagram.R;
 import ru.android73.geekstagram.ui.fragment.ImagesListFragment;
+import ru.android73.geekstagram.ui.fragment.ViewerFragment;
 import ru.android73.geekstagram.ui.presentation.presenter.MainPresenter;
 import ru.android73.geekstagram.ui.presentation.view.MainView;
 
 public class MainActivity extends BaseActivity implements MainView,
-        NavigationView.OnNavigationItemSelectedListener {
+        NavigationView.OnNavigationItemSelectedListener, ImagesListFragment.OnFragmentInteractionListener {
 
     @InjectPresenter
     MainPresenter mainPresenter;
@@ -42,7 +43,10 @@ public class MainActivity extends BaseActivity implements MainView,
 
         if (savedInstanceState == null) {
             MvpAppCompatFragment fragment = ImagesListFragment.newInstance();
-            getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, fragment).commit();
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.fragment_container, fragment, ImagesListFragment.TAG)
+                    .addToBackStack(ImagesListFragment.TAG)
+                    .commit();
         }
     }
 
@@ -73,5 +77,18 @@ public class MainActivity extends BaseActivity implements MainView,
         }
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onItemClicked(String imageUri) {
+        showViewerFragment(imageUri);
+    }
+
+    private void showViewerFragment(String imageUri) {
+        MvpAppCompatFragment fragment = ViewerFragment.newInstance(imageUri);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, fragment, ViewerFragment.TAG)
+                .addToBackStack(ViewerFragment.TAG)
+                .commit();
     }
 }

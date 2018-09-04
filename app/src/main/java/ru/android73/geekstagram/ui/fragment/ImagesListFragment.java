@@ -1,6 +1,7 @@
 package ru.android73.geekstagram.ui.fragment;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -36,6 +37,7 @@ import static android.app.Activity.RESULT_OK;
 public class ImagesListFragment extends MvpAppCompatFragment implements ImagesListView,
         ImageAdapter.OnItemClickListener {
 
+    public static final String TAG = "ImagesListFragment";
     private static final int REQUEST_IMAGE_CAPTURE = 1000;
     private static final int IMAGE_WIDTH = 180;
 
@@ -47,6 +49,7 @@ public class ImagesListFragment extends MvpAppCompatFragment implements ImagesLi
     protected RecyclerView recyclerView;
     protected ImageAdapter adapter;
     protected List<ImageListItem> dataSource;
+    private OnFragmentInteractionListener listener;
 
     public static ImagesListFragment newInstance() {
         ImagesListFragment fragment = new ImagesListFragment();
@@ -87,6 +90,17 @@ public class ImagesListFragment extends MvpAppCompatFragment implements ImagesLi
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
         float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
         return (int) (dpWidth / IMAGE_WIDTH);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnFragmentInteractionListener) {
+            listener = (OnFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
     }
 
     @Override
@@ -184,10 +198,19 @@ public class ImagesListFragment extends MvpAppCompatFragment implements ImagesLi
     }
 
     @Override
+    public void showImageViewer(int adapterPosition) {
+        listener.onItemClicked(dataSource.get(adapterPosition).getImageUri());
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             imagesListPresenter.onTakePhotoSuccess();
         }
+    }
+
+    public interface OnFragmentInteractionListener {
+        void onItemClicked(String imageUri);
     }
 }
