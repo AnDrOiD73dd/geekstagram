@@ -10,5 +10,6 @@ public class GeekstagramApp extends Application {
         super.onCreate();
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
         AppApi.getInstance().initDb(getApplicationContext());
+        AppApi.getInstance().initFileManager(getApplicationContext());
     }
 }
