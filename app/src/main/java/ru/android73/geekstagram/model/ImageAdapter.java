@@ -58,14 +58,14 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        private ImageView ivImageContainer;
-        private ImageView ivFavorite;
-        private ImageView ivDelete;
+        private ImageView imageContainer;
+        private ImageView favoriteIcon;
+        private ImageView deleteIcon;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            ivImageContainer = itemView.findViewById(R.id.iv_image_container);
-            ivImageContainer.setOnClickListener(new View.OnClickListener() {
+            imageContainer = itemView.findViewById(R.id.iv_image_container);
+            imageContainer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (itemClickListener != null) {
@@ -73,7 +73,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
                     }
                 }
             });
-            ivImageContainer.setOnLongClickListener(new View.OnLongClickListener() {
+            imageContainer.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
                     if (itemClickListener != null) {
@@ -84,8 +84,8 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
                 }
             });
 
-            ivFavorite = itemView.findViewById(R.id.iv_favorite);
-            ivFavorite.setOnClickListener(new View.OnClickListener() {
+            favoriteIcon = itemView.findViewById(R.id.iv_favorite);
+            favoriteIcon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (itemClickListener != null) {
@@ -93,8 +93,8 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
                     }
                 }
             });
-            ivDelete = itemView.findViewById(R.id.iv_delete);
-            ivDelete.setOnClickListener(new View.OnClickListener() {
+            deleteIcon = itemView.findViewById(R.id.iv_delete);
+            deleteIcon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (itemClickListener != null) {
@@ -119,7 +119,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
                     .centerCrop()
                     .placeholder(R.drawable.ic_image_24dp_vector)
                     .error(R.drawable.ic_report_problem_24dp_vector)
-                    .into(ivImageContainer, new Callback() {
+                    .into(imageContainer, new Callback() {
                         @Override
                         public void onSuccess() {
                         }
@@ -130,14 +130,14 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
                         }
                     });
             if (item.isFavorite()) {
-                ivFavorite.setImageDrawable(ivFavorite.getContext().getResources()
+                favoriteIcon.setImageDrawable(favoriteIcon.getContext().getResources()
                         .getDrawable(R.drawable.ic_favorite_24dp_vector));
             }
             else {
-                ivFavorite.setImageDrawable(ivFavorite.getContext().getResources()
+                favoriteIcon.setImageDrawable(favoriteIcon.getContext().getResources()
                         .getDrawable(R.drawable.ic_favorite_filled_with_border_vector));
             }
-            ivDelete.setImageResource(R.drawable.ic_delete_filled_with_border_24dp_vector);
+            deleteIcon.setImageResource(R.drawable.ic_delete_filled_with_border_24dp_vector);
         }
     }
 }

@@ -27,7 +27,7 @@ public class ViewerFragment extends MvpAppCompatFragment implements ViewerView {
     protected ImageView imageView;
 
     @InjectPresenter
-    ViewerPresenter mViewerPresenter;
+    ViewerPresenter viewerPresenter;
 
     public static ViewerFragment newInstance(String imageUri) {
         ViewerFragment fragment = new ViewerFragment();
