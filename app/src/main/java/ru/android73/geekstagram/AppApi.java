@@ -9,7 +9,7 @@ import ru.android73.geekstagram.model.db.GeekstagramDatabase;
 public class AppApi {
     private static final String DATABASE_NAME = "GeekstagramDatabase";
 
-    private static AppApi instance;
+    private static volatile AppApi instance;
     private GeekstagramDatabase database;
     private FileManager fileManager;
 
@@ -28,7 +28,7 @@ public class AppApi {
 
     public void initDb(Context context) {
         database =  Room.databaseBuilder(context, GeekstagramDatabase.class, DATABASE_NAME)
-                .allowMainThreadQueries()
+                .allowMainThreadQueries()  //TODO delete it
                 .build();
     }
 

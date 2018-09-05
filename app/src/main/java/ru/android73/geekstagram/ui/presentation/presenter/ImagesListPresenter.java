@@ -1,7 +1,5 @@
 package ru.android73.geekstagram.ui.presentation.presenter;
 
-import android.net.Uri;
-
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 
@@ -54,7 +52,7 @@ public class ImagesListPresenter extends MvpPresenter<ImagesListView> {
         }
         else {
             lastPhotoPath = imageFile.getAbsolutePath();
-            Uri imageUri = AppApi.getInstance().getFileManager().getPhotoImageUri(imageFile);
+            String imageUri = AppApi.getInstance().getFileManager().getPhotoImageUri(imageFile).toString();
             getViewState().openCamera(imageUri);
         }
     }

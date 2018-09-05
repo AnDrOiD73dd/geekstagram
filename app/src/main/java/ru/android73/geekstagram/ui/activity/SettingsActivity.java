@@ -18,8 +18,8 @@ public class SettingsActivity extends BaseActivity implements SettingsView {
 
     @InjectPresenter
     SettingsPresenter settingsPresenter;
-    private AppCompatRadioButton rbThemeDark;
-    private AppCompatRadioButton rbThemeStandard;
+    private AppCompatRadioButton themeDarkRadioButton;
+    private AppCompatRadioButton themeStandardRadioButton;
     private CompoundButton.OnCheckedChangeListener themeChooserListener;
 
     public static Intent getIntent(final Context context) {
@@ -30,8 +30,8 @@ public class SettingsActivity extends BaseActivity implements SettingsView {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-        rbThemeStandard = findViewById(R.id.rb_theme_standard);
-        rbThemeDark = findViewById(R.id.rb_theme_dark);
+        themeStandardRadioButton = findViewById(R.id.rb_theme_standard);
+        themeDarkRadioButton = findViewById(R.id.rb_theme_dark);
         themeChooserListener = new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -53,8 +53,8 @@ public class SettingsActivity extends BaseActivity implements SettingsView {
                 }
             }
         };
-        rbThemeStandard.setOnCheckedChangeListener(themeChooserListener);
-        rbThemeDark.setOnCheckedChangeListener(themeChooserListener);
+        themeStandardRadioButton.setOnCheckedChangeListener(themeChooserListener);
+        themeDarkRadioButton.setOnCheckedChangeListener(themeChooserListener);
     }
 
     @Override
@@ -65,12 +65,12 @@ public class SettingsActivity extends BaseActivity implements SettingsView {
 
     @Override
     public void setCheckedStandardTheme() {
-        rbThemeStandard.setChecked(true);
+        themeStandardRadioButton.setChecked(true);
     }
 
     @Override
     public void setCheckedDarkTheme() {
-        rbThemeDark.setChecked(true);
+        themeDarkRadioButton.setChecked(true);
     }
 
     @Override

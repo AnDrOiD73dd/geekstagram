@@ -135,10 +135,11 @@ public class ImagesListFragment extends MvpAppCompatFragment implements ImagesLi
     }
 
     @Override
-    public void openCamera(Uri imageUri) {
+    public void openCamera(String imagePath) {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // TODO check NPE
         if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+            Uri imageUri = Uri.parse(imagePath);
             takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
         }
@@ -181,7 +182,7 @@ public class ImagesListFragment extends MvpAppCompatFragment implements ImagesLi
         ImageListItem item = dataSource.get(adapterPosition);
         //TODO move work with DB and files
         AppApi.getInstance().getDatabase().geekstagramDao().delete(item);
-        File file = new File(item.getImageUri());
+        File file = new File(item.getImagePath());
         // TODO handle result
         file.delete();
         dataSource.remove(adapterPosition);
@@ -199,7 +200,7 @@ public class ImagesListFragment extends MvpAppCompatFragment implements ImagesLi
 
     @Override
     public void showImageViewer(int adapterPosition) {
-        listener.onItemClicked(dataSource.get(adapterPosition).getImageUri());
+        listener.onItemClicked(dataSource.get(adapterPosition).getImagePath());
     }
 
     @Override
