@@ -112,7 +112,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
         }
 
         private void setupViewData(ImageListItem item) {
-            File file = new File(item.getImageUri());
+            File file = new File(item.getImagePath());
             Picasso.get()
                     .load(file)
                     .resize(PREVIEW_SIZE,PREVIEW_SIZE)
@@ -126,7 +126,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
 
                         @Override
                         public void onError(Exception e) {
-                            Logger.e(e.getLocalizedMessage());
+                            Logger.e("Error loading image: %s", e.getMessage());
                         }
                     });
             if (item.isFavorite()) {

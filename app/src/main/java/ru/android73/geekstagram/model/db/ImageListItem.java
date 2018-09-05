@@ -12,22 +12,22 @@ public class ImageListItem {
     @PrimaryKey
     @NonNull
     @ColumnInfo(name = "image_uri")
-    private String imageUri;
+    private String imagePath;
     @ColumnInfo(name = "favorite")
     private boolean favorite;
 
-    public ImageListItem(@NonNull String  imageUri, boolean favorite) {
-        this.imageUri = imageUri;
+    public ImageListItem(@NonNull String  imagePath, boolean favorite) {
+        this.imagePath = imagePath;
         this.favorite = favorite;
     }
 
     @NonNull
-    public String getImageUri() {
-        return imageUri;
+    public String getImagePath() {
+        return imagePath;
     }
 
-    public void setImageUri(@NonNull String imageUri) {
-        this.imageUri = imageUri;
+    public void setImagePath(@NonNull String imageUri) {
+        this.imagePath = imageUri;
     }
 
     public boolean isFavorite() {
