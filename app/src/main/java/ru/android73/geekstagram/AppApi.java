@@ -9,7 +9,7 @@ import ru.android73.geekstagram.model.db.GeekstagramDatabase;
 public class AppApi {
     private static final String DATABASE_NAME = "GeekstagramDatabase";
 
-    private static AppApi instance;
+    private static volatile AppApi instance;
     private GeekstagramDatabase database;
     private FileManager fileManager;
 
