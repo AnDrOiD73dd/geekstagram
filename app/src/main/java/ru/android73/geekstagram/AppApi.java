@@ -28,7 +28,7 @@ public class AppApi {
 
     public void initDb(Context context) {
         database =  Room.databaseBuilder(context, GeekstagramDatabase.class, DATABASE_NAME)
-                .allowMainThreadQueries()
+                .allowMainThreadQueries()  //TODO delete it
                 .build();
     }
 
