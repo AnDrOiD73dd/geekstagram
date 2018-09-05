@@ -135,10 +135,11 @@ public class ImagesListFragment extends MvpAppCompatFragment implements ImagesLi
     }
 
     @Override
-    public void openCamera(Uri imageUri) {
+    public void openCamera(String imagePath) {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // TODO check NPE
         if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+            Uri imageUri = Uri.parse(imagePath);
             takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
         }
