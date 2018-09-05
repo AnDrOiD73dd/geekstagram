@@ -1,5 +1,7 @@
 package ru.android73.geekstagram.ui.fragment;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -12,6 +14,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,32 +22,37 @@ import android.view.ViewGroup;
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
-import java.util.ArrayList;
+import java.io.File;
 import java.util.List;
 
+import ru.android73.geekstagram.AppApi;
 import ru.android73.geekstagram.R;
 import ru.android73.geekstagram.model.ImageAdapter;
-import ru.android73.geekstagram.model.ImageListItem;
-import ru.android73.geekstagram.ui.presentation.presenter.GeneralPresenter;
-import ru.android73.geekstagram.ui.presentation.view.GeneralView;
+import ru.android73.geekstagram.model.db.ImageListItem;
+import ru.android73.geekstagram.ui.presentation.presenter.ImagesListPresenter;
+import ru.android73.geekstagram.ui.presentation.view.ImagesListView;
 
-public class GeneralFragment extends MvpAppCompatFragment implements GeneralView,
+import static android.app.Activity.RESULT_OK;
+
+public class ImagesListFragment extends MvpAppCompatFragment implements ImagesListView,
         ImageAdapter.OnItemClickListener {
 
-    private static final int COLUMN_COUNT = 2;
-    public static final int REQUEST_IMAGE_CAPTURE = 1000;
+    public static final String TAG = "ImagesListFragment";
+    private static final int REQUEST_IMAGE_CAPTURE = 1000;
+    private static final int IMAGE_WIDTH = 180;
 
     @InjectPresenter
-    GeneralPresenter generalPresenter;
+    ImagesListPresenter imagesListPresenter;
 
     protected FloatingActionButton floatingActionButton;
     protected CoordinatorLayout coordinatorLayout;
     protected RecyclerView recyclerView;
     protected ImageAdapter adapter;
     protected List<ImageListItem> dataSource;
+    private OnFragmentInteractionListener listener;
 
-    public static GeneralFragment newInstance() {
-        GeneralFragment fragment = new GeneralFragment();
+    public static ImagesListFragment newInstance() {
+        ImagesListFragment fragment = new ImagesListFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -60,22 +68,39 @@ public class GeneralFragment extends MvpAppCompatFragment implements GeneralView
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                generalPresenter.onFabClick(getActivity());
+                imagesListPresenter.onAddPhotoClick();
             }
         });
 
-        dataSource = new ArrayList<>();
+        dataSource = AppApi.getInstance().getDatabase().geekstagramDao().getAll();
         adapter = new ImageAdapter(dataSource);
         adapter.setOnItemClickListener(this);
 
         recyclerView = layout.findViewById(R.id.rv_images_list);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setHasFixedSize(true);
-        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), COLUMN_COUNT);
+        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), calculateColumnsCount());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 
         return layout;
+    }
+
+    private int calculateColumnsCount() {
+        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
+        return (int) (dpWidth / IMAGE_WIDTH);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnFragmentInteractionListener) {
+            listener = (OnFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
     }
 
     @Override
@@ -85,23 +110,23 @@ public class GeneralFragment extends MvpAppCompatFragment implements GeneralView
     }
 
     @Override
-    public void onViewCreated(final View view, final Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-    }
-
-    @Override
     public void onImageClick(View v, int adapterPosition) {
-        generalPresenter.onImageClick(v, adapterPosition);
+        imagesListPresenter.onImageClick(adapterPosition);
     }
 
     @Override
     public void onImageLongClick(View v, int adapterPosition) {
-        generalPresenter.onImageLongClick(adapterPosition);
+        imagesListPresenter.onImageLongClick(adapterPosition);
     }
 
     @Override
     public void onLikeClick(View v, int adapterPosition) {
-        generalPresenter.onLikeClick(v, adapterPosition);
+        imagesListPresenter.onLikeClick(adapterPosition);
+    }
+
+    @Override
+    public void onDeleteClick(int adapterPosition) {
+        imagesListPresenter.onDeleteClick(adapterPosition);
     }
 
     @Override
@@ -121,26 +146,30 @@ public class GeneralFragment extends MvpAppCompatFragment implements GeneralView
 
     @Override
     public void addItemToList(ImageListItem item) {
-        dataSource.add(item);
-    }
-
-    @Override
-    public void notifyDataChanged() {
-        adapter.notifyDataSetChanged();
+        if (dataSource.add(item)) {
+            // TODO move work with DB
+            AppApi.getInstance().getDatabase().geekstagramDao().insert(item);
+            int position = dataSource.indexOf(item);
+            adapter.notifyItemInserted(position);
+        }
     }
 
     @Override
     public void showDeleteConfirmationDialog(final int adapterPosition) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        Activity activity = getActivity();
+        if (activity == null) {
+            return;
+        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setMessage(R.string.dialog_delete_item_message)
                 .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                generalPresenter.onDeleteConfirmed(adapterPosition);
+                imagesListPresenter.onDeleteConfirmed(adapterPosition);
             }
         })
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                generalPresenter.onDeleteCanceled();
+                imagesListPresenter.onDeleteCanceled();
             }
         });
         AlertDialog dialog = builder.create();
@@ -149,18 +178,39 @@ public class GeneralFragment extends MvpAppCompatFragment implements GeneralView
 
     @Override
     public void removeItem(int adapterPosition) {
+        ImageListItem item = dataSource.get(adapterPosition);
+        //TODO move work with DB and files
+        AppApi.getInstance().getDatabase().geekstagramDao().delete(item);
+        File file = new File(item.getImageUri());
+        // TODO handle result
+        file.delete();
         dataSource.remove(adapterPosition);
+        adapter.notifyItemRemoved(adapterPosition);
     }
 
     @Override
     public void revertItemLike(int adapterPosition) {
         ImageListItem item = dataSource.get(adapterPosition);
         item.setFavorite(!item.isFavorite());
+        // TODO move work with DB
+        AppApi.getInstance().getDatabase().geekstagramDao().update(item);
+        adapter.notifyItemChanged(adapterPosition);
+    }
+
+    @Override
+    public void showImageViewer(int adapterPosition) {
+        listener.onItemClicked(dataSource.get(adapterPosition).getImageUri());
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        generalPresenter.handleActivityResult(getActivity(), requestCode, resultCode, data);
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            imagesListPresenter.onTakePhotoSuccess();
+        }
+    }
+
+    public interface OnFragmentInteractionListener {
+        void onItemClicked(String imageUri);
     }
 }

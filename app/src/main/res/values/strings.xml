@@ -17,12 +17,14 @@
     <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
 
     <string name="notification_image_added_text">Image successfully added</string>
+    <string name="notification_image_deleted_text">Image successfully deleted</string>
     <string name="notification_can_not_open_camera">Can not open camera</string>
     <string name="notification_can_not_create_file">Can not create file</string>
     <string name="image_content_description">Your image</string>
     <string name="image_favorite_content_description">Select as favorite</string>
     <string name="scroll_aware_fab_behavior">ru.android73.geekstagram.common.ScrollAwareFabBehavior</string>
-    <string name="dialog_delete_item_message">Do you really want to delete photo?</string>
+    <string name="dialog_delete_item_message">Do you really want to delete this photo?</string>
     <string name="yes">Yes</string>
     <string name="cancel">Cancel</string>
+    <string name="image_delete_content_description">Delete button</string>
 </resources>

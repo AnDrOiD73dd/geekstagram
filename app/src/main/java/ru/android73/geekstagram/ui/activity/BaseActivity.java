@@ -2,14 +2,19 @@ package ru.android73.geekstagram.ui.activity;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
 
-import ru.android73.geekstagram.R;
 import ru.android73.geekstagram.common.AppTheme;
+import ru.android73.geekstagram.common.AppThemeMapper;
 import ru.android73.geekstagram.common.PreferenceSettingsRepository;
 import ru.android73.geekstagram.common.SettingsRepository;
 
 public class BaseActivity extends MvpAppCompatActivity {
 
+    private final AppThemeMapper themeMapper;
     protected int currentThemeId;
+
+    public BaseActivity() {
+        themeMapper = new AppThemeMapper();
+    }
 
     @Override
     public void setTheme(int resid) {
@@ -18,16 +23,8 @@ public class BaseActivity extends MvpAppCompatActivity {
     }
 
     private int getUserTheme() {
-        SettingsRepository preferences = new PreferenceSettingsRepository();
-        String themeName = preferences.getTheme(this);
-        if (themeName.equals(AppTheme.BLUE.name())) {
-            return R.style.DefaultTheme;
-        }
-        else if (themeName.equals(AppTheme.GRAY.name())) {
-            return R.style.DarkTheme;
-        }
-        else {
-            return -1;
-        }
+        SettingsRepository preferences = new PreferenceSettingsRepository(new AppThemeMapper());
+        AppTheme themeName = preferences.getTheme(this);
+        return themeMapper.toResourceId(themeName);
     }
 }

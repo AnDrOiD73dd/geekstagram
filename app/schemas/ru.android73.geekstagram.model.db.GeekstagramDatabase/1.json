@@ -1,0 +1,48 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "c1392a8d646316eea8af27f3d842cf95",
+    "entities": [
+      {
+        "tableName": "ImageListItem",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`image_uri` TEXT NOT NULL, `favorite` INTEGER NOT NULL, PRIMARY KEY(`image_uri`))",
+        "fields": [
+          {
+            "fieldPath": "imageUri",
+            "columnName": "image_uri",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "favorite",
+            "columnName": "favorite",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "image_uri"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [
+          {
+            "name": "index_ImageListItem_image_uri",
+            "unique": true,
+            "columnNames": [
+              "image_uri"
+            ],
+            "createSql": "CREATE UNIQUE INDEX `index_ImageListItem_image_uri` ON `${TABLE_NAME}` (`image_uri`)"
+          }
+        ],
+        "foreignKeys": []
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"c1392a8d646316eea8af27f3d842cf95\")"
+    ]
+  }
+}
