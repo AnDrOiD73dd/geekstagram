@@ -27,4 +27,6 @@
     <string name="yes">Yes</string>
     <string name="cancel">Cancel</string>
     <string name="image_delete_content_description">Delete button</string>
+    <string name="tab_name_home">Home</string>
+    <string name="tab_name_favorite">Favorite</string>
 </resources>
