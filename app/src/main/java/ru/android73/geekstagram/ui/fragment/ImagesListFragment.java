@@ -21,12 +21,14 @@ import android.view.ViewGroup;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.arellomobile.mvp.presenter.ProvidePresenter;
 
 import java.io.File;
 import java.util.List;
 
 import ru.android73.geekstagram.AppApi;
 import ru.android73.geekstagram.R;
+import ru.android73.geekstagram.common.FileManagerImpl;
 import ru.android73.geekstagram.model.ImageAdapter;
 import ru.android73.geekstagram.model.db.ImageListItem;
 import ru.android73.geekstagram.ui.presentation.presenter.ImagesListPresenter;
@@ -56,6 +58,11 @@ public class ImagesListFragment extends MvpAppCompatFragment implements ImagesLi
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @ProvidePresenter
+    ImagesListPresenter provideImagesListPresenter() {
+        return new ImagesListPresenter(new FileManagerImpl(getContext().getApplicationContext()));
     }
 
     @Override
