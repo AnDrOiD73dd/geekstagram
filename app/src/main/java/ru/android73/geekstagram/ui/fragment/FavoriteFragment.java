@@ -44,10 +44,7 @@ public class FavoriteFragment extends MvpAppCompatFragment implements FavoriteVi
         fragmentManager = getChildFragmentManager();
 
         if (fragmentManager.findFragmentByTag(ImageListDbFragment.TAG) == null) {
-            fragmentManager
-                    .beginTransaction()
-                    .add(R.id.container_frame, ImageListDbFragment.newInstance(), ImageListDbFragment.TAG)
-                    .commit();
+            replaceChildFragment(ImageListDbFragment.newInstance(), ImageListDbFragment.TAG);
         }
 
         BottomNavigationView bottomNavigationView = layout.findViewById(R.id.bottom_navigation_view);
@@ -62,19 +59,13 @@ public class FavoriteFragment extends MvpAppCompatFragment implements FavoriteVi
                                 if (fragment == null) {
                                     fragment = ImageListDbFragment.newInstance();
                                 }
-                                fragmentManager.beginTransaction()
-                                        .replace(R.id.container_frame, fragment, ImageListDbFragment.TAG)
-                                        .commit();
+                                replaceChildFragment(fragment, ImageListDbFragment.TAG);
                                 return true;
                             case R.id.action_network:
-                                fragmentManager.beginTransaction()
-                                        .replace(R.id.container_frame, ImageListNetworkFragment.newInstance(), ImageListNetworkFragment.TAG)
-                                        .commit();
+                                replaceChildFragment(ImageListNetworkFragment.newInstance(), ImageListNetworkFragment.TAG);
                                 return true;
                             case R.id.action_aggregate:
-                                fragmentManager.beginTransaction()
-                                        .replace(R.id.container_frame, ImagesListFragment.newInstance(), ImagesListFragment.TAG)
-                                        .commit();
+                                replaceChildFragment(ImagesListFragment.newInstance(), ImagesListFragment.TAG);
                                 return true;
                         }
                         return false;
@@ -86,6 +77,12 @@ public class FavoriteFragment extends MvpAppCompatFragment implements FavoriteVi
     @Override
     public void onViewCreated(final View view, final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+    }
 
+    private void replaceChildFragment(Fragment fragment, String fragmentTag) {
+        fragmentManager
+                .beginTransaction()
+                .replace(R.id.container_frame, fragment, fragmentTag)
+                .commit();
     }
 }
