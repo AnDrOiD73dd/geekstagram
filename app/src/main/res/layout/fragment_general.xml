@@ -14,7 +14,8 @@
         android:layout_height="match_parent"
         android:padding="@dimen/content_padding"
         android:scrollbars="vertical"
-        android:clipToPadding="false"/>
+        android:clipToPadding="false"
+        android:scrollbarStyle="outsideOverlay"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/floating_action_button"
