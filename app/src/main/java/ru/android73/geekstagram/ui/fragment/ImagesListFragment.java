@@ -41,7 +41,7 @@ public class ImagesListFragment extends MvpAppCompatFragment implements ImagesLi
 
     public static final String TAG = "ImagesListFragment";
     private static final int REQUEST_IMAGE_CAPTURE = 1000;
-    private static final int IMAGE_WIDTH = 180;
+    private static final int IMAGE_WIDTH_DP = 180;
 
     @InjectPresenter
     ImagesListPresenter imagesListPresenter;
@@ -96,7 +96,7 @@ public class ImagesListFragment extends MvpAppCompatFragment implements ImagesLi
     private int calculateColumnsCount() {
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
         float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
-        return (int) (dpWidth / IMAGE_WIDTH);
+        return (int) (dpWidth / IMAGE_WIDTH_DP);
     }
 
     @Override
