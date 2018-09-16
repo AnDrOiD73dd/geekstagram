@@ -48,14 +48,6 @@ public class MainActivity extends BaseActivity implements MainView,
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-//        if (savedInstanceState == null) {
-//            MvpAppCompatFragment fragment = ImagesListFragment.newInstance();
-//            getSupportFragmentManager().beginTransaction()
-//                    .add(R.id.fragment_container, fragment, ImagesListFragment.TAG)
-//                    .addToBackStack(ImagesListFragment.TAG)
-//                    .commit();
-//        }
-
         TabFragmentFactory tabFragmentFactory = new TabFragmentFactory(getTabTitles());
         CustomFragmentPagerAdapter customFragmentPagerAdapter
                 = new CustomFragmentPagerAdapter(getSupportFragmentManager(), tabFragmentFactory);
