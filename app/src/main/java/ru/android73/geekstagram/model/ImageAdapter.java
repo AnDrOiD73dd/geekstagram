@@ -131,13 +131,13 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
                     });
             if (item.isFavorite()) {
                 favoriteIcon.setImageDrawable(favoriteIcon.getContext().getResources()
-                        .getDrawable(R.drawable.ic_favorite_24dp_vector));
+                        .getDrawable(R.drawable.ic_favorite_red_24dp_vector));
             }
             else {
                 favoriteIcon.setImageDrawable(favoriteIcon.getContext().getResources()
-                        .getDrawable(R.drawable.ic_favorite_filled_with_border_vector));
+                        .getDrawable(R.drawable.ic_favorite_white_24dp_vector));
             }
-            deleteIcon.setImageResource(R.drawable.ic_delete_filled_with_border_24dp_vector);
+            deleteIcon.setImageResource(R.drawable.ic_delete_filled_24dp_vector);
         }
     }
 }
