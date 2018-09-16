@@ -4,33 +4,21 @@
     android:layout_height="wrap_content"
     android:layout_width="wrap_content">
     <item
-        android:id="@+id/action_home"
+        android:id="@+id/action_database"
         android:enabled="true"
-        android:icon="@drawable/ic_home_24dp_vector"
-        android:title="@string/text_home"
+        android:icon="@drawable/ic_sd_storage_24dp_vector"
+        android:title="@string/navigation_menu_text_database"
         app:showAsAction="ifRoom" />
     <item
-        android:id="@+id/action_add"
+        android:id="@+id/action_network"
         android:enabled="true"
-        android:icon="@drawable/ic_add_circle_outline_24dp_vector"
-        android:title="@string/text_add"
+        android:icon="@drawable/ic_cloud_download_24dp_vector"
+        android:title="@string/navigation_menu_text_network"
         app:showAsAction="ifRoom" />
     <item
-        android:id="@+id/action_chat"
+        android:id="@+id/action_aggregate"
         android:enabled="true"
-        android:icon="@drawable/ic_message_24dp_vector"
-        android:title="@string/text_chat"
-        app:showAsAction="ifRoom" />
-    <item
-        android:id="@+id/action_profile"
-        android:enabled="true"
-        android:icon="@drawable/ic_person_24dp_vector"
-        android:title="@string/text_profile"
-        app:showAsAction="ifRoom" />
-    <item
-        android:id="@+id/action_menu"
-        android:enabled="true"
-        android:icon="@drawable/ic_menu_24dp_vector"
-        android:title="@string/text_menu"
+        android:icon="@drawable/ic_dashboard_24dp_vector"
+        android:title="@string/navigation_menu_text_aggregate"
         app:showAsAction="ifRoom" />
 </menu>

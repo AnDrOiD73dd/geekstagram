@@ -3,7 +3,9 @@ package ru.android73.geekstagram.ui.activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
@@ -13,7 +15,9 @@ import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import ru.android73.geekstagram.R;
+import ru.android73.geekstagram.ui.fragment.CustomFragmentPagerAdapter;
 import ru.android73.geekstagram.ui.fragment.ImagesListFragment;
+import ru.android73.geekstagram.ui.fragment.TabFragmentFactory;
 import ru.android73.geekstagram.ui.fragment.ViewerFragment;
 import ru.android73.geekstagram.ui.presentation.presenter.MainPresenter;
 import ru.android73.geekstagram.ui.presentation.view.MainView;
@@ -25,11 +29,14 @@ public class MainActivity extends BaseActivity implements MainView,
     MainPresenter mainPresenter;
 
     private DrawerLayout drawerLayout;
+    private ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);Toolbar toolbar = findViewById(R.id.toolbar);
+        setContentView(R.layout.activity_main);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         drawerLayout = findViewById(R.id.activity_main_drawer);
@@ -41,13 +48,18 @@ public class MainActivity extends BaseActivity implements MainView,
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        if (savedInstanceState == null) {
-            MvpAppCompatFragment fragment = ImagesListFragment.newInstance();
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.fragment_container, fragment, ImagesListFragment.TAG)
-                    .addToBackStack(ImagesListFragment.TAG)
-                    .commit();
-        }
+        TabFragmentFactory tabFragmentFactory = new TabFragmentFactory(getTabTitles());
+        CustomFragmentPagerAdapter customFragmentPagerAdapter
+                = new CustomFragmentPagerAdapter(getSupportFragmentManager(), tabFragmentFactory);
+        // Set up the ViewPager with the sections adapter.
+        viewPager = findViewById(R.id.view_pager_container);
+        viewPager.setAdapter(customFragmentPagerAdapter);
+
+        TabLayout tabLayout = findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(viewPager);
+
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
     }
 
     @Override
@@ -90,5 +102,11 @@ public class MainActivity extends BaseActivity implements MainView,
                 .replace(R.id.fragment_container, fragment, ViewerFragment.TAG)
                 .addToBackStack(ViewerFragment.TAG)
                 .commit();
+    }
+
+    private String[] getTabTitles() {
+        String homeTab = getResources().getString(R.string.tab_name_home);
+        String favoriteTab = getResources().getString(R.string.tab_name_favorite);
+        return new String[] {homeTab, favoriteTab};
     }
 }
