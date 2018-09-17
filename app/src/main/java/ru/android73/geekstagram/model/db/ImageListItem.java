@@ -6,6 +6,8 @@ import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
+import java.util.Objects;
+
 @Entity(indices = {@Index(value = {"image_uri"}, unique = true)})
 public class ImageListItem {
 
@@ -36,5 +38,19 @@ public class ImageListItem {
 
     public void setFavorite(boolean favorite) {
         this.favorite = favorite;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ImageListItem item = (ImageListItem) o;
+        return favorite == item.favorite &&
+                Objects.equals(imagePath, item.imagePath);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(imagePath, favorite);
     }
 }

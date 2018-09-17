@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import java.io.File;
+import java.util.List;
 
 public interface FileManager {
     File createPhotoFile(@Nullable String dateFormat, @Nullable String fileSuffix);
@@ -14,4 +15,6 @@ public interface FileManager {
     File createTempFile(@NonNull String filePrefix, @NonNull String fileSuffix, @NonNull File directory);
 
     Uri getPhotoImageUri(File imageFile);
+
+    List<String> getStorageFilesList();
 }

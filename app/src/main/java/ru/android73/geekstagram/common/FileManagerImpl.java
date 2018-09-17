@@ -10,7 +10,9 @@ import android.support.v4.content.FileProvider;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import ru.android73.geekstagram.R;
@@ -56,5 +58,17 @@ public class FileManagerImpl implements FileManager {
     public Uri getPhotoImageUri(File imageFile) {
         return FileProvider.getUriForFile(context, context.getString(R.string.file_provider_authority),
                 imageFile);
+    }
+
+    @Override
+    public List<String> getStorageFilesList() {
+        File storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        String[] filesName = storageDir.list();
+        List<String> filesList = new ArrayList<>();
+        for (String fileName : filesName) {
+            File temp = new File(storageDir, fileName);
+            filesList.add(temp.getAbsolutePath());
+        }
+        return filesList;
     }
 }

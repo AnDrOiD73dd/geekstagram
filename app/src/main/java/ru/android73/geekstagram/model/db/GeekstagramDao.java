@@ -15,6 +15,9 @@ public interface GeekstagramDao {
     @Query("SELECT * FROM ImageListItem")
     List<ImageListItem> getAll();
 
+    @Query("SELECT * FROM ImageListItem WHERE image_uri==:imagePath")
+    ImageListItem get(String imagePath);
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(ImageListItem entity);
 
