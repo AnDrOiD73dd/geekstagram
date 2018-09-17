@@ -8,7 +8,7 @@ public interface ImageRepositoryCallback {
 
     void onAdded(ImageListItem item);
 
-    void onUpdated(ImageListItem item);
+    void onUpdated(int i, ImageListItem item);
 
     void onDeleted(int index, ImageListItem item);
 }

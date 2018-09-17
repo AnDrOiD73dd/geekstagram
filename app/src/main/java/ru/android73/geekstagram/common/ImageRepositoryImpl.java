@@ -63,7 +63,7 @@ public class ImageRepositoryImpl implements ImageRepository {
                     AppApi.getInstance().getDatabase().geekstagramDao().delete(item);
                 }
                 for (ImageRepositoryCallback callback : callbackList) {
-                    callback.onUpdated(item);
+                    callback.onUpdated(i, item);
                 }
                 return;
             }
