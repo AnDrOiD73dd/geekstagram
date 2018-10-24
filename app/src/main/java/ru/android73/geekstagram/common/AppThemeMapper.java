@@ -12,7 +12,7 @@ public class AppThemeMapper {
             return R.style.DarkTheme;
         }
         else {
-            return -1;
+            return R.style.DefaultTheme;
         }
 
     }

@@ -7,7 +7,7 @@ import ru.android73.geekstagram.common.AppThemeMapper;
 import ru.android73.geekstagram.common.PreferenceSettingsRepository;
 import ru.android73.geekstagram.common.SettingsRepository;
 
-public class BaseActivity extends MvpAppCompatActivity {
+public abstract class BaseActivity extends MvpAppCompatActivity {
 
     private final AppThemeMapper themeMapper;
     protected int currentThemeId;
@@ -23,7 +23,7 @@ public class BaseActivity extends MvpAppCompatActivity {
     }
 
     private int getUserTheme() {
-        SettingsRepository preferences = new PreferenceSettingsRepository(getApplicationContext(), new AppThemeMapper());
+        SettingsRepository preferences = new PreferenceSettingsRepository(getApplicationContext(), themeMapper);
         AppTheme themeName = preferences.getTheme();
         return themeMapper.toResourceId(themeName);
     }
