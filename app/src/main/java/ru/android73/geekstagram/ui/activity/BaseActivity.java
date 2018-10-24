@@ -23,8 +23,8 @@ public class BaseActivity extends MvpAppCompatActivity {
     }
 
     private int getUserTheme() {
-        SettingsRepository preferences = new PreferenceSettingsRepository(new AppThemeMapper());
-        AppTheme themeName = preferences.getTheme(this);
+        SettingsRepository preferences = new PreferenceSettingsRepository(getApplicationContext(), new AppThemeMapper());
+        AppTheme themeName = preferences.getTheme();
         return themeMapper.toResourceId(themeName);
     }
 }
