@@ -2,8 +2,8 @@ package ru.android73.geekstagram.common.theme;
 
 public class ThemeMapperEnumString {
 
-    private static final String DEFAULT_THEME = "default theme";
-    private static final String GRAY_THEME = "gray theme";
+    private static final String DEFAULT_THEME = "DefaultTheme";
+    private static final String GRAY_THEME = "GrayTheme";
 
     public AppTheme toEnum(String themeName) {
         switch (themeName) {
@@ -17,10 +17,13 @@ public class ThemeMapperEnumString {
     }
 
     public String toString(AppTheme themeName) {
-        if (themeName.equals(AppTheme.GRAY)) {
-            return GRAY_THEME;
-        } else {
-            return DEFAULT_THEME;
+        switch (themeName) {
+            case BLUE:
+                return DEFAULT_THEME;
+            case GRAY:
+                return GRAY_THEME;
+            default:
+                return DEFAULT_THEME;
         }
     }
 }
