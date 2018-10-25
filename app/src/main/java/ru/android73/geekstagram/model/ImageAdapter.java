@@ -20,7 +20,7 @@ import ru.android73.geekstagram.model.db.ImageListItem;
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> {
 
     private static final int PREVIEW_SIZE = 300;
-    private final List<ImageListItem> dataSource;
+    private List<ImageListItem> dataSource;
     private OnItemClickListener itemClickListener;
 
     public ImageAdapter(List<ImageListItem> dataSource) {
@@ -45,11 +45,19 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
         return dataSource.size();
     }
 
+    public void setData(List<ImageListItem> dataSource) {
+        this.dataSource = dataSource;
+    }
+
+    public List<ImageListItem> getData() {
+        return dataSource;
+    }
+
     public interface OnItemClickListener {
         void onImageClick(View v, int adapterPosition);
-        void onImageLongClick(View v, int adapterPosition);
-        void onLikeClick(View v, int adapterPosition);
-        void onDeleteClick(int adapterPosition);
+        void onImageLongClick(View v, ImageListItem imageListItem, int adapterPosition);
+        void onLikeClick(View v, ImageListItem item, int adapterPosition);
+        void onDeleteClick(ImageListItem item, int adapterPosition);
     }
 
     public void setOnItemClickListener(OnItemClickListener itemClickListener){
@@ -77,7 +85,8 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
                 @Override
                 public boolean onLongClick(View v) {
                     if (itemClickListener != null) {
-                        itemClickListener.onImageLongClick(v, getAdapterPosition());
+                        int position = getAdapterPosition();
+                        itemClickListener.onImageLongClick(v, dataSource.get(position), position);
                         return true;
                     }
                     return false;
@@ -89,7 +98,8 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
                 @Override
                 public void onClick(View v) {
                     if (itemClickListener != null) {
-                        itemClickListener.onLikeClick(v, getAdapterPosition());
+                        int position = getAdapterPosition();
+                        itemClickListener.onLikeClick(v, dataSource.get(position), position);
                     }
                 }
             });
@@ -98,7 +108,8 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
                 @Override
                 public void onClick(View v) {
                     if (itemClickListener != null) {
-                        itemClickListener.onDeleteClick(getAdapterPosition());
+                        int position = getAdapterPosition();
+                        itemClickListener.onDeleteClick(dataSource.get(position), position);
                     }
                 }
             });
@@ -131,13 +142,13 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
                     });
             if (item.isFavorite()) {
                 favoriteIcon.setImageDrawable(favoriteIcon.getContext().getResources()
-                        .getDrawable(R.drawable.ic_favorite_24dp_vector));
+                        .getDrawable(R.drawable.ic_favorite_red_24dp_vector));
             }
             else {
                 favoriteIcon.setImageDrawable(favoriteIcon.getContext().getResources()
-                        .getDrawable(R.drawable.ic_favorite_filled_with_border_vector));
+                        .getDrawable(R.drawable.ic_favorite_white_24dp_vector));
             }
-            deleteIcon.setImageResource(R.drawable.ic_delete_filled_with_border_24dp_vector);
+            deleteIcon.setImageResource(R.drawable.ic_delete_filled_24dp_vector);
         }
     }
 }

@@ -65,7 +65,9 @@ public class FavoriteFragment extends MvpAppCompatFragment implements FavoriteVi
                                 replaceChildFragment(ImageListNetworkFragment.newInstance(), ImageListNetworkFragment.TAG);
                                 return true;
                             case R.id.action_aggregate:
-                                replaceChildFragment(ImagesListFragment.newInstance(), ImagesListFragment.TAG);
+                                replaceChildFragment(ImagesListFragment
+                                        .newInstance(ImagesListFragment.MODE_FAVORITE),
+                                        ImagesListFragment.TAG);
                                 return true;
                         }
                         return false;

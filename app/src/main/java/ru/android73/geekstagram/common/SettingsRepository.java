@@ -1,8 +1,9 @@
 package ru.android73.geekstagram.common;
 
-import android.content.Context;
+import ru.android73.geekstagram.common.theme.AppTheme;
 
 public interface SettingsRepository {
-    void saveTheme(Context context, AppTheme appTheme);
-    AppTheme getTheme(Context context);
+    void saveTheme(AppTheme appTheme);
+
+    AppTheme getTheme();
 }

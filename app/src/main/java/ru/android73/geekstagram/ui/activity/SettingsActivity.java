@@ -9,8 +9,12 @@ import android.util.TypedValue;
 import android.widget.CompoundButton;
 
 import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.arellomobile.mvp.presenter.ProvidePresenter;
 
 import ru.android73.geekstagram.R;
+import ru.android73.geekstagram.common.PreferenceSettingsRepository;
+import ru.android73.geekstagram.common.SettingsRepository;
+import ru.android73.geekstagram.common.theme.ThemeMapperEnumString;
 import ru.android73.geekstagram.ui.presentation.presenter.SettingsPresenter;
 import ru.android73.geekstagram.ui.presentation.view.SettingsView;
 
@@ -26,6 +30,13 @@ public class SettingsActivity extends BaseActivity implements SettingsView {
         return new Intent(context, SettingsActivity.class);
     }
 
+    @ProvidePresenter
+    public SettingsPresenter provideSettingsPresenter() {
+        SettingsRepository preferences = new PreferenceSettingsRepository(getApplicationContext(),
+                new ThemeMapperEnumString());
+        return new SettingsPresenter(preferences);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,14 +49,12 @@ public class SettingsActivity extends BaseActivity implements SettingsView {
                 switch (buttonView.getId()) {
                     case R.id.rb_theme_standard:
                         if (isChecked) {
-                            settingsPresenter.onThemeSelected(SettingsActivity.this,
-                                    R.style.DefaultTheme, currentThemeId);
+                            settingsPresenter.onThemeSelected(R.style.DefaultTheme, currentThemeId);
                         }
                         break;
                     case R.id.rb_theme_dark:
                         if (isChecked) {
-                            settingsPresenter.onThemeSelected(SettingsActivity.this,
-                                    R.style.DarkTheme, currentThemeId);
+                            settingsPresenter.onThemeSelected(R.style.DarkTheme, currentThemeId);
                         }
                         break;
                     default:
@@ -86,8 +95,7 @@ public class SettingsActivity extends BaseActivity implements SettingsView {
         getTheme().resolveAttribute(R.attr.themeName, themeAttributeValue, true);
         if (themeAttributeValue.string.equals(getString(R.string.theme_name_standard))) {
             setCheckedStandardTheme();
-        }
-        else if (themeAttributeValue.string.equals(getString(R.string.theme_name_dark))) {
+        } else if (themeAttributeValue.string.equals(getString(R.string.theme_name_dark))) {
             setCheckedDarkTheme();
         }
     }

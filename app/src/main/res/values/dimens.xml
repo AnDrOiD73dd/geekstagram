@@ -10,4 +10,5 @@
     <dimen name="margin_8dp">8dp</dimen>
     <dimen name="image_padding">8dp</dimen>
     <dimen name="image_item_margin">5dp</dimen>
+    <dimen name="image_action_padding">8dp</dimen>
 </resources>
