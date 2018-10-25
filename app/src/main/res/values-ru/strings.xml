@@ -19,4 +19,8 @@
     <string name="navigation_menu_text_database">База данных</string>
     <string name="navigation_menu_text_network">Интернет</string>
     <string name="navigation_menu_text_aggregate">Общие</string>
+    <string name="theme_name_standard">стандартная тема</string>
+    <string name="theme_name_dark">темная тема</string>
+    <string name="image_content_description">Ваше изображение</string>
+    <string name="image_favorite_content_description">Добавить в избранное</string>
 </resources>
