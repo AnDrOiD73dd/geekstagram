@@ -12,9 +12,9 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.arellomobile.mvp.presenter.ProvidePresenter;
 
 import ru.android73.geekstagram.R;
-import ru.android73.geekstagram.common.AppThemeMapper;
 import ru.android73.geekstagram.common.PreferenceSettingsRepository;
 import ru.android73.geekstagram.common.SettingsRepository;
+import ru.android73.geekstagram.common.theme.ThemeMapperEnumString;
 import ru.android73.geekstagram.ui.presentation.presenter.SettingsPresenter;
 import ru.android73.geekstagram.ui.presentation.view.SettingsView;
 
@@ -32,7 +32,8 @@ public class SettingsActivity extends BaseActivity implements SettingsView {
 
     @ProvidePresenter
     public SettingsPresenter provideSettingsPresenter() {
-        SettingsRepository preferences = new PreferenceSettingsRepository(getApplicationContext(), new AppThemeMapper());
+        SettingsRepository preferences = new PreferenceSettingsRepository(getApplicationContext(),
+                new ThemeMapperEnumString());
         return new SettingsPresenter(preferences);
     }
 
@@ -94,8 +95,7 @@ public class SettingsActivity extends BaseActivity implements SettingsView {
         getTheme().resolveAttribute(R.attr.themeName, themeAttributeValue, true);
         if (themeAttributeValue.string.equals(getString(R.string.theme_name_standard))) {
             setCheckedStandardTheme();
-        }
-        else if (themeAttributeValue.string.equals(getString(R.string.theme_name_dark))) {
+        } else if (themeAttributeValue.string.equals(getString(R.string.theme_name_dark))) {
             setCheckedDarkTheme();
         }
     }

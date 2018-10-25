@@ -5,8 +5,8 @@ import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 
 import ru.android73.geekstagram.R;
-import ru.android73.geekstagram.common.AppTheme;
 import ru.android73.geekstagram.common.SettingsRepository;
+import ru.android73.geekstagram.common.theme.AppTheme;
 import ru.android73.geekstagram.log.Logger;
 import ru.android73.geekstagram.ui.presentation.view.SettingsView;
 
