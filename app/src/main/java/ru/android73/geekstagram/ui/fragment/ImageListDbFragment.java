@@ -9,8 +9,8 @@ import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import ru.android73.geekstagram.R;
-import ru.android73.geekstagram.ui.presentation.presenter.ImageListDbPresenter;
-import ru.android73.geekstagram.ui.presentation.view.ImageListDbView;
+import ru.android73.geekstagram.mvp.presentation.presenter.ImageListDbPresenter;
+import ru.android73.geekstagram.mvp.presentation.view.ImageListDbView;
 
 public class ImageListDbFragment extends MvpAppCompatFragment implements ImageListDbView {
 

@@ -2,11 +2,11 @@ package ru.android73.geekstagram.ui.activity;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
 
-import ru.android73.geekstagram.common.PreferenceSettingsRepository;
-import ru.android73.geekstagram.common.SettingsRepository;
-import ru.android73.geekstagram.common.theme.AppTheme;
-import ru.android73.geekstagram.common.theme.ThemeMapperEnumResource;
-import ru.android73.geekstagram.common.theme.ThemeMapperEnumString;
+import ru.android73.geekstagram.mvp.model.repo.PreferenceSettingsRepository;
+import ru.android73.geekstagram.mvp.model.repo.SettingsRepository;
+import ru.android73.geekstagram.mvp.model.theme.AppTheme;
+import ru.android73.geekstagram.mvp.model.theme.ThemeMapperEnumResource;
+import ru.android73.geekstagram.mvp.model.theme.ThemeMapperEnumString;
 
 public abstract class BaseActivity extends MvpAppCompatActivity {
 

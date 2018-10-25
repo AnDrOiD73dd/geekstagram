@@ -14,8 +14,8 @@ import java.io.File;
 
 import ru.android73.geekstagram.R;
 import ru.android73.geekstagram.log.Logger;
-import ru.android73.geekstagram.ui.presentation.presenter.ViewerPresenter;
-import ru.android73.geekstagram.ui.presentation.view.ViewerView;
+import ru.android73.geekstagram.mvp.presentation.presenter.ViewerPresenter;
+import ru.android73.geekstagram.mvp.presentation.view.ViewerView;
 
 
 public class ViewerFragment extends MvpAppCompatFragment implements ViewerView {

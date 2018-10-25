@@ -15,8 +15,8 @@ import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import ru.android73.geekstagram.R;
-import ru.android73.geekstagram.ui.presentation.presenter.FavoritePresenter;
-import ru.android73.geekstagram.ui.presentation.view.FavoriteView;
+import ru.android73.geekstagram.mvp.presentation.presenter.FavoritePresenter;
+import ru.android73.geekstagram.mvp.presentation.view.FavoriteView;
 
 public class FavoriteFragment extends MvpAppCompatFragment implements FavoriteView {
 

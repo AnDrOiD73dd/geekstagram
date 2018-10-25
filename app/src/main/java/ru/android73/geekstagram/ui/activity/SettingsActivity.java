@@ -12,11 +12,11 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.arellomobile.mvp.presenter.ProvidePresenter;
 
 import ru.android73.geekstagram.R;
-import ru.android73.geekstagram.common.PreferenceSettingsRepository;
-import ru.android73.geekstagram.common.SettingsRepository;
-import ru.android73.geekstagram.common.theme.ThemeMapperEnumString;
-import ru.android73.geekstagram.ui.presentation.presenter.SettingsPresenter;
-import ru.android73.geekstagram.ui.presentation.view.SettingsView;
+import ru.android73.geekstagram.mvp.model.repo.PreferenceSettingsRepository;
+import ru.android73.geekstagram.mvp.model.repo.SettingsRepository;
+import ru.android73.geekstagram.mvp.model.theme.ThemeMapperEnumString;
+import ru.android73.geekstagram.mvp.presentation.presenter.SettingsPresenter;
+import ru.android73.geekstagram.mvp.presentation.view.SettingsView;
 
 public class SettingsActivity extends BaseActivity implements SettingsView {
 

@@ -30,12 +30,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ru.android73.geekstagram.R;
-import ru.android73.geekstagram.common.FileManagerImpl;
-import ru.android73.geekstagram.common.ImageRepository;
-import ru.android73.geekstagram.model.ImageAdapter;
-import ru.android73.geekstagram.model.db.ImageListItem;
-import ru.android73.geekstagram.ui.presentation.presenter.ImagesListPresenter;
-import ru.android73.geekstagram.ui.presentation.view.ImagesListView;
+import ru.android73.geekstagram.mvp.model.FileManagerImpl;
+import ru.android73.geekstagram.mvp.model.ImageAdapter;
+import ru.android73.geekstagram.mvp.model.db.ImageListItem;
+import ru.android73.geekstagram.mvp.model.repo.ImageRepository;
+import ru.android73.geekstagram.mvp.presentation.presenter.ImagesListPresenter;
+import ru.android73.geekstagram.mvp.presentation.view.ImagesListView;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -49,12 +49,14 @@ public class ImagesListFragment extends MvpAppCompatFragment implements ImagesLi
     private static final String KEY_MODE = "key mode";
     public static final int MODE_ALL = 0;
     public static final int MODE_FAVORITE = 1;
+
     @IntDef({
-        MODE_ALL,
-        MODE_FAVORITE
+            MODE_ALL,
+            MODE_FAVORITE
     })
     public @interface ImageListMode {
     }
+
     private static final int REQUEST_IMAGE_CAPTURE = 1000;
     private static final int IMAGE_WIDTH_DP = 180;
 

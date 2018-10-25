@@ -3,7 +3,7 @@ package ru.android73.geekstagram;
 import android.arch.persistence.room.Room;
 import android.content.Context;
 
-import ru.android73.geekstagram.model.db.GeekstagramDatabase;
+import ru.android73.geekstagram.mvp.model.db.GeekstagramDatabase;
 
 public class AppApi {
     private static final String DATABASE_NAME = "GeekstagramDatabase";
