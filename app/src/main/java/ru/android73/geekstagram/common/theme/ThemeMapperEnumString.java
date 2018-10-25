@@ -7,10 +7,9 @@ public class ThemeMapperEnumString {
 
     public AppTheme toEnum(String themeName) {
         switch (themeName) {
-            case DEFAULT_THEME:
-                return AppTheme.BLUE;
             case GRAY_THEME:
                 return AppTheme.GRAY;
+            case DEFAULT_THEME:
             default:
                 return AppTheme.BLUE;
         }
@@ -18,10 +17,9 @@ public class ThemeMapperEnumString {
 
     public String toString(AppTheme themeName) {
         switch (themeName) {
-            case BLUE:
-                return DEFAULT_THEME;
             case GRAY:
                 return GRAY_THEME;
+            case BLUE:
             default:
                 return DEFAULT_THEME;
         }

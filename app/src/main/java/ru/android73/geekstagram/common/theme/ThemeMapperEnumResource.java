@@ -6,10 +6,9 @@ public class ThemeMapperEnumResource {
 
     public int toResourceId(AppTheme appTheme) {
         switch (appTheme) {
-            case BLUE:
-                return R.style.DefaultTheme;
             case GRAY:
                 return R.style.DarkTheme;
+            case BLUE:
             default:
                 return R.style.DefaultTheme;
         }
