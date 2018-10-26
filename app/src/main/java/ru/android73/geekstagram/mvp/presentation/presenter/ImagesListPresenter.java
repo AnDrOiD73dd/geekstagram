@@ -1,31 +1,38 @@
 package ru.android73.geekstagram.mvp.presentation.presenter;
 
+import android.annotation.SuppressLint;
+
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 
 import java.io.File;
 
+import io.reactivex.Scheduler;
+import io.reactivex.schedulers.Schedulers;
 import ru.android73.geekstagram.R;
+import ru.android73.geekstagram.log.Logger;
 import ru.android73.geekstagram.mvp.model.FileManager;
+import ru.android73.geekstagram.mvp.model.db.ImageListItem;
 import ru.android73.geekstagram.mvp.model.repo.ImageRepository;
 import ru.android73.geekstagram.mvp.model.repo.ImageRepositoryCallback;
 import ru.android73.geekstagram.mvp.model.repo.ImageRepositoryImpl;
-import ru.android73.geekstagram.mvp.model.db.ImageListItem;
-import ru.android73.geekstagram.ui.fragment.ImagesListFragment;
 import ru.android73.geekstagram.mvp.presentation.view.ImagesListView;
+import ru.android73.geekstagram.ui.fragment.ImagesListFragment;
 
 @InjectViewState
 public class ImagesListPresenter extends MvpPresenter<ImagesListView> {
 
     private final FileManager fileManager;
     private final int mode;
+    private final Scheduler scheduler;
     private String lastPhotoPath;
     private ImageRepository imageRepository;
     private ImageRepositoryCallback imageRepositoryCallback;
 
-    public ImagesListPresenter(@ImagesListFragment.ImageListMode final int mode, FileManager fileManager) {
-        this.fileManager = fileManager;
+    public ImagesListPresenter(@ImagesListFragment.ImageListMode final int mode, FileManager fileManager, Scheduler scheduler) {
         this.mode = mode;
+        this.fileManager = fileManager;
+        this.scheduler = scheduler;
         imageRepository = new ImageRepositoryImpl(fileManager);
         imageRepositoryCallback = new ImageRepositoryCallback() {
             @Override
@@ -56,11 +63,16 @@ public class ImagesListPresenter extends MvpPresenter<ImagesListView> {
         };
     }
 
+    @SuppressLint("CheckResult")
     @Override
     public void attachView(ImagesListView view) {
         super.attachView(view);
         imageRepository.addListener(imageRepositoryCallback);
-        getViewState().loadData(imageRepository);
+        imageRepository.load()
+                .subscribeOn(Schedulers.io())
+                .observeOn(scheduler)
+                .subscribe(() -> imageRepositoryCallback.onLoadComplete(),
+                        throwable -> Logger.e("%s", throwable));
     }
 
     @Override

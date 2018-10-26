@@ -29,11 +29,11 @@ import com.arellomobile.mvp.presenter.ProvidePresenter;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import ru.android73.geekstagram.R;
 import ru.android73.geekstagram.mvp.model.FileManagerImpl;
 import ru.android73.geekstagram.mvp.model.ImageAdapter;
 import ru.android73.geekstagram.mvp.model.db.ImageListItem;
-import ru.android73.geekstagram.mvp.model.repo.ImageRepository;
 import ru.android73.geekstagram.mvp.presentation.presenter.ImagesListPresenter;
 import ru.android73.geekstagram.mvp.presentation.view.ImagesListView;
 
@@ -82,7 +82,9 @@ public class ImagesListFragment extends MvpAppCompatFragment implements ImagesLi
         if (bundle.containsKey(KEY_MODE)) {
             mode = bundle.getInt(KEY_MODE);
         }
-        return new ImagesListPresenter(mode, new FileManagerImpl(getContext().getApplicationContext()));
+        return new ImagesListPresenter(mode,
+                new FileManagerImpl(getContext().getApplicationContext()),
+                AndroidSchedulers.mainThread());
     }
 
     public ImagesListFragment() {
@@ -158,16 +160,6 @@ public class ImagesListFragment extends MvpAppCompatFragment implements ImagesLi
     @Override
     public void onDeleteClick(ImageListItem item, int adapterPosition) {
         imagesListPresenter.onDeleteClick(item, adapterPosition);
-    }
-
-    @Override
-    public void loadData(final ImageRepository imageRepository) {
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                imageRepository.load();
-            }
-        });
     }
 
     @Override

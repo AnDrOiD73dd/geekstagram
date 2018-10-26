@@ -1,31 +1,35 @@
 package ru.android73.geekstagram.mvp.model.repo;
 
+import android.annotation.SuppressLint;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Completable;
+import io.reactivex.schedulers.Schedulers;
 import ru.android73.geekstagram.AppApi;
+import ru.android73.geekstagram.log.Logger;
 import ru.android73.geekstagram.mvp.model.FileManager;
 import ru.android73.geekstagram.mvp.model.db.ImageListItem;
 
 public class ImageRepositoryImpl implements ImageRepository {
 
+    private final AppApi api;
     private List<ImageRepositoryCallback> callbackList;
     private List<ImageListItem> imagesList;
     private FileManager fileManager;
 
     public ImageRepositoryImpl(FileManager fileManager) {
         this.fileManager = fileManager;
+        api = AppApi.getInstance();
         imagesList = new ArrayList<>();
         callbackList = new ArrayList<>();
     }
 
     @Override
-    public void load() {
-        syncData();
-        for (ImageRepositoryCallback callback : callbackList) {
-            callback.onLoadComplete();
-        }
+    public Completable load() {
+        return syncData();
     }
 
     @Override
@@ -41,7 +45,7 @@ public class ImageRepositoryImpl implements ImageRepository {
         int index = imagesList.indexOf(item);
         if (imagesList.remove(item)) {
             if (item.isFavorite()) {
-                AppApi.getInstance().getDatabase().geekstagramDao().delete(item);
+                api.getDatabase().geekstagramDao().delete(item);
             }
             File file = new File(item.getImagePath());
             // TODO handle result
@@ -59,9 +63,9 @@ public class ImageRepositoryImpl implements ImageRepository {
                 imagesList.remove(i);
                 imagesList.add(i, item);
                 if (item.isFavorite()) {
-                    AppApi.getInstance().getDatabase().geekstagramDao().insert(item);
+                    api.getDatabase().geekstagramDao().insert(item);
                 } else {
-                    AppApi.getInstance().getDatabase().geekstagramDao().delete(item);
+                    api.getDatabase().geekstagramDao().delete(item);
                 }
                 for (ImageRepositoryCallback callback : callbackList) {
                     callback.onUpdated(i, item);
@@ -92,23 +96,31 @@ public class ImageRepositoryImpl implements ImageRepository {
         return imagesList.size();
     }
 
-    private void syncData() {
-        List<String> filesPaths = fileManager.getStorageFilesList();
-        List<ImageListItem> favoritesFiles = AppApi.getInstance().getDatabase().geekstagramDao().getAll();
-        imagesList.clear();
-        for (ImageListItem item : favoritesFiles) {
-            if (filesPaths.contains(item.getImagePath())) {
-                imagesList.add(item);
-            } else {
-                AppApi.getInstance().getDatabase().geekstagramDao().delete(item);
-            }
-        }
-        for (String filePath : filesPaths) {
-            ImageListItem item = AppApi.getInstance().getDatabase().geekstagramDao().get(filePath);
-            if (!imagesList.contains(item)) {
-                imagesList.add(new ImageListItem(filePath, false));
-            }
-        }
+    @SuppressLint("CheckResult")
+    private Completable syncData() {
+        return Completable.create(emitter -> {
+            List<String> filesPaths = fileManager.getStorageFilesList();
+            api.getDatabase().geekstagramDao().getAll()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(Schedulers.io())
+                    .subscribe(imageListItems -> {
+                        imagesList.clear();
+                        for (ImageListItem item : imageListItems) {
+                            if (filesPaths.contains(item.getImagePath())) {
+                                imagesList.add(item);
+                            } else {
+                                api.getDatabase().geekstagramDao().delete(item);
+                            }
+                        }
+                        for (String filePath : filesPaths) {
+                            ImageListItem imageListItem = api.getDatabase().geekstagramDao().get(filePath);
+                            if (!imagesList.contains(imageListItem)) {
+                                imagesList.add(new ImageListItem(filePath, false));
+                            }
+                        }
+                        emitter.onComplete();
+                    }, throwable -> Logger.e("%s", throwable));
+        });
     }
 
     @Override

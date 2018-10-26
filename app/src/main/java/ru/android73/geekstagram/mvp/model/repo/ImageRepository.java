@@ -2,11 +2,12 @@ package ru.android73.geekstagram.mvp.model.repo;
 
 import java.util.List;
 
+import io.reactivex.Completable;
 import ru.android73.geekstagram.mvp.model.db.ImageListItem;
 
 public interface ImageRepository {
 
-    void load();
+    Completable load();
 
     void add(ImageListItem item);
 

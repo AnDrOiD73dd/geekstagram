@@ -15,9 +15,6 @@ import ru.android73.geekstagram.mvp.model.db.ImageListItem;
 public interface ImagesListView extends MvpView {
 
     @StateStrategyType(OneExecutionStateStrategy.class)
-    void loadData(ImageRepository imageRepository);
-
-    @StateStrategyType(OneExecutionStateStrategy.class)
     void setData(List<ImageListItem> data);
 
     @StateStrategyType(OneExecutionStateStrategy.class)

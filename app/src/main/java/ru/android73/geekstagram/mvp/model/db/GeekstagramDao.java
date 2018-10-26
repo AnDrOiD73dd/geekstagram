@@ -9,11 +9,13 @@ import android.arch.persistence.room.Update;
 
 import java.util.List;
 
+import io.reactivex.Single;
+
 @Dao
 public interface GeekstagramDao {
 
     @Query("SELECT * FROM ImageListItem")
-    List<ImageListItem> getAll();
+    Single<List<ImageListItem>> getAll();
 
     @Query("SELECT * FROM ImageListItem WHERE image_uri==:imagePath")
     ImageListItem get(String imagePath);
