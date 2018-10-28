@@ -11,8 +11,8 @@ import ru.android73.geekstagram.mvp.model.db.ImageListItem;
 
 public class SimpleImageRepository implements ImageRepository {
 
-    private FileRepository fileRepository;
-    private ImageRepository favoritesRepository;
+    protected FileRepository fileRepository;
+    protected ImageRepository favoritesRepository;
 
     public SimpleImageRepository(FileManager fileManager) {
         fileRepository = new FileRepositoryImpl(fileManager);

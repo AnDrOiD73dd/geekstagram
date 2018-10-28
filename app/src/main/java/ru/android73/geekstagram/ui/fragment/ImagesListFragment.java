@@ -28,6 +28,7 @@ import ru.android73.geekstagram.R;
 import ru.android73.geekstagram.mvp.model.FileManagerImpl;
 import ru.android73.geekstagram.mvp.model.ImageAdapter;
 import ru.android73.geekstagram.mvp.model.db.ImageListItem;
+import ru.android73.geekstagram.mvp.model.repo.ImageRepository;
 import ru.android73.geekstagram.mvp.presentation.presenter.ImagesListPresenter;
 import ru.android73.geekstagram.mvp.presentation.view.ImagesListView;
 
@@ -39,6 +40,7 @@ public class ImagesListFragment extends MvpAppCompatFragment implements ImagesLi
     ImagesListPresenter imagesListPresenter;
 
     public static final String TAG = "ImagesListFragment";
+    public static final String KEY_REPOSITORY = "key_repository";
 
     private static final int REQUEST_IMAGE_CAPTURE = 1000;
     private static final int IMAGE_WIDTH_DP = 180;
@@ -49,17 +51,19 @@ public class ImagesListFragment extends MvpAppCompatFragment implements ImagesLi
     protected ImageAdapter adapter;
     private OnFragmentInteractionListener listener;
 
-    public static ImagesListFragment newInstance() {
+    public static ImagesListFragment newInstance(ImageRepository imageRepository) {
         ImagesListFragment fragment = new ImagesListFragment();
         Bundle bundle = new Bundle();
+        bundle.putSerializable(KEY_REPOSITORY, imageRepository);
         fragment.setArguments(bundle);
         return fragment;
     }
 
     @ProvidePresenter
     ImagesListPresenter provideImagesListPresenter() {
+        ImageRepository imageRepository = (ImageRepository) getArguments().getSerializable(KEY_REPOSITORY);
         return new ImagesListPresenter(new FileManagerImpl(getContext().getApplicationContext()),
-                AndroidSchedulers.mainThread());
+                AndroidSchedulers.mainThread(), imageRepository);
     }
 
     public ImagesListFragment() {

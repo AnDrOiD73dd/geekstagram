@@ -28,11 +28,12 @@ public class ImagesListPresenter extends MvpPresenter<ImagesListView> implements
     private ImageRepository imageRepository;
     private final FileManager fileManager;
 
-    public ImagesListPresenter(FileManager fileManager, Scheduler scheduler) {
-        this.fileManager = fileManager;
+    public ImagesListPresenter(FileManager fileManager, Scheduler scheduler, ImageRepository imageRepository) {
         this.scheduler = scheduler;
-        photosList = new ArrayList<>();
+        this.fileManager = fileManager;
+        this.imageRepository = imageRepository;
         imageRepository = new SimpleImageRepository(fileManager);
+        photosList = new ArrayList<>();
     }
 
     @Override

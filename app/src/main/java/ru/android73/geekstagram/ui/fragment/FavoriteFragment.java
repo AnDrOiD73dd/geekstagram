@@ -12,6 +12,9 @@ import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import ru.android73.geekstagram.R;
+import ru.android73.geekstagram.mvp.model.FileManagerImpl;
+import ru.android73.geekstagram.mvp.model.repo.FavoritesOnlyRepository;
+import ru.android73.geekstagram.mvp.model.repo.SimpleImageRepository;
 import ru.android73.geekstagram.mvp.presentation.presenter.FavoritePresenter;
 import ru.android73.geekstagram.mvp.presentation.view.FavoriteView;
 
@@ -50,19 +53,20 @@ public class FavoriteFragment extends MvpAppCompatFragment implements FavoriteVi
                 item -> {
                     switch (item.getItemId()) {
                         case R.id.action_database:
-                            Fragment fragment = fragmentManager.findFragmentByTag(ImageListDbFragment.TAG);
-                            if (fragment == null) {
-                                fragment = ImageListDbFragment.newInstance();
-                            }
-                            replaceChildFragment(fragment, ImageListDbFragment.TAG);
+//                            Fragment fragment = fragmentManager.findFragmentByTag(ImageListDbFragment.TAG);
+//                            if (fragment == null) {
+//                                fragment = ImageListDbFragment.newInstance();
+//                            }
+                            Fragment fragment = ImagesListFragment.newInstance(new FavoritesOnlyRepository(new FileManagerImpl(getContext())));
+                            replaceChildFragment(fragment, ImagesListFragment.TAG);
                             return true;
                         case R.id.action_network:
                             replaceChildFragment(ImageListNetworkFragment.newInstance(),
                                     ImageListNetworkFragment.TAG);
                             return true;
                         case R.id.action_aggregate:
-                            replaceChildFragment(ImagesListFragment.newInstance(),
-                                    ImagesListFragment.TAG);
+                            fragment = ImagesListFragment.newInstance(new SimpleImageRepository(new FileManagerImpl(getContext())));
+                            replaceChildFragment(fragment, ImagesListFragment.TAG);
                             return true;
                     }
                     return false;

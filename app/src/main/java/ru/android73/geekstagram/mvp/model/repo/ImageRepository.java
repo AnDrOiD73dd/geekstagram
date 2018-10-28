@@ -1,12 +1,13 @@
 package ru.android73.geekstagram.mvp.model.repo;
 
+import java.io.Serializable;
 import java.util.List;
 
 import io.reactivex.Completable;
 import io.reactivex.Single;
 import ru.android73.geekstagram.mvp.model.db.ImageListItem;
 
-public interface ImageRepository {
+public interface ImageRepository extends Serializable {
 
     Single<List<ImageListItem>> getPhotos();
 
