@@ -7,9 +7,12 @@
     <string name="nav_about_developer_title">О разработчике</string>
 
     <string name="notification_image_added_text">Изображение успешно добавлено</string>
-    <string name="notification_image_deleted_text">Изображение успешно удалено</string>
-    <string name="notification_can_not_open_camera">Не могу открыть камеру</string>
     <string name="notification_can_not_create_file">Не могу создать файл</string>
+    <string name="notification_image_deleted_text">Изображение успешно удалено</string>
+    <string name="notification_image_deleted_error_text">Произошла ошибка при удалении файла</string>
+    <string name="notification_can_not_load_data_text">Не удалось загрузить изображения</string>
+    <string name="notification_can_not_update_image_text">Не удалось обновить изображение</string>
+    <string name="notification_can_not_open_camera">Не могу открыть камеру</string>
     <string name="dialog_delete_item_message">Вы действительно хотите удалить фотографию?</string>
     <string name="yes">Да</string>
     <string name="cancel">Отмена</string>

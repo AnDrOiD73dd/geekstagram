@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.StringRes;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -123,8 +124,37 @@ public class ImagesListFragment extends MvpAppCompatFragment implements ImagesLi
     }
 
     @Override
-    public void showInfo(int resourceId) {
-        Snackbar.make(coordinatorLayout, resourceId, Snackbar.LENGTH_LONG).show();
+    public void showMessageImageAdded() {
+        showInfo(R.string.notification_image_added_text);
+    }
+
+    @Override
+    public void showMessageImageDeleted() {
+        showInfo(R.string.notification_image_deleted_text);
+    }
+
+    @Override
+    public void showErrorImageDeleted() {
+        showInfo(R.string.notification_image_deleted_error_text);
+    }
+
+    @Override
+    public void showErrorLoadPhoto() {
+        showInfo(R.string.notification_can_not_load_data_text);
+    }
+
+    @Override
+    public void showErrorAddPhoto() {
+        showInfo(R.string.notification_can_not_create_file);
+    }
+
+    @Override
+    public void showErrorFavorite() {
+        showInfo(R.string.notification_can_not_update_image_text);
+    }
+
+    private void showInfo(@StringRes int message) {
+        Snackbar.make(coordinatorLayout, message, Snackbar.LENGTH_LONG).show();
     }
 
     @Override

@@ -15,6 +15,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import io.reactivex.Completable;
 import io.reactivex.Single;
 import ru.android73.geekstagram.R;
 import ru.android73.geekstagram.log.Logger;
@@ -56,8 +57,9 @@ public class FileManagerImpl implements FileManager {
     }
 
     @Override
-    public Single<Uri> getPhotoImageUri(File imageFile) {
+    public Single<Uri> getPhotoImageUri(String filePath) {
         return Single.create(emitter -> {
+            File imageFile = new File(filePath);
             Uri uri = FileProvider.getUriForFile(context, context.getString(R.string.file_provider_authority),
                     imageFile);
             emitter.onSuccess(uri);
@@ -75,6 +77,18 @@ public class FileManagerImpl implements FileManager {
                 filesList.add(temp.getAbsolutePath());
             }
             emitter.onSuccess(filesList);
+        });
+    }
+
+    @Override
+    public Completable delete(String filePath) {
+        return Completable.create(emitter -> {
+            File file = new File(filePath);
+            if (file.delete()) {
+                emitter.onComplete();
+            } else {
+                emitter.onError(new RuntimeException("Could not delete file"));
+            }
         });
     }
 }

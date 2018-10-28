@@ -3,25 +3,16 @@ package ru.android73.geekstagram.mvp.model.repo;
 import java.util.List;
 
 import io.reactivex.Completable;
+import io.reactivex.Single;
 import ru.android73.geekstagram.mvp.model.db.ImageListItem;
 
 public interface ImageRepository {
 
-    Completable load();
+    Single<List<ImageListItem>> getPhotos();
 
-    void add(ImageListItem item);
+    Single<ImageListItem> add(ImageListItem item);
 
-    void remove(ImageListItem item);
+    Completable remove(ImageListItem item);
 
-    void update(ImageListItem item);
-
-    List<ImageListItem> getAll();
-
-    List<ImageListItem> getFavorites();
-
-    int getSize();
-
-    void addListener(ImageRepositoryCallback listener);
-
-    void removeListener(ImageRepositoryCallback listener);
+    Completable update(ImageListItem item);
 }

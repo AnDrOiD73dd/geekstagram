@@ -10,96 +10,75 @@ import java.util.List;
 
 import io.reactivex.Scheduler;
 import io.reactivex.schedulers.Schedulers;
-import ru.android73.geekstagram.R;
 import ru.android73.geekstagram.log.Logger;
 import ru.android73.geekstagram.mvp.model.FileManager;
 import ru.android73.geekstagram.mvp.model.ImageAdapter;
 import ru.android73.geekstagram.mvp.model.db.ImageListItem;
 import ru.android73.geekstagram.mvp.model.repo.ImageRepository;
-import ru.android73.geekstagram.mvp.model.repo.ImageRepositoryCallback;
-import ru.android73.geekstagram.mvp.model.repo.ImageRepositoryImpl;
+import ru.android73.geekstagram.mvp.model.repo.SimpleImageRepository;
 import ru.android73.geekstagram.mvp.presentation.view.ImagesListView;
 import ru.android73.geekstagram.mvp.presentation.view.PhotoView;
 
 @InjectViewState
 public class ImagesListPresenter extends MvpPresenter<ImagesListView> implements IPhotoListPresenter {
 
-    private final FileManager fileManager;
     private final Scheduler scheduler;
     private String lastPhotoPath;
-    private ImageRepository imageRepository;
-    private ImageRepositoryCallback imageRepositoryCallback;
     private List<ImageListItem> photosList;
+    private ImageRepository imageRepository;
+    private final FileManager fileManager;
 
     public ImagesListPresenter(FileManager fileManager, Scheduler scheduler) {
         this.fileManager = fileManager;
         this.scheduler = scheduler;
         photosList = new ArrayList<>();
-        imageRepository = new ImageRepositoryImpl(fileManager);
-        imageRepositoryCallback = new ImageRepositoryCallback() {
-            @Override
-            public void onLoadComplete() {
-                photosList = imageRepository.getAll();
-                getViewState().updatePhotosList();
-            }
-
-            @Override
-            public void onAdded(ImageListItem item) {
-                if (photosList.contains(item)) {
-                    return;
-                } else {
-                    if (photosList.add(item)) {
-                        int position = photosList.indexOf(item);
-                        getViewState().onItemAdded(position);
-                        getViewState().showInfo(R.string.notification_image_added_text);
-                    }
-                }
-            }
-
-            @Override
-            public void onUpdated(int index, ImageListItem item) {
-                for (int i = 0; i < photosList.size(); i++) {
-                    if (photosList.get(i).getImagePath().equals(item.getImagePath())) {
-                        photosList.remove(i);
-                        photosList.add(i, item);
-                        getViewState().onItemUpdated(i);
-                        return;
-                    }
-                }
-            }
-
-            @Override
-            public void onDeleted(int index, ImageListItem item) {
-                getViewState().showInfo(R.string.notification_image_deleted_text);
-                getViewState().onItemDeleted(index);
-            }
-        };
+        imageRepository = new SimpleImageRepository(fileManager);
     }
 
-    @SuppressLint("CheckResult")
     @Override
     public void attachView(ImagesListView view) {
         super.attachView(view);
-        imageRepository.addListener(imageRepositoryCallback);
-        imageRepository.load()
-                .subscribeOn(Schedulers.io())
-                .observeOn(scheduler)
-                .subscribe(() -> imageRepositoryCallback.onLoadComplete(),
-                        throwable -> Logger.e("%s", throwable));
+        loadPhotos();
     }
 
-    @Override
-    public void destroyView(ImagesListView view) {
-        imageRepository.removeListener(imageRepositoryCallback);
-        super.destroyView(view);
+    @SuppressLint("CheckResult")
+    private void loadPhotos() {
+        imageRepository.getPhotos()
+                .subscribeOn(Schedulers.io())
+                .observeOn(scheduler)
+                .subscribe(imageListItems -> {
+                    photosList = imageListItems;
+                    getViewState().updatePhotosList();
+                }, throwable -> {
+                    Logger.e(throwable);
+                    getViewState().showErrorLoadPhoto();
+                });
     }
 
     public void onTakePhotoSuccess() {
-        imageRepository.add(new ImageListItem(lastPhotoPath, false));
+        ImageListItem item = new ImageListItem(lastPhotoPath, false);
+        if (photosList.add(item)) {
+            int position = photosList.indexOf(item);
+            getViewState().onItemAdded(position);
+            getViewState().showMessageImageAdded();
+        } else {
+            getViewState().showErrorAddPhoto();
+        }
     }
 
+    @SuppressLint("CheckResult")
     public void onDeleteConfirmed(ImageListItem item, int adapterPosition) {
-        imageRepository.remove(item);
+        imageRepository.remove(item)
+                .subscribeOn(Schedulers.io())
+                .observeOn(scheduler)
+                .subscribe(() -> {
+                    photosList.remove(item);
+                    getViewState().showMessageImageDeleted();
+                    getViewState().onItemDeleted(adapterPosition);
+                }, throwable -> {
+                    Logger.e(throwable);
+                    getViewState().showErrorImageDeleted();
+                });
     }
 
     public void onDeleteCanceled() {
@@ -108,26 +87,22 @@ public class ImagesListPresenter extends MvpPresenter<ImagesListView> implements
 
     @SuppressLint("CheckResult")
     public void onAddPhotoClick() {
-        fileManager.createPhotoFile(null, null)
+        imageRepository.add(null)
                 .subscribeOn(Schedulers.io())
                 .observeOn(scheduler)
-                .subscribe(imageFile -> {
-                    if (imageFile == null) {
-                        onAddPhotoError(null);
-                    } else {
-                        lastPhotoPath = imageFile.getAbsolutePath();
-                        fileManager.getPhotoImageUri(imageFile)
-                                .subscribeOn(Schedulers.io())
-                                .observeOn(scheduler)
-                                .subscribe(uri -> getViewState().openCamera(uri.toString()),
-                                        this::onAddPhotoError);
-                    }
+                .subscribe(imageListItem -> {
+                    lastPhotoPath = imageListItem.getImagePath();
+                    fileManager.getPhotoImageUri(lastPhotoPath)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(scheduler)
+                            .subscribe(uri -> getViewState().openCamera(uri.toString()),
+                                    this::onAddPhotoError);
                 }, this::onAddPhotoError);
     }
 
     private void onAddPhotoError(Throwable throwable) {
         Logger.e(throwable);
-        getViewState().showInfo(R.string.notification_can_not_create_file);
+        getViewState().showErrorAddPhoto();
     }
 
     @Override
@@ -149,11 +124,20 @@ public class ImagesListPresenter extends MvpPresenter<ImagesListView> implements
         getViewState().showImageViewer(item.getImagePath());
     }
 
+    @SuppressLint("CheckResult")
     @Override
     public void onFavoriteClick(int adapterPosition, ImageAdapter.ViewHolder viewHolder) {
         ImageListItem item = photosList.get(adapterPosition);
         item.setFavorite(!item.isFavorite());
-        imageRepository.update(item);
+        imageRepository.update(item).subscribeOn(Schedulers.io()).observeOn(scheduler)
+                .subscribe(() -> {
+                    photosList.remove(adapterPosition);
+                    photosList.add(adapterPosition, item);
+                    getViewState().onItemUpdated(adapterPosition);
+                }, throwable -> {
+                    Logger.e(throwable);
+                    getViewState().showErrorFavorite();
+                });
     }
 
     @Override
