@@ -11,9 +11,10 @@ import android.widget.CompoundButton;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.arellomobile.mvp.presenter.ProvidePresenter;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import ru.android73.geekstagram.R;
-import ru.android73.geekstagram.mvp.model.repo.PreferenceSettingsRepository;
-import ru.android73.geekstagram.mvp.model.repo.SettingsRepository;
+import ru.android73.geekstagram.mvp.model.repo.ThemeRepository;
+import ru.android73.geekstagram.mvp.model.repo.ThemeRepositoryImpl;
 import ru.android73.geekstagram.mvp.model.theme.ThemeMapperEnumString;
 import ru.android73.geekstagram.mvp.presentation.presenter.SettingsPresenter;
 import ru.android73.geekstagram.mvp.presentation.view.SettingsView;
@@ -32,9 +33,9 @@ public class SettingsActivity extends BaseActivity implements SettingsView {
 
     @ProvidePresenter
     public SettingsPresenter provideSettingsPresenter() {
-        SettingsRepository preferences = new PreferenceSettingsRepository(getApplicationContext(),
+        ThemeRepository preferences = new ThemeRepositoryImpl(getApplicationContext(),
                 new ThemeMapperEnumString());
-        return new SettingsPresenter(preferences);
+        return new SettingsPresenter(AndroidSchedulers.mainThread(), preferences);
     }
 
     @Override
@@ -43,23 +44,20 @@ public class SettingsActivity extends BaseActivity implements SettingsView {
         setContentView(R.layout.activity_settings);
         themeStandardRadioButton = findViewById(R.id.rb_theme_standard);
         themeDarkRadioButton = findViewById(R.id.rb_theme_dark);
-        themeChooserListener = new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                switch (buttonView.getId()) {
-                    case R.id.rb_theme_standard:
-                        if (isChecked) {
-                            settingsPresenter.onThemeSelected(R.style.DefaultTheme, currentThemeId);
-                        }
-                        break;
-                    case R.id.rb_theme_dark:
-                        if (isChecked) {
-                            settingsPresenter.onThemeSelected(R.style.DarkTheme, currentThemeId);
-                        }
-                        break;
-                    default:
-                        break;
-                }
+        themeChooserListener = (buttonView, isChecked) -> {
+            switch (buttonView.getId()) {
+                case R.id.rb_theme_standard:
+                    if (isChecked) {
+                        settingsPresenter.onThemeSelected(R.style.DefaultTheme, currentThemeId);
+                    }
+                    break;
+                case R.id.rb_theme_dark:
+                    if (isChecked) {
+                        settingsPresenter.onThemeSelected(R.style.DarkTheme, currentThemeId);
+                    }
+                    break;
+                default:
+                    break;
             }
         };
         themeStandardRadioButton.setOnCheckedChangeListener(themeChooserListener);
