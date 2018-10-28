@@ -13,4 +13,14 @@ public class ThemeMapperEnumResource {
                 return R.style.DefaultTheme;
         }
     }
+
+    public AppTheme toEnum(int themeId) {
+        switch (themeId) {
+            default:
+            case R.style.DefaultTheme:
+                return AppTheme.BLUE;
+            case R.style.DarkTheme:
+                return AppTheme.GRAY;
+        }
+    }
 }
