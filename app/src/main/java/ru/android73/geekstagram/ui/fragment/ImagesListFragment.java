@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
-import android.support.annotation.IntDef;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -45,16 +44,6 @@ public class ImagesListFragment extends MvpAppCompatFragment implements ImagesLi
     ImagesListPresenter imagesListPresenter;
 
     public static final String TAG = "ImagesListFragment";
-    private static final String KEY_MODE = "key mode";
-    public static final int MODE_ALL = 0;
-    public static final int MODE_FAVORITE = 1;
-
-    @IntDef({
-            MODE_ALL,
-            MODE_FAVORITE
-    })
-    public @interface ImageListMode {
-    }
 
     private static final int REQUEST_IMAGE_CAPTURE = 1000;
     private static final int IMAGE_WIDTH_DP = 180;
@@ -66,23 +55,16 @@ public class ImagesListFragment extends MvpAppCompatFragment implements ImagesLi
     private OnFragmentInteractionListener listener;
     private Handler handler;
 
-    public static ImagesListFragment newInstance(@ImageListMode int mode) {
+    public static ImagesListFragment newInstance() {
         ImagesListFragment fragment = new ImagesListFragment();
         Bundle bundle = new Bundle();
-        bundle.putInt(KEY_MODE, mode);
         fragment.setArguments(bundle);
         return fragment;
     }
 
     @ProvidePresenter
     ImagesListPresenter provideImagesListPresenter() {
-        int mode = -1;
-        Bundle bundle = getArguments();
-        if (bundle.containsKey(KEY_MODE)) {
-            mode = bundle.getInt(KEY_MODE);
-        }
-        return new ImagesListPresenter(mode,
-                new FileManagerImpl(getContext().getApplicationContext()),
+        return new ImagesListPresenter(new FileManagerImpl(getContext().getApplicationContext()),
                 AndroidSchedulers.mainThread());
     }
 

@@ -15,31 +15,24 @@ import ru.android73.geekstagram.mvp.model.repo.ImageRepository;
 import ru.android73.geekstagram.mvp.model.repo.ImageRepositoryCallback;
 import ru.android73.geekstagram.mvp.model.repo.ImageRepositoryImpl;
 import ru.android73.geekstagram.mvp.presentation.view.ImagesListView;
-import ru.android73.geekstagram.ui.fragment.ImagesListFragment;
 
 @InjectViewState
 public class ImagesListPresenter extends MvpPresenter<ImagesListView> {
 
     private final FileManager fileManager;
-    private final int mode;
     private final Scheduler scheduler;
     private String lastPhotoPath;
     private ImageRepository imageRepository;
     private ImageRepositoryCallback imageRepositoryCallback;
 
-    public ImagesListPresenter(@ImagesListFragment.ImageListMode final int mode, FileManager fileManager, Scheduler scheduler) {
-        this.mode = mode;
+    public ImagesListPresenter(FileManager fileManager, Scheduler scheduler) {
         this.fileManager = fileManager;
         this.scheduler = scheduler;
         imageRepository = new ImageRepositoryImpl(fileManager);
         imageRepositoryCallback = new ImageRepositoryCallback() {
             @Override
             public void onLoadComplete() {
-                if (mode == ImagesListFragment.MODE_ALL) {
-                    getViewState().setData(imageRepository.getAll());
-                } else if (mode == ImagesListFragment.MODE_FAVORITE) {
-                    getViewState().setData(imageRepository.getFavorites());
-                }
+                getViewState().setData(imageRepository.getAll());
             }
 
             @Override

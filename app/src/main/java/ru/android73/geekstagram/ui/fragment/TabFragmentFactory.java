@@ -12,9 +12,12 @@ public class TabFragmentFactory {
 
     public Fragment createFragment(int position) {
         switch (position) {
-            case 0: return ImagesListFragment.newInstance(ImagesListFragment.MODE_ALL);
-            case 1: return FavoriteFragment.newInstance();
-            default: throw new IllegalArgumentException("Could not create fragment for position " + position);
+            case 0:
+                return ImagesListFragment.newInstance();
+            case 1:
+                return FavoriteFragment.newInstance();
+            default:
+                throw new IllegalArgumentException("Could not create fragment for position " + position);
         }
     }
 
