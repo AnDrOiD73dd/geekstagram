@@ -5,13 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,9 +22,6 @@ import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.arellomobile.mvp.presenter.ProvidePresenter;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import ru.android73.geekstagram.R;
 import ru.android73.geekstagram.mvp.model.FileManagerImpl;
@@ -37,8 +32,7 @@ import ru.android73.geekstagram.mvp.presentation.view.ImagesListView;
 
 import static android.app.Activity.RESULT_OK;
 
-public class ImagesListFragment extends MvpAppCompatFragment implements ImagesListView,
-        ImageAdapter.OnItemClickListener {
+public class ImagesListFragment extends MvpAppCompatFragment implements ImagesListView {
 
     @InjectPresenter
     ImagesListPresenter imagesListPresenter;
@@ -53,7 +47,6 @@ public class ImagesListFragment extends MvpAppCompatFragment implements ImagesLi
     protected RecyclerView recyclerView;
     protected ImageAdapter adapter;
     private OnFragmentInteractionListener listener;
-    private Handler handler;
 
     public static ImagesListFragment newInstance() {
         ImagesListFragment fragment = new ImagesListFragment();
@@ -69,7 +62,6 @@ public class ImagesListFragment extends MvpAppCompatFragment implements ImagesLi
     }
 
     public ImagesListFragment() {
-        handler = new Handler();
     }
 
     @Override
@@ -81,21 +73,19 @@ public class ImagesListFragment extends MvpAppCompatFragment implements ImagesLi
         floatingActionButton = layout.findViewById(R.id.floating_action_button);
         floatingActionButton.setOnClickListener(v -> imagesListPresenter.onAddPhotoClick());
 
-        List<ImageListItem> dataSource = new ArrayList<>();
-        adapter = new ImageAdapter(dataSource);
-        adapter.setOnItemClickListener(this);
+        adapter = new ImageAdapter(imagesListPresenter);
 
         recyclerView = layout.findViewById(R.id.rv_images_list);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setHasFixedSize(true);
-        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), calculateColumnsCount());
+        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), getColumnCount());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 
         return layout;
     }
 
-    private int calculateColumnsCount() {
+    private int getColumnCount() {
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
         float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
         return (int) (dpWidth / IMAGE_WIDTH_DP);
@@ -113,37 +103,23 @@ public class ImagesListFragment extends MvpAppCompatFragment implements ImagesLi
     }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
-        adapter.setOnItemClickListener(null);
+    public void updatePhotosList() {
+        adapter.notifyDataSetChanged();
     }
 
     @Override
-    public void onImageClick(View v, int adapterPosition) {
-        imagesListPresenter.onImageClick(adapterPosition);
+    public void onItemAdded(int position) {
+        adapter.notifyItemInserted(position);
     }
 
     @Override
-    public void onImageLongClick(View v, ImageListItem item, int adapterPosition) {
-        imagesListPresenter.onImageLongClick(item, adapterPosition);
+    public void onItemUpdated(int position) {
+        adapter.notifyItemChanged(position);
     }
 
     @Override
-    public void onLikeClick(View v, ImageListItem item, int adapterPosition) {
-        imagesListPresenter.onLikeClick(item, adapterPosition);
-    }
-
-    @Override
-    public void onDeleteClick(ImageListItem item, int adapterPosition) {
-        imagesListPresenter.onDeleteClick(item, adapterPosition);
-    }
-
-    @Override
-    public void setData(final List<ImageListItem> data) {
-        getActivity().runOnUiThread(() -> {
-            adapter.setData(data);
-            adapter.notifyDataSetChanged();
-        });
+    public void onItemDeleted(int position) {
+        adapter.notifyItemRemoved(position);
     }
 
     @Override
@@ -163,24 +139,6 @@ public class ImagesListFragment extends MvpAppCompatFragment implements ImagesLi
     }
 
     @Override
-    public void onItemAdded(ImageListItem item) {
-        List<ImageListItem> dataSource = adapter.getData();
-        if (dataSource.contains(item)) {
-            return;
-        } else {
-            if (dataSource.add(item)) {
-                int position = dataSource.indexOf(item);
-                adapter.notifyItemInserted(position);
-            }
-        }
-    }
-
-    @Override
-    public void onItemDeleted(int index, ImageListItem item) {
-        adapter.notifyItemRemoved(index);
-    }
-
-    @Override
     public void showDeleteConfirmationDialog(final ImageListItem item, final int adapterPosition) {
         Activity activity = getActivity();
         if (activity == null) {
@@ -195,21 +153,8 @@ public class ImagesListFragment extends MvpAppCompatFragment implements ImagesLi
     }
 
     @Override
-    public void updateItem(ImageListItem item) {
-        List<ImageListItem> dataSource = adapter.getData();
-        for (int i = 0; i < dataSource.size(); i++) {
-            if (dataSource.get(i).getImagePath().equals(item.getImagePath())) {
-                dataSource.remove(i);
-                dataSource.add(i, item);
-                adapter.notifyItemChanged(i);
-                return;
-            }
-        }
-    }
-
-    @Override
-    public void showImageViewer(int adapterPosition) {
-        listener.onItemClicked(adapter.getData().get(adapterPosition).getImagePath());
+    public void showImageViewer(String imagePath) {
+        listener.onItemClicked(imagePath);
     }
 
     @Override
@@ -222,40 +167,5 @@ public class ImagesListFragment extends MvpAppCompatFragment implements ImagesLi
 
     public interface OnFragmentInteractionListener {
         void onItemClicked(String imageUri);
-    }
-
-    private class ImageDiffUtilCallback extends DiffUtil.Callback {
-
-        private final List<ImageListItem> oldList;
-        private final List<ImageListItem> newList;
-
-        public ImageDiffUtilCallback(List<ImageListItem> oldList, List<ImageListItem> newList) {
-            this.oldList = oldList;
-            this.newList = newList;
-        }
-
-        @Override
-        public int getOldListSize() {
-            return oldList.size();
-        }
-
-        @Override
-        public int getNewListSize() {
-            return newList.size();
-        }
-
-        @Override
-        public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-            ImageListItem oldItem = oldList.get(oldItemPosition);
-            ImageListItem newItem = newList.get(newItemPosition);
-            return oldItem.getImagePath().equals(newItem.getImagePath());
-        }
-
-        @Override
-        public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-            ImageListItem oldItem = oldList.get(oldItemPosition);
-            ImageListItem newItem = newList.get(newItemPosition);
-            return oldItem.equals(newItem);
-        }
     }
 }

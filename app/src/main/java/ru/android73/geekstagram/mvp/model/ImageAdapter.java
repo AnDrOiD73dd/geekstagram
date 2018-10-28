@@ -11,20 +11,23 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
-import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.OnLongClick;
 import ru.android73.geekstagram.R;
 import ru.android73.geekstagram.log.Logger;
-import ru.android73.geekstagram.mvp.model.db.ImageListItem;
+import ru.android73.geekstagram.mvp.presentation.presenter.IPhotoListPresenter;
+import ru.android73.geekstagram.mvp.presentation.view.PhotoView;
 
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> {
 
     private static final int PREVIEW_SIZE = 300;
-    private List<ImageListItem> dataSource;
-    private OnItemClickListener itemClickListener;
+    private IPhotoListPresenter presenter;
 
-    public ImageAdapter(List<ImageListItem> dataSource) {
-        this.dataSource = dataSource;
+    public ImageAdapter(IPhotoListPresenter presenter) {
+        this.presenter = presenter;
     }
 
     @NonNull
@@ -37,118 +40,90 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.bind(position);
+        presenter.bindPhoto(position, holder);
     }
 
     @Override
     public int getItemCount() {
-        return dataSource.size();
+        return presenter.getPhotosCount();
     }
 
-    public void setData(List<ImageListItem> dataSource) {
-        this.dataSource = dataSource;
-    }
+    public class ViewHolder extends RecyclerView.ViewHolder implements PhotoView {
 
-    public List<ImageListItem> getData() {
-        return dataSource;
-    }
-
-    public interface OnItemClickListener {
-        void onImageClick(View v, int adapterPosition);
-        void onImageLongClick(View v, ImageListItem imageListItem, int adapterPosition);
-        void onLikeClick(View v, ImageListItem item, int adapterPosition);
-        void onDeleteClick(ImageListItem item, int adapterPosition);
-    }
-
-    public void setOnItemClickListener(OnItemClickListener itemClickListener){
-        this.itemClickListener = itemClickListener;
-    }
-
-    public class ViewHolder extends RecyclerView.ViewHolder {
-
-        private ImageView imageContainer;
-        private ImageView favoriteIcon;
-        private ImageView deleteIcon;
+        @BindView(R.id.iv_image_container)
+        ImageView imageContainer;
+        @BindView(R.id.iv_favorite)
+        ImageView favoriteIcon;
+        @BindView(R.id.iv_delete)
+        ImageView deleteIcon;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            imageContainer = itemView.findViewById(R.id.iv_image_container);
-            imageContainer.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (itemClickListener != null) {
-                        itemClickListener.onImageClick(v, getAdapterPosition());
-                    }
-                }
-            });
-            imageContainer.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    if (itemClickListener != null) {
-                        int position = getAdapterPosition();
-                        itemClickListener.onImageLongClick(v, dataSource.get(position), position);
-                        return true;
-                    }
-                    return false;
-                }
-            });
-
-            favoriteIcon = itemView.findViewById(R.id.iv_favorite);
-            favoriteIcon.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (itemClickListener != null) {
-                        int position = getAdapterPosition();
-                        itemClickListener.onLikeClick(v, dataSource.get(position), position);
-                    }
-                }
-            });
-            deleteIcon = itemView.findViewById(R.id.iv_delete);
-            deleteIcon.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (itemClickListener != null) {
-                        int position = getAdapterPosition();
-                        itemClickListener.onDeleteClick(dataSource.get(position), position);
-                    }
-                }
-            });
+            ButterKnife.bind(this, itemView);
         }
 
-        void bind(int position) {
+        @OnClick({R.id.iv_image_container, R.id.iv_favorite, R.id.iv_delete})
+        public void onItemClick(View view) {
+            switch (view.getId()) {
+                case R.id.iv_image_container:
+                    presenter.onImageClick(getAdapterPosition(), this);
+                    break;
+                case R.id.iv_favorite:
+                    presenter.onFavoriteClick(getAdapterPosition(), this);
+                    break;
+                case R.id.iv_delete:
+                    presenter.onDeleteClick(getAdapterPosition(), this);
+                    break;
+            }
+        }
+
+        @OnLongClick(R.id.iv_image_container)
+        public boolean onItemLongClick(View view) {
+            presenter.onDeleteClick(getAdapterPosition(), this);
+            return true;
+        }
+
+        @Override
+        public void setPhoto(String filePath) {
+            File file = new File(filePath);
             if (getLayoutPosition() != RecyclerView.NO_POSITION) {
-                ImageListItem item = dataSource.get(position);
-                setupViewData(item);
+                Picasso.get()
+                        .load(file)
+                        .resize(PREVIEW_SIZE, PREVIEW_SIZE)
+                        .centerCrop()
+                        .placeholder(R.drawable.ic_image_24dp_vector)
+                        .error(R.drawable.ic_report_problem_24dp_vector)
+                        .into(imageContainer, new Callback() {
+                            @Override
+                            public void onSuccess() {
+                            }
+
+                            @Override
+                            public void onError(Exception e) {
+                                Logger.e("Error loading image: %s", e.getMessage());
+                            }
+                        });
             }
         }
 
-        private void setupViewData(ImageListItem item) {
-            File file = new File(item.getImagePath());
-            Picasso.get()
-                    .load(file)
-                    .resize(PREVIEW_SIZE,PREVIEW_SIZE)
-                    .centerCrop()
-                    .placeholder(R.drawable.ic_image_24dp_vector)
-                    .error(R.drawable.ic_report_problem_24dp_vector)
-                    .into(imageContainer, new Callback() {
-                        @Override
-                        public void onSuccess() {
-                        }
+        @Override
+        public void setFavorite(boolean flag) {
+            if (getLayoutPosition() != RecyclerView.NO_POSITION) {
+                if (flag) {
+                    favoriteIcon.setImageDrawable(favoriteIcon.getContext().getResources()
+                            .getDrawable(R.drawable.ic_favorite_red_24dp_vector));
+                } else {
+                    favoriteIcon.setImageDrawable(favoriteIcon.getContext().getResources()
+                            .getDrawable(R.drawable.ic_favorite_white_24dp_vector));
+                }
+            }
+        }
 
-                        @Override
-                        public void onError(Exception e) {
-                            Logger.e("Error loading image: %s", e.getMessage());
-                        }
-                    });
-            if (item.isFavorite()) {
-                favoriteIcon.setImageDrawable(favoriteIcon.getContext().getResources()
-                        .getDrawable(R.drawable.ic_favorite_red_24dp_vector));
+        @Override
+        public void setDeleteIcon() {
+            if (getLayoutPosition() != RecyclerView.NO_POSITION) {
+                deleteIcon.setImageResource(R.drawable.ic_delete_filled_24dp_vector);
             }
-            else {
-                favoriteIcon.setImageDrawable(favoriteIcon.getContext().getResources()
-                        .getDrawable(R.drawable.ic_favorite_white_24dp_vector));
-            }
-            deleteIcon.setImageResource(R.drawable.ic_delete_filled_24dp_vector);
         }
     }
 }
