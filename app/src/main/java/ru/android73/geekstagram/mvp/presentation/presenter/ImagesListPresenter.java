@@ -5,8 +5,6 @@ import android.annotation.SuppressLint;
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 
-import java.io.File;
-
 import io.reactivex.Scheduler;
 import io.reactivex.schedulers.Schedulers;
 import ru.android73.geekstagram.R;
@@ -110,14 +108,26 @@ public class ImagesListPresenter extends MvpPresenter<ImagesListView> {
         getViewState().showDeleteConfirmationDialog(item, adapterPosition);
     }
 
+    @SuppressLint("CheckResult")
     public void onAddPhotoClick() {
-        File imageFile = fileManager.createPhotoFile(null, null);
-        if (imageFile == null) {
-            getViewState().showInfo(R.string.notification_can_not_create_file);
-        } else {
-            lastPhotoPath = imageFile.getAbsolutePath();
-            String imageUri = fileManager.getPhotoImageUri(imageFile).toString();
-            getViewState().openCamera(imageUri);
-        }
+        fileManager.createPhotoFile(null, null)
+                .subscribeOn(Schedulers.io())
+                .observeOn(scheduler)
+                .subscribe(imageFile -> {
+                    if (imageFile == null) {
+                        onAddPhotoError(null);
+                    } else {
+                        lastPhotoPath = imageFile.getAbsolutePath();
+                        fileManager.getPhotoImageUri(imageFile)
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(scheduler)
+                                .subscribe(uri -> getViewState().openCamera(uri.toString()), this::onAddPhotoError);
+                    }
+                }, this::onAddPhotoError);
+    }
+
+    private void onAddPhotoError(Throwable throwable) {
+        Logger.e(throwable);
+        getViewState().showInfo(R.string.notification_can_not_create_file);
     }
 }

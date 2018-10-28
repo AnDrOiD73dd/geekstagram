@@ -7,14 +7,12 @@ import android.support.annotation.Nullable;
 import java.io.File;
 import java.util.List;
 
+import io.reactivex.Single;
+
 public interface FileManager {
-    File createPhotoFile(@Nullable String dateFormat, @Nullable String fileSuffix);
+    Single<File> createPhotoFile(@Nullable String dateFormat, @Nullable String fileSuffix);
 
-    File createTempFileInPicturesDirectory(@NonNull String filePrefix, @NonNull String fileSuffix);
+    Single<Uri> getPhotoImageUri(File imageFile);
 
-    File createTempFile(@NonNull String filePrefix, @NonNull String fileSuffix, @NonNull File directory);
-
-    Uri getPhotoImageUri(File imageFile);
-
-    List<String> getStorageFilesList();
+    Single<List<String>> getStorageFilesList();
 }

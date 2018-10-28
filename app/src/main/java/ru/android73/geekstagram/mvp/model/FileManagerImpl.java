@@ -15,6 +15,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import io.reactivex.Single;
 import ru.android73.geekstagram.R;
 import ru.android73.geekstagram.log.Logger;
 
@@ -29,22 +30,22 @@ public class FileManagerImpl implements FileManager {
     }
 
     @Override
-    public File createPhotoFile(@Nullable String dateFormat, @Nullable String fileSuffix) {
-        String datePattern = dateFormat == null ? DEFAULT_DATE_FORMAT : dateFormat;
-        String imageSuffix = fileSuffix == null ? DEFAULT_IMAGE_SUFFIX : fileSuffix;
-        String timeStamp = new SimpleDateFormat(datePattern, Locale.getDefault()).format(new Date());
-        return createTempFileInPicturesDirectory(timeStamp, imageSuffix);
+    public Single<File> createPhotoFile(@Nullable String dateFormat, @Nullable String fileSuffix) {
+        return Single.create(emitter -> {
+            String datePattern = dateFormat == null ? DEFAULT_DATE_FORMAT : dateFormat;
+            String imageSuffix = fileSuffix == null ? DEFAULT_IMAGE_SUFFIX : fileSuffix;
+            String timeStamp = new SimpleDateFormat(datePattern, Locale.getDefault()).format(new Date());
+            emitter.onSuccess(createTempFileInPicturesDirectory(timeStamp, imageSuffix));
+        });
     }
 
-    @Override
-    public File createTempFileInPicturesDirectory(@NonNull String filePrefix, @NonNull String fileSuffix) {
+    private File createTempFileInPicturesDirectory(@NonNull String filePrefix, @NonNull String fileSuffix) {
         File storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         return createTempFile(filePrefix, fileSuffix, storageDir);
     }
 
-    @Override
-    public File createTempFile(@NonNull String filePrefix, @NonNull String fileSuffix,
-                               @NonNull File directory) {
+    private File createTempFile(@NonNull String filePrefix, @NonNull String fileSuffix,
+                                @NonNull File directory) {
         File image = null;
         try {
             image = File.createTempFile(filePrefix, fileSuffix, directory);
@@ -55,20 +56,25 @@ public class FileManagerImpl implements FileManager {
     }
 
     @Override
-    public Uri getPhotoImageUri(File imageFile) {
-        return FileProvider.getUriForFile(context, context.getString(R.string.file_provider_authority),
-                imageFile);
+    public Single<Uri> getPhotoImageUri(File imageFile) {
+        return Single.create(emitter -> {
+            Uri uri = FileProvider.getUriForFile(context, context.getString(R.string.file_provider_authority),
+                    imageFile);
+            emitter.onSuccess(uri);
+        });
     }
 
     @Override
-    public List<String> getStorageFilesList() {
-        File storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        String[] filesName = storageDir.list();
-        List<String> filesList = new ArrayList<>();
-        for (String fileName : filesName) {
-            File temp = new File(storageDir, fileName);
-            filesList.add(temp.getAbsolutePath());
-        }
-        return filesList;
+    public Single<List<String>> getStorageFilesList() {
+        return Single.create(emitter -> {
+            File storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+            String[] filesName = storageDir.list();
+            List<String> filesList = new ArrayList<>();
+            for (String fileName : filesName) {
+                File temp = new File(storageDir, fileName);
+                filesList.add(temp.getAbsolutePath());
+            }
+            emitter.onSuccess(filesList);
+        });
     }
 }

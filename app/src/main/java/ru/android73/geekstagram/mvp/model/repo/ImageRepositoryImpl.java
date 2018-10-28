@@ -9,7 +9,6 @@ import java.util.List;
 import io.reactivex.Completable;
 import io.reactivex.schedulers.Schedulers;
 import ru.android73.geekstagram.AppApi;
-import ru.android73.geekstagram.log.Logger;
 import ru.android73.geekstagram.mvp.model.FileManager;
 import ru.android73.geekstagram.mvp.model.db.ImageListItem;
 
@@ -99,27 +98,39 @@ public class ImageRepositoryImpl implements ImageRepository {
     @SuppressLint("CheckResult")
     private Completable syncData() {
         return Completable.create(emitter -> {
-            List<String> filesPaths = fileManager.getStorageFilesList();
-            api.getDatabase().geekstagramDao().getAll()
+            fileManager.getStorageFilesList()
                     .subscribeOn(Schedulers.io())
                     .observeOn(Schedulers.io())
-                    .subscribe(imageListItems -> {
-                        imagesList.clear();
-                        for (ImageListItem item : imageListItems) {
-                            if (filesPaths.contains(item.getImagePath())) {
-                                imagesList.add(item);
-                            } else {
-                                api.getDatabase().geekstagramDao().delete(item);
-                            }
+                    .subscribe(filesPaths -> {
+                        api.getDatabase().geekstagramDao().getAll()
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(Schedulers.io())
+                                .subscribe(imageListItems -> {
+                                    imagesList.clear();
+                                    for (ImageListItem item : imageListItems) {
+                                        if (filesPaths.contains(item.getImagePath())) {
+                                            imagesList.add(item);
+                                        } else {
+                                            api.getDatabase().geekstagramDao().delete(item);
+                                        }
+                                    }
+                                    for (String filePath : filesPaths) {
+                                        ImageListItem imageListItem = api.getDatabase().geekstagramDao().get(filePath);
+                                        if (!imagesList.contains(imageListItem)) {
+                                            imagesList.add(new ImageListItem(filePath, false));
+                                        }
+                                    }
+                                    emitter.onComplete();
+                                }, throwable -> {
+                                    if (!emitter.isDisposed()) {
+                                        emitter.onError(throwable);
+                                    }
+                                });
+                    }, throwable -> {
+                        if (!emitter.isDisposed()) {
+                            emitter.onError(throwable);
                         }
-                        for (String filePath : filesPaths) {
-                            ImageListItem imageListItem = api.getDatabase().geekstagramDao().get(filePath);
-                            if (!imagesList.contains(imageListItem)) {
-                                imagesList.add(new ImageListItem(filePath, false));
-                            }
-                        }
-                        emitter.onComplete();
-                    }, throwable -> Logger.e("%s", throwable));
+                    });
         });
     }
 

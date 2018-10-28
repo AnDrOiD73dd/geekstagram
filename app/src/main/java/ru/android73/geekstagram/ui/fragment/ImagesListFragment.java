@@ -2,7 +2,6 @@ package ru.android73.geekstagram.ui.fragment;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -98,12 +97,7 @@ public class ImagesListFragment extends MvpAppCompatFragment implements ImagesLi
         coordinatorLayout = layout.findViewById(R.id.fragment_general_root);
 
         floatingActionButton = layout.findViewById(R.id.floating_action_button);
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                imagesListPresenter.onAddPhotoClick();
-            }
-        });
+        floatingActionButton.setOnClickListener(v -> imagesListPresenter.onAddPhotoClick());
 
         List<ImageListItem> dataSource = new ArrayList<>();
         adapter = new ImageAdapter(dataSource);
@@ -164,12 +158,9 @@ public class ImagesListFragment extends MvpAppCompatFragment implements ImagesLi
 
     @Override
     public void setData(final List<ImageListItem> data) {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                adapter.setData(data);
-                adapter.notifyDataSetChanged();
-            }
+        getActivity().runOnUiThread(() -> {
+            adapter.setData(data);
+            adapter.notifyDataSetChanged();
         });
     }
 
@@ -215,16 +206,8 @@ public class ImagesListFragment extends MvpAppCompatFragment implements ImagesLi
         }
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setMessage(R.string.dialog_delete_item_message)
-                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        imagesListPresenter.onDeleteConfirmed(item, adapterPosition);
-                    }
-                })
-                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        imagesListPresenter.onDeleteCanceled();
-                    }
-                });
+                .setPositiveButton(R.string.yes, (dialog, id) -> imagesListPresenter.onDeleteConfirmed(item, adapterPosition))
+                .setNegativeButton(R.string.cancel, (dialog, id) -> imagesListPresenter.onDeleteCanceled());
         AlertDialog dialog = builder.create();
         dialog.show();
     }
