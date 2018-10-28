@@ -19,8 +19,8 @@ import ru.android73.geekstagram.ui.fragment.CustomFragmentPagerAdapter;
 import ru.android73.geekstagram.ui.fragment.ImagesListFragment;
 import ru.android73.geekstagram.ui.fragment.TabFragmentFactory;
 import ru.android73.geekstagram.ui.fragment.ViewerFragment;
-import ru.android73.geekstagram.ui.presentation.presenter.MainPresenter;
-import ru.android73.geekstagram.ui.presentation.view.MainView;
+import ru.android73.geekstagram.mvp.presentation.presenter.MainPresenter;
+import ru.android73.geekstagram.mvp.presentation.view.MainView;
 
 public class MainActivity extends BaseActivity implements MainView,
         NavigationView.OnNavigationItemSelectedListener, ImagesListFragment.OnFragmentInteractionListener {
@@ -48,7 +48,7 @@ public class MainActivity extends BaseActivity implements MainView,
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        TabFragmentFactory tabFragmentFactory = new TabFragmentFactory(getTabTitles());
+        TabFragmentFactory tabFragmentFactory = new TabFragmentFactory(this, getTabTitles());
         CustomFragmentPagerAdapter customFragmentPagerAdapter
                 = new CustomFragmentPagerAdapter(getSupportFragmentManager(), tabFragmentFactory);
         // Set up the ViewPager with the sections adapter.

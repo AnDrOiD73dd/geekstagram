@@ -3,7 +3,7 @@ package ru.android73.geekstagram;
 import android.arch.persistence.room.Room;
 import android.content.Context;
 
-import ru.android73.geekstagram.model.db.GeekstagramDatabase;
+import ru.android73.geekstagram.mvp.model.db.GeekstagramDatabase;
 
 public class AppApi {
     private static final String DATABASE_NAME = "GeekstagramDatabase";
@@ -25,9 +25,7 @@ public class AppApi {
     }
 
     public void initDb(Context context) {
-        database =  Room.databaseBuilder(context, GeekstagramDatabase.class, DATABASE_NAME)
-                .allowMainThreadQueries()  //TODO delete it
-                .build();
+        database =  Room.databaseBuilder(context, GeekstagramDatabase.class, DATABASE_NAME).build();
     }
 
     public GeekstagramDatabase getDatabase() {

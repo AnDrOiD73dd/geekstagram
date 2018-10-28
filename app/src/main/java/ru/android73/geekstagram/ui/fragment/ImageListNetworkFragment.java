@@ -9,8 +9,8 @@ import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import ru.android73.geekstagram.R;
-import ru.android73.geekstagram.ui.presentation.presenter.ImageListNetworkPresenter;
-import ru.android73.geekstagram.ui.presentation.view.ImageListNetworkView;
+import ru.android73.geekstagram.mvp.presentation.presenter.ImageListNetworkPresenter;
+import ru.android73.geekstagram.mvp.presentation.view.ImageListNetworkView;
 
 public class ImageListNetworkFragment extends MvpAppCompatFragment implements ImageListNetworkView {
 

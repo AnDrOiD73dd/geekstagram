@@ -11,12 +11,15 @@ import android.widget.CompoundButton;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.arellomobile.mvp.presenter.ProvidePresenter;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import ru.android73.geekstagram.R;
-import ru.android73.geekstagram.common.PreferenceSettingsRepository;
-import ru.android73.geekstagram.common.SettingsRepository;
-import ru.android73.geekstagram.common.theme.ThemeMapperEnumString;
-import ru.android73.geekstagram.ui.presentation.presenter.SettingsPresenter;
-import ru.android73.geekstagram.ui.presentation.view.SettingsView;
+import ru.android73.geekstagram.mvp.model.repo.ThemeRepository;
+import ru.android73.geekstagram.mvp.model.repo.ThemeRepositoryImpl;
+import ru.android73.geekstagram.mvp.model.theme.AppTheme;
+import ru.android73.geekstagram.mvp.model.theme.ThemeMapperEnumResource;
+import ru.android73.geekstagram.mvp.model.theme.ThemeMapperEnumString;
+import ru.android73.geekstagram.mvp.presentation.presenter.SettingsPresenter;
+import ru.android73.geekstagram.mvp.presentation.view.SettingsView;
 
 public class SettingsActivity extends BaseActivity implements SettingsView {
 
@@ -25,6 +28,7 @@ public class SettingsActivity extends BaseActivity implements SettingsView {
     private AppCompatRadioButton themeDarkRadioButton;
     private AppCompatRadioButton themeStandardRadioButton;
     private CompoundButton.OnCheckedChangeListener themeChooserListener;
+    private ThemeMapperEnumResource themeMapperEnumResource;
 
     public static Intent getIntent(final Context context) {
         return new Intent(context, SettingsActivity.class);
@@ -32,34 +36,36 @@ public class SettingsActivity extends BaseActivity implements SettingsView {
 
     @ProvidePresenter
     public SettingsPresenter provideSettingsPresenter() {
-        SettingsRepository preferences = new PreferenceSettingsRepository(getApplicationContext(),
+        ThemeRepository preferences = new ThemeRepositoryImpl(getApplicationContext(),
                 new ThemeMapperEnumString());
-        return new SettingsPresenter(preferences);
+        return new SettingsPresenter(AndroidSchedulers.mainThread(), preferences);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+        themeMapperEnumResource = new ThemeMapperEnumResource();
         themeStandardRadioButton = findViewById(R.id.rb_theme_standard);
         themeDarkRadioButton = findViewById(R.id.rb_theme_dark);
-        themeChooserListener = new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                switch (buttonView.getId()) {
-                    case R.id.rb_theme_standard:
-                        if (isChecked) {
-                            settingsPresenter.onThemeSelected(R.style.DefaultTheme, currentThemeId);
-                        }
-                        break;
-                    case R.id.rb_theme_dark:
-                        if (isChecked) {
-                            settingsPresenter.onThemeSelected(R.style.DarkTheme, currentThemeId);
-                        }
-                        break;
-                    default:
-                        break;
-                }
+        themeChooserListener = (buttonView, isChecked) -> {
+            switch (buttonView.getId()) {
+                case R.id.rb_theme_standard:
+                    if (isChecked) {
+                        AppTheme currentTheme = themeMapperEnumResource.toEnum(currentThemeId);
+                        AppTheme newTheme = themeMapperEnumResource.toEnum(R.style.DefaultTheme);
+                        settingsPresenter.onThemeSelected(newTheme, currentTheme);
+                    }
+                    break;
+                case R.id.rb_theme_dark:
+                    if (isChecked) {
+                        AppTheme currentTheme = themeMapperEnumResource.toEnum(currentThemeId);
+                        AppTheme newTheme = themeMapperEnumResource.toEnum(R.style.DarkTheme);
+                        settingsPresenter.onThemeSelected(newTheme, currentTheme);
+                    }
+                    break;
+                default:
+                    break;
             }
         };
         themeStandardRadioButton.setOnCheckedChangeListener(themeChooserListener);
@@ -83,7 +89,7 @@ public class SettingsActivity extends BaseActivity implements SettingsView {
     }
 
     @Override
-    public void applyTheme(int themeId) {
+    public void applyTheme(AppTheme theme) {
         TaskStackBuilder.create(this)
                 .addNextIntent(new Intent(this, MainActivity.class))
                 .addNextIntent(this.getIntent())

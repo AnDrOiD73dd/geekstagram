@@ -1,12 +1,14 @@
 package ru.android73.geekstagram.ui.activity;
 
+import android.annotation.SuppressLint;
+
 import com.arellomobile.mvp.MvpAppCompatActivity;
 
-import ru.android73.geekstagram.common.PreferenceSettingsRepository;
-import ru.android73.geekstagram.common.SettingsRepository;
-import ru.android73.geekstagram.common.theme.AppTheme;
-import ru.android73.geekstagram.common.theme.ThemeMapperEnumResource;
-import ru.android73.geekstagram.common.theme.ThemeMapperEnumString;
+import ru.android73.geekstagram.mvp.model.repo.ThemeRepository;
+import ru.android73.geekstagram.mvp.model.repo.ThemeRepositoryImpl;
+import ru.android73.geekstagram.mvp.model.theme.AppTheme;
+import ru.android73.geekstagram.mvp.model.theme.ThemeMapperEnumResource;
+import ru.android73.geekstagram.mvp.model.theme.ThemeMapperEnumString;
 
 public abstract class BaseActivity extends MvpAppCompatActivity {
 
@@ -19,16 +21,15 @@ public abstract class BaseActivity extends MvpAppCompatActivity {
         themeMapperEnumString = new ThemeMapperEnumString();
     }
 
+    @SuppressLint("CheckResult")
     @Override
     public void setTheme(int resid) {
-        currentThemeId = getUserTheme();
+        currentThemeId = themeMapperEnumResource.toResourceId(getUserTheme());
         super.setTheme(currentThemeId);
     }
 
-    private int getUserTheme() {
-        SettingsRepository preferences = new PreferenceSettingsRepository(getApplicationContext(),
-                themeMapperEnumString);
-        AppTheme themeName = preferences.getTheme();
-        return themeMapperEnumResource.toResourceId(themeName);
+    private AppTheme getUserTheme() {
+        ThemeRepository preferences = new ThemeRepositoryImpl(getApplicationContext(), themeMapperEnumString);
+        return preferences.getTheme();
     }
 }

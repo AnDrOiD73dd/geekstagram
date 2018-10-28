@@ -2,18 +2,15 @@ package ru.android73.geekstagram.ui.fragment;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.MediaStore;
-import android.support.annotation.IntDef;
+import android.support.annotation.StringRes;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -26,35 +23,25 @@ import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.arellomobile.mvp.presenter.ProvidePresenter;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import ru.android73.geekstagram.R;
-import ru.android73.geekstagram.common.FileManagerImpl;
-import ru.android73.geekstagram.common.ImageRepository;
-import ru.android73.geekstagram.model.ImageAdapter;
-import ru.android73.geekstagram.model.db.ImageListItem;
-import ru.android73.geekstagram.ui.presentation.presenter.ImagesListPresenter;
-import ru.android73.geekstagram.ui.presentation.view.ImagesListView;
+import ru.android73.geekstagram.mvp.model.FileManagerImpl;
+import ru.android73.geekstagram.mvp.model.ImageAdapter;
+import ru.android73.geekstagram.mvp.model.db.ImageListItem;
+import ru.android73.geekstagram.mvp.model.repo.ImageRepository;
+import ru.android73.geekstagram.mvp.presentation.presenter.ImagesListPresenter;
+import ru.android73.geekstagram.mvp.presentation.view.ImagesListView;
 
 import static android.app.Activity.RESULT_OK;
 
-public class ImagesListFragment extends MvpAppCompatFragment implements ImagesListView,
-        ImageAdapter.OnItemClickListener {
+public class ImagesListFragment extends MvpAppCompatFragment implements ImagesListView {
 
     @InjectPresenter
     ImagesListPresenter imagesListPresenter;
 
     public static final String TAG = "ImagesListFragment";
-    private static final String KEY_MODE = "key mode";
-    public static final int MODE_ALL = 0;
-    public static final int MODE_FAVORITE = 1;
-    @IntDef({
-        MODE_ALL,
-        MODE_FAVORITE
-    })
-    public @interface ImageListMode {
-    }
+    public static final String KEY_REPOSITORY = "key_repository";
+
     private static final int REQUEST_IMAGE_CAPTURE = 1000;
     private static final int IMAGE_WIDTH_DP = 180;
 
@@ -63,28 +50,23 @@ public class ImagesListFragment extends MvpAppCompatFragment implements ImagesLi
     protected RecyclerView recyclerView;
     protected ImageAdapter adapter;
     private OnFragmentInteractionListener listener;
-    private Handler handler;
 
-    public static ImagesListFragment newInstance(@ImageListMode int mode) {
+    public static ImagesListFragment newInstance(ImageRepository imageRepository) {
         ImagesListFragment fragment = new ImagesListFragment();
         Bundle bundle = new Bundle();
-        bundle.putInt(KEY_MODE, mode);
+        bundle.putSerializable(KEY_REPOSITORY, imageRepository);
         fragment.setArguments(bundle);
         return fragment;
     }
 
     @ProvidePresenter
     ImagesListPresenter provideImagesListPresenter() {
-        int mode = -1;
-        Bundle bundle = getArguments();
-        if (bundle.containsKey(KEY_MODE)) {
-            mode = bundle.getInt(KEY_MODE);
-        }
-        return new ImagesListPresenter(mode, new FileManagerImpl(getContext().getApplicationContext()));
+        ImageRepository imageRepository = (ImageRepository) getArguments().getSerializable(KEY_REPOSITORY);
+        return new ImagesListPresenter(new FileManagerImpl(getContext().getApplicationContext()),
+                AndroidSchedulers.mainThread(), imageRepository);
     }
 
     public ImagesListFragment() {
-        handler = new Handler();
     }
 
     @Override
@@ -94,28 +76,21 @@ public class ImagesListFragment extends MvpAppCompatFragment implements ImagesLi
         coordinatorLayout = layout.findViewById(R.id.fragment_general_root);
 
         floatingActionButton = layout.findViewById(R.id.floating_action_button);
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                imagesListPresenter.onAddPhotoClick();
-            }
-        });
+        floatingActionButton.setOnClickListener(v -> imagesListPresenter.onAddPhotoClick());
 
-        List<ImageListItem> dataSource = new ArrayList<>();
-        adapter = new ImageAdapter(dataSource);
-        adapter.setOnItemClickListener(this);
+        adapter = new ImageAdapter(imagesListPresenter);
 
         recyclerView = layout.findViewById(R.id.rv_images_list);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setHasFixedSize(true);
-        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), calculateColumnsCount());
+        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), getColumnCount());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 
         return layout;
     }
 
-    private int calculateColumnsCount() {
+    private int getColumnCount() {
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
         float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
         return (int) (dpWidth / IMAGE_WIDTH_DP);
@@ -133,55 +108,57 @@ public class ImagesListFragment extends MvpAppCompatFragment implements ImagesLi
     }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
-        adapter.setOnItemClickListener(null);
+    public void updatePhotosList() {
+        adapter.notifyDataSetChanged();
     }
 
     @Override
-    public void onImageClick(View v, int adapterPosition) {
-        imagesListPresenter.onImageClick(adapterPosition);
+    public void onItemAdded(int position) {
+        adapter.notifyItemInserted(position);
     }
 
     @Override
-    public void onImageLongClick(View v, ImageListItem item, int adapterPosition) {
-        imagesListPresenter.onImageLongClick(item, adapterPosition);
+    public void onItemUpdated(int position) {
+        adapter.notifyItemChanged(position);
     }
 
     @Override
-    public void onLikeClick(View v, ImageListItem item, int adapterPosition) {
-        imagesListPresenter.onLikeClick(item, adapterPosition);
+    public void onItemDeleted(int position) {
+        adapter.notifyItemRemoved(position);
     }
 
     @Override
-    public void onDeleteClick(ImageListItem item, int adapterPosition) {
-        imagesListPresenter.onDeleteClick(item, adapterPosition);
+    public void showMessageImageAdded() {
+        showInfo(R.string.notification_image_added_text);
     }
 
     @Override
-    public void loadData(final ImageRepository imageRepository) {
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                imageRepository.load();
-            }
-        });
+    public void showMessageImageDeleted() {
+        showInfo(R.string.notification_image_deleted_text);
     }
 
     @Override
-    public void setData(final List<ImageListItem> data) {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                adapter.setData(data);
-                adapter.notifyDataSetChanged();
-            }
-        });
+    public void showErrorImageDeleted() {
+        showInfo(R.string.notification_image_deleted_error_text);
     }
 
     @Override
-    public void showInfo(int resourceId) {
-        Snackbar.make(coordinatorLayout, resourceId, Snackbar.LENGTH_LONG).show();
+    public void showErrorLoadPhoto() {
+        showInfo(R.string.notification_can_not_load_data_text);
+    }
+
+    @Override
+    public void showErrorAddPhoto() {
+        showInfo(R.string.notification_can_not_create_file);
+    }
+
+    @Override
+    public void showErrorFavorite() {
+        showInfo(R.string.notification_can_not_update_image_text);
+    }
+
+    private void showInfo(@StringRes int message) {
+        Snackbar.make(coordinatorLayout, message, Snackbar.LENGTH_LONG).show();
     }
 
     @Override
@@ -196,24 +173,6 @@ public class ImagesListFragment extends MvpAppCompatFragment implements ImagesLi
     }
 
     @Override
-    public void onItemAdded(ImageListItem item) {
-        List<ImageListItem> dataSource = adapter.getData();
-        if (dataSource.contains(item)) {
-            return;
-        } else {
-            if (dataSource.add(item)) {
-                int position = dataSource.indexOf(item);
-                adapter.notifyItemInserted(position);
-            }
-        }
-    }
-
-    @Override
-    public void onItemDeleted(int index, ImageListItem item) {
-        adapter.notifyItemRemoved(index);
-    }
-
-    @Override
     public void showDeleteConfirmationDialog(final ImageListItem item, final int adapterPosition) {
         Activity activity = getActivity();
         if (activity == null) {
@@ -221,36 +180,15 @@ public class ImagesListFragment extends MvpAppCompatFragment implements ImagesLi
         }
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setMessage(R.string.dialog_delete_item_message)
-                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        imagesListPresenter.onDeleteConfirmed(item, adapterPosition);
-                    }
-                })
-                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        imagesListPresenter.onDeleteCanceled();
-                    }
-                });
+                .setPositiveButton(R.string.yes, (dialog, id) -> imagesListPresenter.onDeleteConfirmed(item, adapterPosition))
+                .setNegativeButton(R.string.cancel, (dialog, id) -> imagesListPresenter.onDeleteCanceled());
         AlertDialog dialog = builder.create();
         dialog.show();
     }
 
     @Override
-    public void updateItem(ImageListItem item) {
-        List<ImageListItem> dataSource = adapter.getData();
-        for (int i = 0; i < dataSource.size(); i++) {
-            if (dataSource.get(i).getImagePath().equals(item.getImagePath())) {
-                dataSource.remove(i);
-                dataSource.add(i, item);
-                adapter.notifyItemChanged(i);
-                return;
-            }
-        }
-    }
-
-    @Override
-    public void showImageViewer(int adapterPosition) {
-        listener.onItemClicked(adapter.getData().get(adapterPosition).getImagePath());
+    public void showImageViewer(String imagePath) {
+        listener.onItemClicked(imagePath);
     }
 
     @Override
@@ -263,40 +201,5 @@ public class ImagesListFragment extends MvpAppCompatFragment implements ImagesLi
 
     public interface OnFragmentInteractionListener {
         void onItemClicked(String imageUri);
-    }
-
-    private class ImageDiffUtilCallback extends DiffUtil.Callback {
-
-        private final List<ImageListItem> oldList;
-        private final List<ImageListItem> newList;
-
-        public ImageDiffUtilCallback(List<ImageListItem> oldList, List<ImageListItem> newList) {
-            this.oldList = oldList;
-            this.newList = newList;
-        }
-
-        @Override
-        public int getOldListSize() {
-            return oldList.size();
-        }
-
-        @Override
-        public int getNewListSize() {
-            return newList.size();
-        }
-
-        @Override
-        public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-            ImageListItem oldItem = oldList.get(oldItemPosition);
-            ImageListItem newItem = newList.get(newItemPosition);
-            return oldItem.getImagePath().equals(newItem.getImagePath());
-        }
-
-        @Override
-        public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-            ImageListItem oldItem = oldList.get(oldItemPosition);
-            ImageListItem newItem = newList.get(newItemPosition);
-            return oldItem.equals(newItem);
-        }
     }
 }
