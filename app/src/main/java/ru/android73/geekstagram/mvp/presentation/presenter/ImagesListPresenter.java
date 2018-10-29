@@ -8,14 +8,16 @@ import com.arellomobile.mvp.MvpPresenter;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import io.reactivex.Scheduler;
 import io.reactivex.schedulers.Schedulers;
+import ru.android73.geekstagram.GeekstagramApp;
 import ru.android73.geekstagram.log.Logger;
 import ru.android73.geekstagram.mvp.model.FileManager;
 import ru.android73.geekstagram.mvp.model.ImageAdapter;
 import ru.android73.geekstagram.mvp.model.db.ImageListItem;
 import ru.android73.geekstagram.mvp.model.repo.ImageRepository;
-import ru.android73.geekstagram.mvp.model.repo.SimpleImageRepository;
 import ru.android73.geekstagram.mvp.presentation.view.ImagesListView;
 import ru.android73.geekstagram.mvp.presentation.view.PhotoView;
 
@@ -26,19 +28,19 @@ public class ImagesListPresenter extends MvpPresenter<ImagesListView> implements
     private String lastPhotoPath;
     private List<ImageListItem> photosList;
     private ImageRepository imageRepository;
-    private final FileManager fileManager;
+    @Inject
+    FileManager fileManager;
 
-    public ImagesListPresenter(FileManager fileManager, Scheduler scheduler, ImageRepository imageRepository) {
+    public ImagesListPresenter(Scheduler scheduler, ImageRepository imageRepository) {
         this.scheduler = scheduler;
-        this.fileManager = fileManager;
         this.imageRepository = imageRepository;
-        imageRepository = new SimpleImageRepository(fileManager);
         photosList = new ArrayList<>();
     }
 
     @Override
     public void attachView(ImagesListView view) {
         super.attachView(view);
+        GeekstagramApp.getInstance().getAppComponent().inject(this);
         loadPhotos();
     }
 

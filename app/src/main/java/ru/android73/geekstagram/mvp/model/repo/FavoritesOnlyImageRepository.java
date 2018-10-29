@@ -8,9 +8,9 @@ import io.reactivex.schedulers.Schedulers;
 import ru.android73.geekstagram.mvp.model.FileManager;
 import ru.android73.geekstagram.mvp.model.db.ImageListItem;
 
-public class FavoritesOnlyRepository extends SimpleImageRepository {
+public class FavoritesOnlyImageRepository extends SimpleImageRepository {
 
-    public FavoritesOnlyRepository(FileManager fileManager) {
+    public FavoritesOnlyImageRepository(FileManager fileManager) {
         super(fileManager);
     }
 

@@ -13,14 +13,16 @@ import android.view.MenuItem;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.arellomobile.mvp.presenter.ProvidePresenter;
 
+import ru.android73.geekstagram.GeekstagramApp;
 import ru.android73.geekstagram.R;
+import ru.android73.geekstagram.mvp.presentation.presenter.MainPresenter;
+import ru.android73.geekstagram.mvp.presentation.view.MainView;
 import ru.android73.geekstagram.ui.fragment.CustomFragmentPagerAdapter;
 import ru.android73.geekstagram.ui.fragment.ImagesListFragment;
 import ru.android73.geekstagram.ui.fragment.TabFragmentFactory;
 import ru.android73.geekstagram.ui.fragment.ViewerFragment;
-import ru.android73.geekstagram.mvp.presentation.presenter.MainPresenter;
-import ru.android73.geekstagram.mvp.presentation.view.MainView;
 
 public class MainActivity extends BaseActivity implements MainView,
         NavigationView.OnNavigationItemSelectedListener, ImagesListFragment.OnFragmentInteractionListener {
@@ -30,6 +32,12 @@ public class MainActivity extends BaseActivity implements MainView,
 
     private DrawerLayout drawerLayout;
     private ViewPager viewPager;
+
+    @ProvidePresenter
+    public MainPresenter provideMainPresenter() {
+        MainPresenter presenter = new MainPresenter();
+        return presenter;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +56,7 @@ public class MainActivity extends BaseActivity implements MainView,
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        TabFragmentFactory tabFragmentFactory = new TabFragmentFactory(this, getTabTitles());
+        TabFragmentFactory tabFragmentFactory = new TabFragmentFactory(getTabTitles());
         CustomFragmentPagerAdapter customFragmentPagerAdapter
                 = new CustomFragmentPagerAdapter(getSupportFragmentManager(), tabFragmentFactory);
         // Set up the ViewPager with the sections adapter.
@@ -107,6 +115,6 @@ public class MainActivity extends BaseActivity implements MainView,
     private String[] getTabTitles() {
         String homeTab = getResources().getString(R.string.tab_name_home);
         String favoriteTab = getResources().getString(R.string.tab_name_favorite);
-        return new String[] {homeTab, favoriteTab};
+        return new String[]{homeTab, favoriteTab};
     }
 }

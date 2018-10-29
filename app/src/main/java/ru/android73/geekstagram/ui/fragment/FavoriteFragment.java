@@ -1,5 +1,6 @@
 package ru.android73.geekstagram.ui.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
@@ -11,10 +12,12 @@ import android.view.ViewGroup;
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
+import ru.android73.geekstagram.GeekstagramApp;
 import ru.android73.geekstagram.R;
-import ru.android73.geekstagram.mvp.model.FileManagerImpl;
-import ru.android73.geekstagram.mvp.model.repo.FavoritesOnlyRepository;
-import ru.android73.geekstagram.mvp.model.repo.SimpleImageRepository;
+import ru.android73.geekstagram.mvp.model.repo.ImageRepository;
 import ru.android73.geekstagram.mvp.presentation.presenter.FavoritePresenter;
 import ru.android73.geekstagram.mvp.presentation.view.FavoriteView;
 
@@ -24,6 +27,12 @@ public class FavoriteFragment extends MvpAppCompatFragment implements FavoriteVi
 
     @InjectPresenter
     FavoritePresenter favoritePresenter;
+    @Named("Favorites")
+    @Inject
+    ImageRepository favoriteImageRepository;
+    @Named("Common")
+    @Inject
+    ImageRepository commonImageRepository;
 
     FragmentManager fragmentManager;
 
@@ -34,6 +43,12 @@ public class FavoriteFragment extends MvpAppCompatFragment implements FavoriteVi
         fragment.setArguments(args);
 
         return fragment;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        GeekstagramApp.getInstance().getAppComponent().inject(this);
     }
 
     @Override
@@ -57,7 +72,7 @@ public class FavoriteFragment extends MvpAppCompatFragment implements FavoriteVi
 //                            if (fragment == null) {
 //                                fragment = ImageListDbFragment.newInstance();
 //                            }
-                            Fragment fragment = ImagesListFragment.newInstance(new FavoritesOnlyRepository(new FileManagerImpl(getContext())));
+                            Fragment fragment = ImagesListFragment.newInstance(favoriteImageRepository);
                             replaceChildFragment(fragment, ImagesListFragment.TAG);
                             return true;
                         case R.id.action_network:
@@ -65,7 +80,7 @@ public class FavoriteFragment extends MvpAppCompatFragment implements FavoriteVi
                                     ImageListNetworkFragment.TAG);
                             return true;
                         case R.id.action_aggregate:
-                            fragment = ImagesListFragment.newInstance(new SimpleImageRepository(new FileManagerImpl(getContext())));
+                            fragment = ImagesListFragment.newInstance(commonImageRepository);
                             replaceChildFragment(fragment, ImagesListFragment.TAG);
                             return true;
                     }
