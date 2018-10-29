@@ -1,5 +1,6 @@
 package ru.android73.geekstagram.ui.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
@@ -14,6 +15,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import ru.android73.geekstagram.GeekstagramApp;
 import ru.android73.geekstagram.R;
 import ru.android73.geekstagram.mvp.model.repo.ImageRepository;
 import ru.android73.geekstagram.mvp.presentation.presenter.FavoritePresenter;
@@ -41,6 +43,12 @@ public class FavoriteFragment extends MvpAppCompatFragment implements FavoriteVi
         fragment.setArguments(args);
 
         return fragment;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        GeekstagramApp.getInstance().getAppComponent().inject(this);
     }
 
     @Override

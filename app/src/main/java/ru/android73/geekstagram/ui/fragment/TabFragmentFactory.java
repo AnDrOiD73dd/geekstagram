@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import ru.android73.geekstagram.GeekstagramApp;
 import ru.android73.geekstagram.mvp.model.repo.ImageRepository;
 
 public class TabFragmentFactory {
@@ -16,6 +17,7 @@ public class TabFragmentFactory {
 
     public TabFragmentFactory(String[] titles) {
         this.titles = titles;
+        GeekstagramApp.getInstance().getAppComponent().inject(this);
     }
 
     public Fragment createFragment(int position) {

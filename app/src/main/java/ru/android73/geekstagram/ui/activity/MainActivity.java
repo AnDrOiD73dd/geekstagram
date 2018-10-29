@@ -44,8 +44,6 @@ public class MainActivity extends BaseActivity implements MainView,
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        GeekstagramApp.getInstance().getAppComponent().inject(this);
-
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 

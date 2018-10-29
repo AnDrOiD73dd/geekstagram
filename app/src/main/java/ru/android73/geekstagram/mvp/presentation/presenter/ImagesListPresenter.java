@@ -12,6 +12,7 @@ import javax.inject.Inject;
 
 import io.reactivex.Scheduler;
 import io.reactivex.schedulers.Schedulers;
+import ru.android73.geekstagram.GeekstagramApp;
 import ru.android73.geekstagram.log.Logger;
 import ru.android73.geekstagram.mvp.model.FileManager;
 import ru.android73.geekstagram.mvp.model.ImageAdapter;
@@ -39,6 +40,7 @@ public class ImagesListPresenter extends MvpPresenter<ImagesListView> implements
     @Override
     public void attachView(ImagesListView view) {
         super.attachView(view);
+        GeekstagramApp.getInstance().getAppComponent().inject(this);
         loadPhotos();
     }
 

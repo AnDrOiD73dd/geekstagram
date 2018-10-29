@@ -64,7 +64,6 @@ public class ImagesListFragment extends MvpAppCompatFragment implements ImagesLi
     ImagesListPresenter provideImagesListPresenter() {
         ImageRepository imageRepository = (ImageRepository) getArguments().getSerializable(KEY_REPOSITORY);
         ImagesListPresenter imagesListPresenter = new ImagesListPresenter(AndroidSchedulers.mainThread(), imageRepository);
-        GeekstagramApp.getInstance().getAppComponent().inject(imagesListPresenter);
         return imagesListPresenter ;
     }
 
