@@ -44,6 +44,12 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
+    // Powermock
+    def powermock_version = "1.7.1"
+    testImplementation "org.powermock:powermock-core:$powermock_version"
+    testImplementation "org.powermock:powermock-module-junit4:$powermock_version"
+    testImplementation "org.powermock:powermock-api-mockito2:$powermock_version"
+
     //CardView
     implementation "com.android.support:cardview-v7:$support_version"
 

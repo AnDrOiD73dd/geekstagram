@@ -13,14 +13,14 @@ import javax.inject.Named;
 
 import io.reactivex.Scheduler;
 import io.reactivex.schedulers.Schedulers;
-import ru.android73.geekstagram.GeekstagramApp;
+import ru.android73.geekstagram.di.AppComponent;
 import ru.android73.geekstagram.log.Logger;
 import ru.android73.geekstagram.mvp.model.FileManager;
 import ru.android73.geekstagram.mvp.model.ImageAdapter;
-import ru.android73.geekstagram.mvp.model.entity.ImageListItem;
-import ru.android73.geekstagram.mvp.model.entity.DataType;
-import ru.android73.geekstagram.mvp.model.repo.photo.ImageRepository;
 import ru.android73.geekstagram.mvp.model.cache.ImageCache;
+import ru.android73.geekstagram.mvp.model.entity.DataType;
+import ru.android73.geekstagram.mvp.model.entity.ImageListItem;
+import ru.android73.geekstagram.mvp.model.repo.photo.ImageRepository;
 import ru.android73.geekstagram.mvp.presentation.view.ImagesListView;
 import ru.android73.geekstagram.mvp.presentation.view.PhotoView;
 
@@ -29,6 +29,7 @@ import ru.android73.geekstagram.mvp.presentation.view.PhotoView;
 public class ImagesListPresenter extends MvpPresenter<ImagesListView> implements IPhotoListPresenter {
 
     private final Scheduler scheduler;
+    private final AppComponent appComponent;
     private String lastPhotoPath;
     private List<ImageListItem> photosList;
     private ImageRepository imageRepository;
@@ -38,21 +39,22 @@ public class ImagesListPresenter extends MvpPresenter<ImagesListView> implements
     @Inject
     ImageCache imageCache;
 
-    public ImagesListPresenter(Scheduler scheduler, ImageRepository imageRepository) {
+    public ImagesListPresenter(Scheduler scheduler, ImageRepository imageRepository, AppComponent appComponent) {
         this.scheduler = scheduler;
         this.imageRepository = imageRepository;
+        this.appComponent = appComponent;
         photosList = new ArrayList<>();
     }
 
     @Override
     public void attachView(ImagesListView view) {
         super.attachView(view);
-        GeekstagramApp.getInstance().getAppComponent().inject(this);
+        appComponent.inject(this);
         loadPhotos();
     }
 
     @SuppressLint("CheckResult")
-    private void loadPhotos() {
+    public void loadPhotos() {
         imageRepository.getPhotos()
                 .subscribeOn(Schedulers.io())
                 .observeOn(scheduler)
@@ -60,7 +62,7 @@ public class ImagesListPresenter extends MvpPresenter<ImagesListView> implements
                     photosList = imageListItems;
                     getViewState().updatePhotosList();
                 }, throwable -> {
-                    Logger.e(throwable);
+//                    Logger.e(throwable);
                     getViewState().showErrorLoadPhoto();
                 });
     }

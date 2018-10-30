@@ -24,6 +24,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.arellomobile.mvp.presenter.ProvidePresenter;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import ru.android73.geekstagram.GeekstagramApp;
 import ru.android73.geekstagram.R;
 import ru.android73.geekstagram.mvp.model.ImageAdapter;
 import ru.android73.geekstagram.mvp.model.entity.ImageListItem;
@@ -61,7 +62,9 @@ public class ImagesListFragment extends MvpAppCompatFragment implements ImagesLi
     @ProvidePresenter
     ImagesListPresenter provideImagesListPresenter() {
         ImageRepository imageRepository = (ImageRepository) getArguments().getSerializable(KEY_REPOSITORY);
-        ImagesListPresenter imagesListPresenter = new ImagesListPresenter(AndroidSchedulers.mainThread(), imageRepository);
+        ImagesListPresenter imagesListPresenter = new ImagesListPresenter(AndroidSchedulers.mainThread(),
+                imageRepository,
+                ((GeekstagramApp) getActivity().getApplication()).getAppComponent());
         return imagesListPresenter ;
     }
 
