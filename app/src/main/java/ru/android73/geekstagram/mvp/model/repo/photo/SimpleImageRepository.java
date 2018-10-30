@@ -1,4 +1,4 @@
-package ru.android73.geekstagram.mvp.model.repo;
+package ru.android73.geekstagram.mvp.model.repo.photo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,7 +7,11 @@ import io.reactivex.Completable;
 import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
 import ru.android73.geekstagram.mvp.model.FileManager;
-import ru.android73.geekstagram.mvp.model.db.ImageListItem;
+import ru.android73.geekstagram.mvp.model.entity.ImageListItem;
+import ru.android73.geekstagram.mvp.model.entity.DataType;
+import ru.android73.geekstagram.mvp.model.repo.FileRepository;
+import ru.android73.geekstagram.mvp.model.repo.FileRepositoryImpl;
+
 
 public class SimpleImageRepository implements ImageRepository {
 
@@ -39,9 +43,9 @@ public class SimpleImageRepository implements ImageRepository {
                             // Add images from file system to result list
                             for (String filePath : storageFilesList) {
                                 // Simulate favorite item
-                                ImageListItem imageListItem = new ImageListItem(filePath, true);
+                                ImageListItem imageListItem = new ImageListItem(filePath, true, DataType.LOCAL);
                                 if (!simpleImagesList.contains(imageListItem)) {
-                                    simpleImagesList.add(new ImageListItem(filePath, false));
+                                    simpleImagesList.add(new ImageListItem(filePath, false, DataType.LOCAL));
                                 }
                             }
                             emitter.onSuccess(simpleImagesList);
@@ -65,7 +69,7 @@ public class SimpleImageRepository implements ImageRepository {
                     .subscribeOn(Schedulers.io())
                     .observeOn(Schedulers.io())
                     .subscribe(file -> {
-                        emitter.onSuccess(new ImageListItem(file.getAbsolutePath(), false));
+                        emitter.onSuccess(new ImageListItem(file.getAbsolutePath(), false, DataType.LOCAL));
                     }, throwable -> {
                         if (!emitter.isDisposed()) {
                             emitter.onError(throwable);

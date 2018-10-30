@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import io.reactivex.Scheduler;
 import io.reactivex.schedulers.Schedulers;
@@ -16,10 +17,13 @@ import ru.android73.geekstagram.GeekstagramApp;
 import ru.android73.geekstagram.log.Logger;
 import ru.android73.geekstagram.mvp.model.FileManager;
 import ru.android73.geekstagram.mvp.model.ImageAdapter;
-import ru.android73.geekstagram.mvp.model.db.ImageListItem;
-import ru.android73.geekstagram.mvp.model.repo.ImageRepository;
+import ru.android73.geekstagram.mvp.model.entity.ImageListItem;
+import ru.android73.geekstagram.mvp.model.entity.DataType;
+import ru.android73.geekstagram.mvp.model.repo.photo.ImageRepository;
+import ru.android73.geekstagram.mvp.model.cache.ImageCache;
 import ru.android73.geekstagram.mvp.presentation.view.ImagesListView;
 import ru.android73.geekstagram.mvp.presentation.view.PhotoView;
+
 
 @InjectViewState
 public class ImagesListPresenter extends MvpPresenter<ImagesListView> implements IPhotoListPresenter {
@@ -30,6 +34,9 @@ public class ImagesListPresenter extends MvpPresenter<ImagesListView> implements
     private ImageRepository imageRepository;
     @Inject
     FileManager fileManager;
+    @Named("Realm")
+    @Inject
+    ImageCache imageCache;
 
     public ImagesListPresenter(Scheduler scheduler, ImageRepository imageRepository) {
         this.scheduler = scheduler;
@@ -59,7 +66,7 @@ public class ImagesListPresenter extends MvpPresenter<ImagesListView> implements
     }
 
     public void onTakePhotoSuccess() {
-        ImageListItem item = new ImageListItem(lastPhotoPath, false);
+        ImageListItem item = new ImageListItem(lastPhotoPath, false, DataType.LOCAL);
         if (photosList.add(item)) {
             int position = photosList.indexOf(item);
             getViewState().onItemAdded(position);
@@ -111,7 +118,7 @@ public class ImagesListPresenter extends MvpPresenter<ImagesListView> implements
     @Override
     public void bindPhoto(int pos, PhotoView view) {
         ImageListItem item = photosList.get(pos);
-        view.setPhoto(item.getImagePath());
+        view.setPhoto(item, imageCache);
         view.setFavorite(item.isFavorite());
         view.setDeleteIcon();
     }

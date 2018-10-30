@@ -1,4 +1,4 @@
-package ru.android73.geekstagram.mvp.model.repo;
+package ru.android73.geekstagram.mvp.model.repo.photo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,7 +6,7 @@ import java.util.List;
 import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
 import ru.android73.geekstagram.mvp.model.FileManager;
-import ru.android73.geekstagram.mvp.model.db.ImageListItem;
+import ru.android73.geekstagram.mvp.model.entity.ImageListItem;
 
 public class FavoritesOnlyImageRepository extends SimpleImageRepository {
 

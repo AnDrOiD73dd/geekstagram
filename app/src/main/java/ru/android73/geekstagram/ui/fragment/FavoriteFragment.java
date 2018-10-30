@@ -17,7 +17,7 @@ import javax.inject.Named;
 
 import ru.android73.geekstagram.GeekstagramApp;
 import ru.android73.geekstagram.R;
-import ru.android73.geekstagram.mvp.model.repo.ImageRepository;
+import ru.android73.geekstagram.mvp.model.repo.photo.ImageRepository;
 import ru.android73.geekstagram.mvp.presentation.presenter.FavoritePresenter;
 import ru.android73.geekstagram.mvp.presentation.view.FavoriteView;
 
@@ -33,6 +33,12 @@ public class FavoriteFragment extends MvpAppCompatFragment implements FavoriteVi
     @Named("Common")
     @Inject
     ImageRepository commonImageRepository;
+    @Named("Network")
+    @Inject
+    ImageRepository networkImageRepository;
+    @Named("Combined")
+    @Inject
+    ImageRepository combinedImageRepository;
 
     FragmentManager fragmentManager;
 
@@ -58,8 +64,8 @@ public class FavoriteFragment extends MvpAppCompatFragment implements FavoriteVi
 
         fragmentManager = getChildFragmentManager();
 
-        if (fragmentManager.findFragmentByTag(ImageListDbFragment.TAG) == null) {
-            replaceChildFragment(ImageListDbFragment.newInstance(), ImageListDbFragment.TAG);
+        if (fragmentManager.findFragmentByTag(ImagesListFragment.TAG) == null) {
+            replaceChildFragment(ImagesListFragment.newInstance(favoriteImageRepository), ImagesListFragment.TAG);
         }
 
         BottomNavigationView bottomNavigationView = layout.findViewById(R.id.bottom_navigation_view);
@@ -76,11 +82,11 @@ public class FavoriteFragment extends MvpAppCompatFragment implements FavoriteVi
                             replaceChildFragment(fragment, ImagesListFragment.TAG);
                             return true;
                         case R.id.action_network:
-                            replaceChildFragment(ImageListNetworkFragment.newInstance(),
-                                    ImageListNetworkFragment.TAG);
+                            replaceChildFragment(ImagesListFragment.newInstance(networkImageRepository),
+                                    ImagesListFragment.TAG);
                             return true;
                         case R.id.action_aggregate:
-                            fragment = ImagesListFragment.newInstance(commonImageRepository);
+                            fragment = ImagesListFragment.newInstance(combinedImageRepository);
                             replaceChildFragment(fragment, ImagesListFragment.TAG);
                             return true;
                     }

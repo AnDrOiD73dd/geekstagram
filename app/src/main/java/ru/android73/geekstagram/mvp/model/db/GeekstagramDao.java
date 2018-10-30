@@ -10,6 +10,8 @@ import android.arch.persistence.room.Update;
 import java.util.List;
 
 import io.reactivex.Single;
+import ru.android73.geekstagram.mvp.model.entity.ImageListItem;
+
 
 @Dao
 public interface GeekstagramDao {

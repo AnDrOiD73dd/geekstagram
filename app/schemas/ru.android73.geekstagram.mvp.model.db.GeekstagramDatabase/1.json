@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "c1392a8d646316eea8af27f3d842cf95",
+    "identityHash": "c76a474d6368a2cb83d19d77ca5fa175",
     "entities": [
       {
         "tableName": "ImageListItem",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`image_uri` TEXT NOT NULL, `favorite` INTEGER NOT NULL, PRIMARY KEY(`image_uri`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`image_uri` TEXT NOT NULL, `favorite` INTEGER NOT NULL, `type` INTEGER, PRIMARY KEY(`image_uri`))",
         "fields": [
           {
             "fieldPath": "imagePath",
@@ -19,6 +19,12 @@
             "columnName": "favorite",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "dataType",
+            "columnName": "type",
+            "affinity": "INTEGER",
+            "notNull": false
           }
         ],
         "primaryKey": {
@@ -42,7 +48,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"c1392a8d646316eea8af27f3d842cf95\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"c76a474d6368a2cb83d19d77ca5fa175\")"
     ]
   }
 }

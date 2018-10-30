@@ -6,7 +6,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import ru.android73.geekstagram.GeekstagramApp;
-import ru.android73.geekstagram.mvp.model.repo.ImageRepository;
+import ru.android73.geekstagram.mvp.model.repo.photo.ImageRepository;
 
 public class TabFragmentFactory {
 
