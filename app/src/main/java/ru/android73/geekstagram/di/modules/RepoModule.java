@@ -10,11 +10,12 @@ import ru.android73.geekstagram.mvp.model.FileManager;
 import ru.android73.geekstagram.mvp.model.repo.CombinedImageRepository;
 import ru.android73.geekstagram.mvp.model.repo.FavoritesOnlyImageRepository;
 import ru.android73.geekstagram.mvp.model.repo.ImageRepository;
-import ru.android73.geekstagram.mvp.model.repo.InstagramImageRepository;
+import ru.android73.geekstagram.mvp.model.repo.NetworkImageRepository;
 import ru.android73.geekstagram.mvp.model.repo.SimpleImageRepository;
 import ru.android73.geekstagram.mvp.model.repo.ThemeRepository;
 import ru.android73.geekstagram.mvp.model.repo.ThemeRepositoryImpl;
 import ru.android73.geekstagram.mvp.model.repo.cache.ImageCache;
+import ru.android73.geekstagram.mvp.model.repo.network.PhotoLoader;
 import ru.android73.geekstagram.mvp.model.theme.ThemeMapperEnumString;
 
 @Module(includes = {ApiModule.class, CacheModule.class})
@@ -32,10 +33,10 @@ public class RepoModule {
         return new FavoritesOnlyImageRepository(fileManager);
     }
 
-    @Named("Instagram")
+    @Named("Network")
     @Provides
-    public ImageRepository instagramImageRepository(@Named("paper") ImageCache imageCache) {
-        return new InstagramImageRepository(imageCache);
+    public ImageRepository networkImageRepository(PhotoLoader photoLoader, @Named("paper") ImageCache imageCache) {
+        return new NetworkImageRepository(photoLoader, imageCache);
     }
 
     @Named("Combined")

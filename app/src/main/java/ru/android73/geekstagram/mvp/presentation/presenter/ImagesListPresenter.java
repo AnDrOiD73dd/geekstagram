@@ -17,6 +17,7 @@ import ru.android73.geekstagram.log.Logger;
 import ru.android73.geekstagram.mvp.model.FileManager;
 import ru.android73.geekstagram.mvp.model.ImageAdapter;
 import ru.android73.geekstagram.mvp.model.db.ImageListItem;
+import ru.android73.geekstagram.mvp.model.repo.DataType;
 import ru.android73.geekstagram.mvp.model.repo.ImageRepository;
 import ru.android73.geekstagram.mvp.presentation.view.ImagesListView;
 import ru.android73.geekstagram.mvp.presentation.view.PhotoView;
@@ -59,7 +60,7 @@ public class ImagesListPresenter extends MvpPresenter<ImagesListView> implements
     }
 
     public void onTakePhotoSuccess() {
-        ImageListItem item = new ImageListItem(lastPhotoPath, false);
+        ImageListItem item = new ImageListItem(lastPhotoPath, false, DataType.LOCAL);
         if (photosList.add(item)) {
             int position = photosList.indexOf(item);
             getViewState().onItemAdded(position);
@@ -111,7 +112,7 @@ public class ImagesListPresenter extends MvpPresenter<ImagesListView> implements
     @Override
     public void bindPhoto(int pos, PhotoView view) {
         ImageListItem item = photosList.get(pos);
-        view.setPhoto(item.getImagePath());
+        view.setPhoto(item);
         view.setFavorite(item.isFavorite());
         view.setDeleteIcon();
     }

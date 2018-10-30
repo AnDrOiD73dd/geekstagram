@@ -33,6 +33,9 @@ public class FavoriteFragment extends MvpAppCompatFragment implements FavoriteVi
     @Named("Common")
     @Inject
     ImageRepository commonImageRepository;
+    @Named("Network")
+    @Inject
+    ImageRepository networkImageRepository;
 
     FragmentManager fragmentManager;
 
@@ -76,8 +79,8 @@ public class FavoriteFragment extends MvpAppCompatFragment implements FavoriteVi
                             replaceChildFragment(fragment, ImagesListFragment.TAG);
                             return true;
                         case R.id.action_network:
-                            replaceChildFragment(ImageListNetworkFragment.newInstance(),
-                                    ImageListNetworkFragment.TAG);
+                            replaceChildFragment(ImagesListFragment.newInstance(networkImageRepository),
+                                    ImagesListFragment.TAG);
                             return true;
                         case R.id.action_aggregate:
                             fragment = ImagesListFragment.newInstance(commonImageRepository);

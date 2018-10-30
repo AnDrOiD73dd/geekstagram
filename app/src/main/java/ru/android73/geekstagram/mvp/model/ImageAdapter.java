@@ -18,6 +18,8 @@ import butterknife.OnClick;
 import butterknife.OnLongClick;
 import ru.android73.geekstagram.R;
 import ru.android73.geekstagram.log.Logger;
+import ru.android73.geekstagram.mvp.model.db.ImageListItem;
+import ru.android73.geekstagram.mvp.model.repo.DataType;
 import ru.android73.geekstagram.mvp.presentation.presenter.IPhotoListPresenter;
 import ru.android73.geekstagram.mvp.presentation.view.PhotoView;
 
@@ -84,25 +86,45 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
         }
 
         @Override
-        public void setPhoto(String filePath) {
-            File file = new File(filePath);
+        public void setPhoto(ImageListItem item) {
             if (getLayoutPosition() != RecyclerView.NO_POSITION) {
-                Picasso.get()
-                        .load(file)
-                        .resize(PREVIEW_SIZE, PREVIEW_SIZE)
-                        .centerCrop()
-                        .placeholder(R.drawable.ic_image_24dp_vector)
-                        .error(R.drawable.ic_report_problem_24dp_vector)
-                        .into(imageContainer, new Callback() {
-                            @Override
-                            public void onSuccess() {
-                            }
+                if (item.getDataType().equals(DataType.LOCAL)) {
+                    File file = new File(item.getImagePath());
+                    Picasso.get()
+                            .load(file)
+                            .resize(PREVIEW_SIZE, PREVIEW_SIZE)
+                            .centerCrop()
+                            .placeholder(R.drawable.ic_image_24dp_vector)
+                            .error(R.drawable.ic_report_problem_24dp_vector)
+                            .into(imageContainer, new Callback() {
+                                @Override
+                                public void onSuccess() {
+                                }
 
-                            @Override
-                            public void onError(Exception e) {
-                                Logger.e("Error loading image: %s", e.getMessage());
-                            }
-                        });
+                                @Override
+                                public void onError(Exception e) {
+                                    Logger.e("Error loading image: %s", e.getMessage());
+                                }
+                            });
+
+                } else if (item.getDataType().equals(DataType.REMOTE)) {
+                    Picasso.get()
+                            .load(item.getImagePath())
+                            .resize(PREVIEW_SIZE, PREVIEW_SIZE)
+                            .centerCrop()
+                            .placeholder(R.drawable.ic_image_24dp_vector)
+                            .error(R.drawable.ic_report_problem_24dp_vector)
+                            .into(imageContainer, new Callback() {
+                                @Override
+                                public void onSuccess() {
+                                }
+
+                                @Override
+                                public void onError(Exception e) {
+                                    Logger.e("Error loading image: %s", e.getMessage());
+                                }
+                            });
+                }
             }
         }
 
