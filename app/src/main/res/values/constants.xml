@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="theme_name_standard">standard theme</string>
+    <string name="theme_name_dark">dark theme</string>
+    <string name="file_provider_authority">ru.android73.geekstagram.photoprovider</string>
+</resources>

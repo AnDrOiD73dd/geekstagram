@@ -8,18 +8,20 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="DefaultTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="DefaultTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="colorPrimary">@color/defaultPrimary</item>
         <item name="colorPrimaryDark">@color/defaultPrimaryDark</item>
         <item name="colorAccent">@color/defaultAccent</item>
         <item name="themeName">@string/theme_name_standard</item>
+        <item name="cardViewStyle">@style/CardView</item>
     </style>
 
-    <style name="DarkTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="DarkTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="colorPrimary">@color/secondaryPrimary</item>
         <item name="colorPrimaryDark">@color/secondaryPrimaryDark</item>
         <item name="colorAccent">@color/secondaryAccent</item>
         <item name="themeName">@string/theme_name_dark</item>
+        <item name="cardViewStyle">@style/CardView</item>
     </style>
 
 </resources>

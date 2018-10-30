@@ -1,0 +1,54 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "c76a474d6368a2cb83d19d77ca5fa175",
+    "entities": [
+      {
+        "tableName": "ImageListItem",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`image_uri` TEXT NOT NULL, `favorite` INTEGER NOT NULL, `type` INTEGER, PRIMARY KEY(`image_uri`))",
+        "fields": [
+          {
+            "fieldPath": "imagePath",
+            "columnName": "image_uri",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "favorite",
+            "columnName": "favorite",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dataType",
+            "columnName": "type",
+            "affinity": "INTEGER",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "image_uri"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [
+          {
+            "name": "index_ImageListItem_image_uri",
+            "unique": true,
+            "columnNames": [
+              "image_uri"
+            ],
+            "createSql": "CREATE UNIQUE INDEX `index_ImageListItem_image_uri` ON `${TABLE_NAME}` (`image_uri`)"
+          }
+        ],
+        "foreignKeys": []
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"c76a474d6368a2cb83d19d77ca5fa175\")"
+    ]
+  }
+}
