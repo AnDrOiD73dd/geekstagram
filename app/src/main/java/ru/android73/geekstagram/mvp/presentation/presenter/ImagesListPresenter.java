@@ -17,10 +17,10 @@ import ru.android73.geekstagram.GeekstagramApp;
 import ru.android73.geekstagram.log.Logger;
 import ru.android73.geekstagram.mvp.model.FileManager;
 import ru.android73.geekstagram.mvp.model.ImageAdapter;
-import ru.android73.geekstagram.mvp.model.db.ImageListItem;
-import ru.android73.geekstagram.mvp.model.repo.DataType;
-import ru.android73.geekstagram.mvp.model.repo.ImageRepository;
-import ru.android73.geekstagram.mvp.model.repo.cache.ImageCache;
+import ru.android73.geekstagram.mvp.model.entity.ImageListItem;
+import ru.android73.geekstagram.mvp.model.entity.DataType;
+import ru.android73.geekstagram.mvp.model.repo.photo.ImageRepository;
+import ru.android73.geekstagram.mvp.model.cache.ImageCache;
 import ru.android73.geekstagram.mvp.presentation.view.ImagesListView;
 import ru.android73.geekstagram.mvp.presentation.view.PhotoView;
 

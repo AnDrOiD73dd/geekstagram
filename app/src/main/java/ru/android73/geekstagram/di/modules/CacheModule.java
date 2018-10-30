@@ -4,9 +4,9 @@ import javax.inject.Named;
 
 import dagger.Module;
 import dagger.Provides;
-import ru.android73.geekstagram.mvp.model.repo.cache.ImageCache;
-import ru.android73.geekstagram.mvp.model.repo.cache.PaperImageCache;
-import ru.android73.geekstagram.mvp.model.repo.cache.RealmImageCache;
+import ru.android73.geekstagram.mvp.model.cache.ImageCache;
+import ru.android73.geekstagram.mvp.model.cache.PaperImageCache;
+import ru.android73.geekstagram.mvp.model.cache.RealmImageCache;
 
 
 @Module

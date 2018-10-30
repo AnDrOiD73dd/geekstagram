@@ -18,9 +18,9 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import ru.android73.geekstagram.mvp.model.FileManager;
 import ru.android73.geekstagram.mvp.model.FileManagerImpl;
-import ru.android73.geekstagram.mvp.model.repo.network.ApiService;
-import ru.android73.geekstagram.mvp.model.repo.network.PhotoLoader;
-import ru.android73.geekstagram.mvp.model.repo.network.PhotoLoaderImpl;
+import ru.android73.geekstagram.mvp.model.photoloader.ApiService;
+import ru.android73.geekstagram.mvp.model.photoloader.PhotoLoader;
+import ru.android73.geekstagram.mvp.model.photoloader.PhotoLoaderImpl;
 import ru.android73.geekstagram.mvp.model.theme.ThemeMapperEnumResource;
 import ru.android73.geekstagram.mvp.model.theme.ThemeMapperEnumString;
 

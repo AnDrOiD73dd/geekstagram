@@ -7,15 +7,15 @@ import javax.inject.Named;
 import dagger.Module;
 import dagger.Provides;
 import ru.android73.geekstagram.mvp.model.FileManager;
-import ru.android73.geekstagram.mvp.model.repo.CombinedImageRepository;
-import ru.android73.geekstagram.mvp.model.repo.FavoritesOnlyImageRepository;
-import ru.android73.geekstagram.mvp.model.repo.ImageRepository;
-import ru.android73.geekstagram.mvp.model.repo.NetworkImageRepository;
-import ru.android73.geekstagram.mvp.model.repo.SimpleImageRepository;
+import ru.android73.geekstagram.mvp.model.repo.photo.CombinedImageRepository;
+import ru.android73.geekstagram.mvp.model.repo.photo.FavoritesOnlyImageRepository;
+import ru.android73.geekstagram.mvp.model.repo.photo.ImageRepository;
+import ru.android73.geekstagram.mvp.model.repo.photo.NetworkImageRepository;
+import ru.android73.geekstagram.mvp.model.repo.photo.SimpleImageRepository;
 import ru.android73.geekstagram.mvp.model.repo.ThemeRepository;
 import ru.android73.geekstagram.mvp.model.repo.ThemeRepositoryImpl;
-import ru.android73.geekstagram.mvp.model.repo.cache.ImageCache;
-import ru.android73.geekstagram.mvp.model.repo.network.PhotoLoader;
+import ru.android73.geekstagram.mvp.model.cache.ImageCache;
+import ru.android73.geekstagram.mvp.model.photoloader.PhotoLoader;
 import ru.android73.geekstagram.mvp.model.theme.ThemeMapperEnumString;
 
 

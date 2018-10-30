@@ -1,4 +1,4 @@
-package ru.android73.geekstagram.mvp.model.repo;
+package ru.android73.geekstagram.mvp.model.repo.photo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,10 +7,11 @@ import io.reactivex.Completable;
 import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
 import ru.android73.geekstagram.mvp.model.NetworkStatus;
-import ru.android73.geekstagram.mvp.model.db.ImageListItem;
-import ru.android73.geekstagram.mvp.model.repo.cache.ImageCache;
-import ru.android73.geekstagram.mvp.model.repo.network.PhotoEntity;
-import ru.android73.geekstagram.mvp.model.repo.network.PhotoLoader;
+import ru.android73.geekstagram.mvp.model.entity.ImageListItem;
+import ru.android73.geekstagram.mvp.model.entity.DataType;
+import ru.android73.geekstagram.mvp.model.cache.ImageCache;
+import ru.android73.geekstagram.mvp.model.entity.PhotoEntity;
+import ru.android73.geekstagram.mvp.model.photoloader.PhotoLoader;
 
 
 public class NetworkImageRepository implements ImageRepository {

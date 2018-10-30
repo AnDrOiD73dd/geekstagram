@@ -1,4 +1,4 @@
-package ru.android73.geekstagram.mvp.model.repo;
+package ru.android73.geekstagram.mvp.model.entity;
 
 public enum DataType {
     LOCAL(0),

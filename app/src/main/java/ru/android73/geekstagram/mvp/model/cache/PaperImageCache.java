@@ -1,10 +1,10 @@
-package ru.android73.geekstagram.mvp.model.repo.cache;
+package ru.android73.geekstagram.mvp.model.cache;
 
 import android.graphics.Bitmap;
 
 import java.util.List;
 
-import ru.android73.geekstagram.mvp.model.db.ImageListItem;
+import ru.android73.geekstagram.mvp.model.entity.ImageListItem;
 
 
 public class PaperImageCache implements ImageCache {

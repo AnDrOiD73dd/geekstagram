@@ -1,9 +1,6 @@
 package ru.android73.geekstagram.mvp.model.entity;
 
 import io.realm.RealmObject;
-import ru.android73.geekstagram.mvp.model.db.DataTypeConverter;
-import ru.android73.geekstagram.mvp.model.db.ImageListItem;
-import ru.android73.geekstagram.mvp.model.repo.DataType;
 
 
 public class RealmImageListItem extends RealmObject {

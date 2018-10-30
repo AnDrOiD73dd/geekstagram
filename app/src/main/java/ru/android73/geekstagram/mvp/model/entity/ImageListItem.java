@@ -1,4 +1,4 @@
-package ru.android73.geekstagram.mvp.model.db;
+package ru.android73.geekstagram.mvp.model.entity;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
@@ -8,8 +8,6 @@ import android.arch.persistence.room.TypeConverters;
 import android.support.annotation.NonNull;
 
 import java.util.Objects;
-
-import ru.android73.geekstagram.mvp.model.repo.DataType;
 
 
 @Entity(indices = {@Index(value = {"image_uri"}, unique = true)})

@@ -1,6 +1,7 @@
-package ru.android73.geekstagram.mvp.model.repo.network;
+package ru.android73.geekstagram.mvp.model.entity;
 
 import com.google.gson.annotations.SerializedName;
+
 
 public class PhotoEntity {
 

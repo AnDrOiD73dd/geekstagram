@@ -24,12 +24,10 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.arellomobile.mvp.presenter.ProvidePresenter;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import ru.android73.geekstagram.GeekstagramApp;
 import ru.android73.geekstagram.R;
-import ru.android73.geekstagram.mvp.model.FileManagerImpl;
 import ru.android73.geekstagram.mvp.model.ImageAdapter;
-import ru.android73.geekstagram.mvp.model.db.ImageListItem;
-import ru.android73.geekstagram.mvp.model.repo.ImageRepository;
+import ru.android73.geekstagram.mvp.model.entity.ImageListItem;
+import ru.android73.geekstagram.mvp.model.repo.photo.ImageRepository;
 import ru.android73.geekstagram.mvp.presentation.presenter.ImagesListPresenter;
 import ru.android73.geekstagram.mvp.presentation.view.ImagesListView;
 

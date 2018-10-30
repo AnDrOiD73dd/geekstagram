@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -21,9 +20,9 @@ import butterknife.OnClick;
 import butterknife.OnLongClick;
 import ru.android73.geekstagram.R;
 import ru.android73.geekstagram.log.Logger;
-import ru.android73.geekstagram.mvp.model.db.ImageListItem;
-import ru.android73.geekstagram.mvp.model.repo.DataType;
-import ru.android73.geekstagram.mvp.model.repo.cache.ImageCache;
+import ru.android73.geekstagram.mvp.model.entity.ImageListItem;
+import ru.android73.geekstagram.mvp.model.entity.DataType;
+import ru.android73.geekstagram.mvp.model.cache.ImageCache;
 import ru.android73.geekstagram.mvp.presentation.presenter.IPhotoListPresenter;
 import ru.android73.geekstagram.mvp.presentation.view.PhotoView;
 

@@ -1,4 +1,4 @@
-package ru.android73.geekstagram.mvp.model.repo.cache;
+package ru.android73.geekstagram.mvp.model.cache;
 
 import android.graphics.Bitmap;
 
@@ -13,7 +13,7 @@ import java.util.List;
 import io.realm.Realm;
 import io.realm.RealmList;
 import ru.android73.geekstagram.GeekstagramApp;
-import ru.android73.geekstagram.mvp.model.db.ImageListItem;
+import ru.android73.geekstagram.mvp.model.entity.ImageListItem;
 import ru.android73.geekstagram.mvp.model.entity.CachedImage;
 import ru.android73.geekstagram.mvp.model.entity.CachedImageList;
 import ru.android73.geekstagram.mvp.model.entity.RealmImageListItem;

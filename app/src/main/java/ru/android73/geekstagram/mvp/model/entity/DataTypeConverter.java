@@ -1,8 +1,8 @@
-package ru.android73.geekstagram.mvp.model.db;
+package ru.android73.geekstagram.mvp.model.entity;
 
 import android.arch.persistence.room.TypeConverter;
 
-import ru.android73.geekstagram.mvp.model.repo.DataType;
+import ru.android73.geekstagram.mvp.model.entity.DataType;
 
 public class DataTypeConverter {
 
