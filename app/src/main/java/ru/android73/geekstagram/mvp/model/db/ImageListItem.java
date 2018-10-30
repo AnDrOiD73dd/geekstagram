@@ -11,18 +11,19 @@ import java.util.Objects;
 
 import ru.android73.geekstagram.mvp.model.repo.DataType;
 
+
 @Entity(indices = {@Index(value = {"image_uri"}, unique = true)})
 public class ImageListItem {
 
     @PrimaryKey
     @NonNull
     @ColumnInfo(name = "image_uri")
-    private String imagePath;
+    protected String imagePath;
     @ColumnInfo(name = "favorite")
-    private boolean favorite;
+    protected boolean favorite;
     @ColumnInfo(name = "type")
     @TypeConverters(DataTypeConverter.class)
-    private DataType dataType;
+    protected DataType dataType;
 
     public ImageListItem(@NonNull String imagePath, boolean favorite, DataType dataType) {
         this.imagePath = imagePath;
@@ -57,8 +58,12 @@ public class ImageListItem {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         ImageListItem item = (ImageListItem) o;
         return favorite == item.favorite &&
                 Objects.equals(imagePath, item.imagePath) &&

@@ -1,5 +1,7 @@
 apply plugin: 'com.android.application'
 
+apply plugin: 'realm-android'
+
 android {
     compileSdkVersion 28
     defaultConfig {
@@ -58,6 +60,9 @@ dependencies {
     // optional - RxJava support for Room
     implementation "android.arch.persistence.room:rxjava2:$room_version"
 
+    // Realm
+
+
     // Picasso
     implementation 'com.squareup.picasso:picasso:2.71828'
 
@@ -85,4 +90,7 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
     implementation "com.squareup.okhttp3:logging-interceptor:3.9.1"
     androidTestImplementation 'com.squareup.okhttp3:mockwebserver:3.6.0'
+
+    //Paper
+    implementation 'io.paperdb:paperdb:2.6'
 }

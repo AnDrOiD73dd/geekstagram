@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import io.reactivex.Scheduler;
 import io.reactivex.schedulers.Schedulers;
@@ -19,8 +20,10 @@ import ru.android73.geekstagram.mvp.model.ImageAdapter;
 import ru.android73.geekstagram.mvp.model.db.ImageListItem;
 import ru.android73.geekstagram.mvp.model.repo.DataType;
 import ru.android73.geekstagram.mvp.model.repo.ImageRepository;
+import ru.android73.geekstagram.mvp.model.repo.cache.ImageCache;
 import ru.android73.geekstagram.mvp.presentation.view.ImagesListView;
 import ru.android73.geekstagram.mvp.presentation.view.PhotoView;
+
 
 @InjectViewState
 public class ImagesListPresenter extends MvpPresenter<ImagesListView> implements IPhotoListPresenter {
@@ -31,6 +34,9 @@ public class ImagesListPresenter extends MvpPresenter<ImagesListView> implements
     private ImageRepository imageRepository;
     @Inject
     FileManager fileManager;
+    @Named("Realm")
+    @Inject
+    ImageCache imageCache;
 
     public ImagesListPresenter(Scheduler scheduler, ImageRepository imageRepository) {
         this.scheduler = scheduler;
@@ -112,7 +118,7 @@ public class ImagesListPresenter extends MvpPresenter<ImagesListView> implements
     @Override
     public void bindPhoto(int pos, PhotoView view) {
         ImageListItem item = photosList.get(pos);
-        view.setPhoto(item);
+        view.setPhoto(item, imageCache);
         view.setFavorite(item.isFavorite());
         view.setDeleteIcon();
     }

@@ -18,6 +18,7 @@ import ru.android73.geekstagram.mvp.model.repo.cache.ImageCache;
 import ru.android73.geekstagram.mvp.model.repo.network.PhotoLoader;
 import ru.android73.geekstagram.mvp.model.theme.ThemeMapperEnumString;
 
+
 @Module(includes = {ApiModule.class, CacheModule.class})
 public class RepoModule {
 
@@ -35,7 +36,7 @@ public class RepoModule {
 
     @Named("Network")
     @Provides
-    public ImageRepository networkImageRepository(PhotoLoader photoLoader, @Named("paper") ImageCache imageCache) {
+    public ImageRepository networkImageRepository(PhotoLoader photoLoader, @Named("Realm") ImageCache imageCache) {
         return new NetworkImageRepository(photoLoader, imageCache);
     }
 

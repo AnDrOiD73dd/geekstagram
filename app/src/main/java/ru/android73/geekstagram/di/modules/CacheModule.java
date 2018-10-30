@@ -5,14 +5,22 @@ import javax.inject.Named;
 import dagger.Module;
 import dagger.Provides;
 import ru.android73.geekstagram.mvp.model.repo.cache.ImageCache;
-import ru.android73.geekstagram.mvp.model.repo.cache.PaperCache;
+import ru.android73.geekstagram.mvp.model.repo.cache.PaperImageCache;
+import ru.android73.geekstagram.mvp.model.repo.cache.RealmImageCache;
+
 
 @Module
 public class CacheModule {
 
-    @Named("paper")
+    @Named("Paper")
     @Provides
-    public ImageCache paperCache(){
-        return new PaperCache();
+    public ImageCache paperImageCache() {
+        return new PaperImageCache();
+    }
+
+    @Named("Realm")
+    @Provides
+    public ImageCache realmImageCache() {
+        return new RealmImageCache();
     }
 }

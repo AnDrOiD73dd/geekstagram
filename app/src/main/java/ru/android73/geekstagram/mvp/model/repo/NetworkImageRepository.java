@@ -6,10 +6,12 @@ import java.util.List;
 import io.reactivex.Completable;
 import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
+import ru.android73.geekstagram.mvp.model.NetworkStatus;
 import ru.android73.geekstagram.mvp.model.db.ImageListItem;
 import ru.android73.geekstagram.mvp.model.repo.cache.ImageCache;
 import ru.android73.geekstagram.mvp.model.repo.network.PhotoEntity;
 import ru.android73.geekstagram.mvp.model.repo.network.PhotoLoader;
+
 
 public class NetworkImageRepository implements ImageRepository {
 
@@ -26,17 +28,22 @@ public class NetworkImageRepository implements ImageRepository {
 
     @Override
     public Single<List<ImageListItem>> getPhotos() {
-        return Single.create(emitter -> photoLoader.getPhotos(ACCESS_KEY)
-                .subscribeOn(Schedulers.io())
-                .observeOn(Schedulers.io())
-                .subscribe(photoEntities -> {
-                    List<ImageListItem> imagesList = new ArrayList<>();
-                    for (PhotoEntity photoEntity : photoEntities) {
-                        ImageListItem item = new ImageListItem(photoEntity.getUrls().getRegular(), false, DataType.REMOTE);
-                        imagesList.add(item);
-                    }
-                    emitter.onSuccess(imagesList);
-                }, emitter::onError));
+        if (NetworkStatus.isOnline()) {
+            return Single.create(emitter -> photoLoader.getPhotos(ACCESS_KEY)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(Schedulers.io())
+                    .subscribe(photoEntities -> {
+                        List<ImageListItem> imagesList = new ArrayList<>();
+                        for (PhotoEntity photoEntity : photoEntities) {
+                            ImageListItem item = new ImageListItem(photoEntity.getUrls().getRegular(), false, DataType.REMOTE);
+                            imagesList.add(item);
+                        }
+                        cache.putImageList(imagesList);
+                        emitter.onSuccess(imagesList);
+                    }, emitter::onError));
+        } else {
+            return Single.create(emitter -> emitter.onSuccess(cache.getImageList()));
+        }
     }
 
     @Override

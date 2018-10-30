@@ -1,5 +1,7 @@
 package ru.android73.geekstagram.mvp.model;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,6 +11,7 @@ import android.widget.ImageView;
 
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.io.File;
 
@@ -20,8 +23,10 @@ import ru.android73.geekstagram.R;
 import ru.android73.geekstagram.log.Logger;
 import ru.android73.geekstagram.mvp.model.db.ImageListItem;
 import ru.android73.geekstagram.mvp.model.repo.DataType;
+import ru.android73.geekstagram.mvp.model.repo.cache.ImageCache;
 import ru.android73.geekstagram.mvp.presentation.presenter.IPhotoListPresenter;
 import ru.android73.geekstagram.mvp.presentation.view.PhotoView;
+
 
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> {
 
@@ -86,46 +91,59 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
         }
 
         @Override
-        public void setPhoto(ImageListItem item) {
+        public void setPhoto(ImageListItem item, ImageCache imageCache) {
             if (getLayoutPosition() != RecyclerView.NO_POSITION) {
                 if (item.getDataType().equals(DataType.LOCAL)) {
-                    File file = new File(item.getImagePath());
-                    Picasso.get()
-                            .load(file)
-                            .resize(PREVIEW_SIZE, PREVIEW_SIZE)
-                            .centerCrop()
-                            .placeholder(R.drawable.ic_image_24dp_vector)
-                            .error(R.drawable.ic_report_problem_24dp_vector)
-                            .into(imageContainer, new Callback() {
-                                @Override
-                                public void onSuccess() {
-                                }
-
-                                @Override
-                                public void onError(Exception e) {
-                                    Logger.e("Error loading image: %s", e.getMessage());
-                                }
-                            });
+                    loadImageFromFile(item);
 
                 } else if (item.getDataType().equals(DataType.REMOTE)) {
-                    Picasso.get()
-                            .load(item.getImagePath())
-                            .resize(PREVIEW_SIZE, PREVIEW_SIZE)
-                            .centerCrop()
-                            .placeholder(R.drawable.ic_image_24dp_vector)
-                            .error(R.drawable.ic_report_problem_24dp_vector)
-                            .into(imageContainer, new Callback() {
-                                @Override
-                                public void onSuccess() {
-                                }
-
-                                @Override
-                                public void onError(Exception e) {
-                                    Logger.e("Error loading image: %s", e.getMessage());
-                                }
-                            });
+                    if (NetworkStatus.isOnline()) {
+                        loadImageFromNetwork(item, imageCache);
+                    } else {
+                        String imagePath = imageCache.getImage(item.getImagePath());
+                        item.setImagePath(imagePath);
+                        loadImageFromFile(item);
+                    }
                 }
             }
+        }
+
+        private void loadImageFromNetwork(ImageListItem item, ImageCache imageCache) {
+            Picasso.get()
+                    .load(item.getImagePath())
+                    .resize(PREVIEW_SIZE, PREVIEW_SIZE)
+                    .centerCrop()
+                    .placeholder(R.drawable.ic_image_24dp_vector)
+                    .error(R.drawable.ic_report_problem_24dp_vector)
+                    .into(new Target() {
+                        @Override
+                        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                            imageContainer.setImageBitmap(bitmap);
+                            imageCache.putImage(item.getImagePath(), bitmap);
+                        }
+
+                        @Override
+                        public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+                            Logger.e("Error loading image: %s", e.getMessage());
+                        }
+
+                        @Override
+                        public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+                        }
+                    });
+        }
+
+        private void loadImageFromFile(ImageListItem item) {
+            File file = new File(item.getImagePath());
+            Picasso.get()
+                    .load(file)
+                    .resize(PREVIEW_SIZE, PREVIEW_SIZE)
+                    .centerCrop()
+                    .placeholder(R.drawable.ic_image_24dp_vector)
+                    .error(R.drawable.ic_report_problem_24dp_vector)
+                    .into(imageContainer);
+
         }
 
         @Override
