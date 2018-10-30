@@ -64,8 +64,8 @@ public class FavoriteFragment extends MvpAppCompatFragment implements FavoriteVi
 
         fragmentManager = getChildFragmentManager();
 
-        if (fragmentManager.findFragmentByTag(ImageListDbFragment.TAG) == null) {
-            replaceChildFragment(ImageListDbFragment.newInstance(), ImageListDbFragment.TAG);
+        if (fragmentManager.findFragmentByTag(ImagesListFragment.TAG) == null) {
+            replaceChildFragment(ImagesListFragment.newInstance(favoriteImageRepository), ImagesListFragment.TAG);
         }
 
         BottomNavigationView bottomNavigationView = layout.findViewById(R.id.bottom_navigation_view);
