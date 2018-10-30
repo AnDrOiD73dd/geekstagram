@@ -41,8 +41,8 @@ public class RepoModule {
 
     @Named("Combined")
     @Provides
-    public ImageRepository combinedImageRepository(FileManager fileManager) {
-        return new CombinedImageRepository(fileManager);
+    public ImageRepository combinedImageRepository(@Named("Network") ImageRepository networkImageRepository, @Named("Favorites") ImageRepository favoritesOnlyImageRepository) {
+        return new CombinedImageRepository(networkImageRepository, favoritesOnlyImageRepository);
     }
 
     @Provides
