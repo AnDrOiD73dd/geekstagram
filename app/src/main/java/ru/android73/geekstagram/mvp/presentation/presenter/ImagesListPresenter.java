@@ -88,7 +88,7 @@ public class ImagesListPresenter extends MvpPresenter<ImagesListView> implements
                     getViewState().showMessageImageDeleted();
                     getViewState().onItemDeleted(adapterPosition);
                 }, throwable -> {
-                    Logger.e(throwable);
+//                    Logger.e(throwable);
                     getViewState().showErrorImageDeleted();
                 });
     }

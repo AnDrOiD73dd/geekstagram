@@ -13,6 +13,7 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import io.reactivex.Completable;
 import io.reactivex.Single;
 import io.reactivex.schedulers.TestScheduler;
 import ru.android73.geekstagram.di.AppComponent;
@@ -47,7 +48,6 @@ public class ImagesListPresenterUnitTest {
 
     @Test
     public void attachView() {
-
         List<ImageListItem> imageListItems = new ArrayList<>();
         ImageListItem item = new ImageListItem("http://roga-i-kopita", false, DataType.LOCAL);
         imageListItems.add(item);
@@ -104,10 +104,6 @@ public class ImagesListPresenterUnitTest {
 
     @Test
     public void loadPhotosFailure() {
-        List<ImageListItem> imageListItems = new ArrayList<>();
-        ImageListItem item = new ImageListItem("http://roga-i-kopita", false, DataType.LOCAL);
-        imageListItems.add(item);
-
         Throwable throwable = new Throwable("Error during load photo");
 
         TestComponent testComponent = DaggerTestComponent.builder()
@@ -131,5 +127,67 @@ public class ImagesListPresenterUnitTest {
         Mockito.verify(presenter).loadPhotos();
         scheduler.advanceTimeBy(1, TimeUnit.SECONDS);
         Mockito.verify(imagesListView).showErrorLoadPhoto();
+    }
+
+    @Test
+    public void onDeleteConfirmedSuccess() {
+        List<ImageListItem> imageListItems = new ArrayList<>();
+        ImageListItem item = new ImageListItem("http://roga-i-kopita", false, DataType.LOCAL);
+        imageListItems.add(item);
+        TestComponent testComponent = DaggerTestComponent.builder()
+                .testRepoModule(new TestRepoModule() {
+                    @Override
+                    public ImageRepository realmImageRepository() {
+                        ImageRepository imageRepository = Mockito.mock(ImageRepository.class);
+                        Mockito.when(imageRepository.getPhotos()).thenReturn(Single.just(imageListItems));
+                        Mockito.when(imageRepository.remove(item)).thenReturn(Completable.complete());
+                        return imageRepository;
+                    }
+                })
+                .testCacheModule(new TestCacheModule())
+                .testApiModule(new TestApiModule())
+                .build();
+
+        testComponent.inject(this);
+        presenter = Mockito.spy(new ImagesListPresenter(scheduler, imageRepository, appComponent));
+        testComponent.inject(presenter);
+
+        presenter.attachView(imagesListView);
+        int position = 100;
+        presenter.onDeleteConfirmed(item, position);
+        scheduler.advanceTimeBy(1, TimeUnit.SECONDS);
+        Mockito.verify(imagesListView).showMessageImageDeleted();
+        Mockito.verify(imagesListView).onItemDeleted(position);
+    }
+
+    @Test
+    public void onDeleteConfirmedFailure() {
+        List<ImageListItem> imageListItems = new ArrayList<>();
+        ImageListItem item = new ImageListItem("http://roga-i-kopita", false, DataType.LOCAL);
+        imageListItems.add(item);
+        Throwable throwable = new Throwable("Error during load photo");
+        TestComponent testComponent = DaggerTestComponent.builder()
+                .testRepoModule(new TestRepoModule() {
+                    @Override
+                    public ImageRepository realmImageRepository() {
+                        ImageRepository imageRepository = Mockito.mock(ImageRepository.class);
+                        Mockito.when(imageRepository.getPhotos()).thenReturn(Single.just(imageListItems));
+                        Mockito.when(imageRepository.remove(item)).thenReturn(Completable.error(throwable));
+                        return imageRepository;
+                    }
+                })
+                .testCacheModule(new TestCacheModule())
+                .testApiModule(new TestApiModule())
+                .build();
+
+        testComponent.inject(this);
+        presenter = Mockito.spy(new ImagesListPresenter(scheduler, imageRepository, appComponent));
+        testComponent.inject(presenter);
+
+        presenter.attachView(imagesListView);
+        int position = 100;
+        presenter.onDeleteConfirmed(item, position);
+        scheduler.advanceTimeBy(1, TimeUnit.SECONDS);
+        Mockito.verify(imagesListView).showErrorImageDeleted();
     }
 }
